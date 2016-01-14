@@ -1,9 +1,11 @@
-package tab.com.handsome.handsome;
+package com.handsome.qhb;
 
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import tab.com.handsome.handsome.R;
 
 public class MainActivity extends Activity {
 
