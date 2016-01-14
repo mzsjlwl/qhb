@@ -1,4 +1,4 @@
-package com.handsome.qhb;
+package com.handsome.qhb.ui.activity;
 
 import android.app.Activity;
 import android.os.Bundle;
