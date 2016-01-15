@@ -10,13 +10,11 @@ public class XMPPUtil {
     /**
      * 连接XMPP服务器
      *
-     * @param server 服务器
-     * @param port   端口
      * @return 连接对象
      */
-    public static XMPPConnection getXMPPConnection(String server, int port) {
+    public static XMPPConnection getXMPPConnection() {
         try {
-            ConnectionConfiguration config = new ConnectionConfiguration(server, port);
+            ConnectionConfiguration config = new ConnectionConfiguration("192.168.0.107", 5222);
             //设置重连接
             config.setReconnectionAllowed(true);
             //设置安全模式
@@ -27,22 +25,14 @@ public class XMPPUtil {
             SASLAuthentication.supportSASLMechanism("PLAIN", 0);
             //连接服务器
             XMPPConnection connection = new XMPPTCPConnection(config, null);
+            //连接
+            connection.connect();
 
             return connection;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
-    }
-
-    /**
-     * 连接XMPP服务器，默认端口号5222
-     *
-     * @param server 服务器
-     * @return 连接对象
-     */
-    public static XMPPConnection getXMPPConnection(String server) {
-        return getXMPPConnection(server, 5222);
     }
 
 }
