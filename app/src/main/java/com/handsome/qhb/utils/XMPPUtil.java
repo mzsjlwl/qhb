@@ -10,6 +10,9 @@ public class XMPPUtil {
     /**
      * 连接XMPP服务器
      *
+     * 192.168.0.107  服务器
+     * 5222  默认端口
+     *
      * @return 连接对象
      */
     public static XMPPConnection getXMPPConnection() {

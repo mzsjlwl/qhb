@@ -75,12 +75,12 @@ public class LoginActivity extends Activity implements View.OnClickListener {
                 //异步线程登陆
                 new Thread(new Runnable() {
                     public void run() {
-                        if(login()){//登陆成功
+                        if (login()) {//登陆成功
                             mHandler.sendEmptyMessage(LOGIN_SUCCESS);
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
                             finish();
-                        }else{//登陆失败
+                        } else {//登陆失败
                             mHandler.sendEmptyMessage(LOGIN_ERROR);
                         }
                     }
@@ -91,7 +91,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
 
     /**
      * 登陆服务器
-     *
      */
     private boolean login() {
         try {

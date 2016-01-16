@@ -1,5 +1,6 @@
 package com.handsome.qhb.ui.activity;
 
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
@@ -13,7 +14,7 @@ import com.handsome.qhb.ui.fragment.ShopFragment;
 
 import tab.com.handsome.handsome.R;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener {
+public class MainActivity extends Activity implements View.OnClickListener {
 
     Fragment MeFragment, shopFragment, cycleFragment;//3个碎片布局
     LinearLayout ll_content;//碎片放置的容器

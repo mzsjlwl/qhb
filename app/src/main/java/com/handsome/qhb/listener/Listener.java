@@ -1,4 +1,4 @@
 package com.handsome.qhb.listener;
 
-public class MyListener {
+public class Listener {
 }

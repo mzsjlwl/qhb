@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import org.jivesoftware.smackx.muc.HostedRoom;
+import org.jivesoftware.smackx.disco.packet.DiscoverItems;
 
 import java.util.List;
 
@@ -15,10 +15,10 @@ import tab.com.handsome.handsome.R;
 
 public class CycleItemAdapter extends BaseAdapter{
 
-    private List<HostedRoom> list;
+    private List<DiscoverItems.Item> list;
     private LayoutInflater inflater;
 
-    public CycleItemAdapter(Context context,List<HostedRoom> list){
+    public CycleItemAdapter(Context context,List<DiscoverItems.Item> list){
         this.list = list;
         inflater = LayoutInflater.from(context);
     }
@@ -39,10 +39,10 @@ public class CycleItemAdapter extends BaseAdapter{
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        HostedRoom room = list.get(position);
+        DiscoverItems.Item room = list.get(position);
         View view = inflater.inflate(R.layout.adapter_cycle_item,null);
         TextView tv_cycle_item = (TextView) view.findViewById(R.id.id_tv_cycle_item);
-        tv_cycle_item.setText(room.getName()+room.getJid());
+        tv_cycle_item.setText("name:"+room.getName()+"---entryid:"+room.getEntityID());
         return view;
     }
 }
