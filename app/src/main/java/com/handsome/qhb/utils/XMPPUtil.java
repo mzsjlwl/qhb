@@ -27,10 +27,9 @@ public class XMPPUtil {
             //设置验证方式
             SASLAuthentication.supportSASLMechanism("PLAIN", 0);
             //连接服务器
-            XMPPConnection connection = new XMPPTCPConnection(config, null);
+            XMPPConnection connection = new XMPPTCPConnection(config);
             //连接
             connection.connect();
-
             return connection;
         } catch (Exception e) {
             e.printStackTrace();

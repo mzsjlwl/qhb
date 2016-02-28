@@ -105,12 +105,14 @@ public class CycleFragment extends Fragment implements AdapterView.OnItemClickLi
      * 点击进入房间
      */
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        String entityId = listDiscoverItems.get(position).getEntityID();
         try {
-            MultiUserChat muc = new MultiUserChat(connection, listDiscoverItems.get(position).getEntityID());
+            //entityid 房间号id
+            MultiUserChat muc = new MultiUserChat(connection, entityId);
             muc.join(connection.getUser());
             //进入聊天界面
             Intent intent = new Intent(this.getActivity(), ChatActivity.class);
-            intent.putExtra("entityid", listDiscoverItems.get(position).getEntityID());
+            intent.putExtra("entityid", entityId);
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();
