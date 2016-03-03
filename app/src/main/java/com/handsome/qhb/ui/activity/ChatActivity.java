@@ -16,6 +16,7 @@ public class ChatActivity extends Activity {
         setContentView(R.layout.activity_chat);
 
         okHttpClient = new OkHttpClient();
+
     }
 
 }
