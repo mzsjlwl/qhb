@@ -11,12 +11,11 @@ import tab.com.handsome.handsome.R;
 
 public class MeFragment extends Fragment {
 
-    private View view;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_me, container, false);
-        return view;
-    }
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_me, container, false);
+		return view;
+	}
 
 }
