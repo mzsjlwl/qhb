@@ -103,7 +103,7 @@ public class IndexFragment extends Fragment {
         dots.add(dot1);
         dots.add(dot2);
         dots.add(dot3);
-        
+
         //ListView
         // lv_products = (ListView) view.findViewById(R.id.lv_products);
         //GridView
