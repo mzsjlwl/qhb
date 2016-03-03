@@ -109,7 +109,7 @@ public class IndexFragment extends Fragment {
 
         mQueue = Volley.newRequestQueue(getActivity());
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest("http://10.0.3.2/QHB1/slider.json", null,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest("http://192.168.0.110:8033/QHB/slider.json", null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
