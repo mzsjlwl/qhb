@@ -25,6 +25,7 @@ import com.handsome.qhb.adapter.ProductAdapter;
 import com.handsome.qhb.adapter.SliderAdapter;
 import com.handsome.qhb.bean.Product;
 import com.handsome.qhb.bean.Slider;
+import com.handsome.qhb.config.Config;
 import com.handsome.qhb.utils.ImageUtils;
 
 
@@ -109,7 +110,7 @@ public class IndexFragment extends Fragment {
 
         mQueue = Volley.newRequestQueue(getActivity());
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest("http://192.168.0.110:8033/QHB/slider.json", null,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Config.BASE_URL+"slider.json", null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -139,19 +140,6 @@ public class IndexFragment extends Fragment {
             }
         });
         mQueue.add(jsonObjectRequest);
-//        String sliderString= null;
-//        String productsString = null;
-//        try {
-//            sliderString = MyApplication.getIndexJSONObject().getString("slider").toString();
-//            productsString = MyApplication.getIndexJSONObject().getString("products").toString();
-//        } catch (JSONException e) {
-//            e.printStackTrace();
-//        }
-//        sliderLists =JSON.parseArray(sliderString,Slider.class);
-//        productLists = JSON.parseArray(productsString,Product.class);
-//        initSliderImage();
-//        initSliderdots();
-//        initProductList();
         return view;
     }
 
