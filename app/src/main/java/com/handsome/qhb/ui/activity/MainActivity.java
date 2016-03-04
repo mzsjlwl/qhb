@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.handsome.qhb.bean.Slider;
 import com.handsome.qhb.ui.fragment.CommunityFragment;
+import com.handsome.qhb.ui.fragment.FragmentController;
 import com.handsome.qhb.ui.fragment.IndexFragment;
 import com.handsome.qhb.ui.fragment.SearchFragment;
 import com.handsome.qhb.ui.fragment.ShopCarFragment;
@@ -25,6 +26,7 @@ public class MainActivity extends Activity implements View.OnClickListener{
     Fragment indexFragment,searchFragment,communityFragment,shopCarFragment,userFragment;
     TextView tv_index,tv_search,tv_community,tv_shopcar,tv_user;
     FrameLayout ly_content;
+    private FragmentController controller;
     public static List<Slider> sliderLists = null  ;
 
     @Override
@@ -33,7 +35,9 @@ public class MainActivity extends Activity implements View.OnClickListener{
         setContentView(R.layout.activity_main);
 
         initViews();
-        initFragment();
+        controller = FragmentController.getInstance(this,R.id.ly_content);
+        controller.showFragment(0);
+//        initFragment();
     }
 
     /**
@@ -54,17 +58,17 @@ public class MainActivity extends Activity implements View.OnClickListener{
 
     }
 
-    /**
-     * 初始化碎片
-     */
-    private void initFragment() {
-        indexFragment = new IndexFragment();
-        searchFragment = new SearchFragment();
-        communityFragment = new CommunityFragment();
-        shopCarFragment = new ShopCarFragment();
-        userFragment = new UserFragment();
-        replaceFragment(indexFragment);
-    }
+//    /**
+//     * 初始化碎片
+//     */
+//    private void initFragment() {
+//        indexFragment = new IndexFragment();
+//        searchFragment = new SearchFragment();
+//        communityFragment = new CommunityFragment();
+//        shopCarFragment = new ShopCarFragment();
+//        userFragment = new UserFragment();
+//        replaceFragment(indexFragment);
+//    }
 
     /**
      * 按钮点击事件
@@ -74,30 +78,35 @@ public class MainActivity extends Activity implements View.OnClickListener{
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.tv_index:
-                replaceFragment(indexFragment);
+//                replaceFragment(indexFragment);
+                  controller.showFragment(0);
                 break;
             case R.id.tv_search:
-                replaceFragment(searchFragment);
+//                replaceFragment(searchFragment);
+                controller.showFragment(1);
                 break;
             case R.id.tv_community:
-                replaceFragment(communityFragment);
+//                replaceFragment(communityFragment);
+                controller.showFragment(2);
                 break;
             case R.id.tv_shopcar:
-                replaceFragment(shopCarFragment);
+                controller.showFragment(3);
+//                replaceFragment(shopCarFragment);
                 break;
             case R.id.tv_user:
-                replaceFragment(userFragment);
+                controller.showFragment(4);
+//                replaceFragment(userFragment);
                 break;
         }
     }
 
-    /**
-     * 切换碎片
-     * @param fragement
-     */
-    private void replaceFragment(Fragment fragement){
-        FragmentTransaction ft = this.getFragmentManager().beginTransaction();
-        ft.replace(R.id.ly_content, fragement).commit();
-    }
+//    /**
+//     * 切换碎片
+//     * @param fragement
+//     */
+//    private void replaceFragment(Fragment fragement){
+//        FragmentTransaction ft = this.getFragmentManager().beginTransaction();
+//        ft.replace(R.id.ly_content, fragement).commit();
+//    }
 
 }
