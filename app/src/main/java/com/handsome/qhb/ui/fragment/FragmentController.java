@@ -31,10 +31,8 @@ public class FragmentController {
 
     private void initFragment() {
         fragments = new ArrayList<Fragment>();
-        fragments.add(new IndexFragment());
-        fragments.add(new SearchFragment());
-        fragments.add(new CommunityFragment());
-        fragments.add(new ShopCarFragment());
+        fragments.add(new ShopFragment());
+        fragments.add(new HallFragment());
         fragments.add(new UserFragment());
 
         FragmentTransaction ft = fm.beginTransaction();

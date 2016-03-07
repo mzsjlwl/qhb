@@ -1,20 +1,13 @@
 package com.handsome.qhb.ui.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handsome.qhb.bean.Slider;
-import com.handsome.qhb.ui.fragment.CommunityFragment;
 import com.handsome.qhb.ui.fragment.FragmentController;
-import com.handsome.qhb.ui.fragment.IndexFragment;
-import com.handsome.qhb.ui.fragment.SearchFragment;
-import com.handsome.qhb.ui.fragment.ShopCarFragment;
-import com.handsome.qhb.ui.fragment.UserFragment;
 
 import java.util.List;
 
@@ -23,8 +16,7 @@ import tab.com.handsome.handsome.R;
 
 public class MainActivity extends Activity implements View.OnClickListener{
 
-    Fragment indexFragment,searchFragment,communityFragment,shopCarFragment,userFragment;
-    TextView tv_index,tv_search,tv_community,tv_shopcar,tv_user;
+    TextView tv_shop,tv_hall,tv_user;
     FrameLayout ly_content;
     private FragmentController controller;
     public static List<Slider> sliderLists = null  ;
@@ -45,15 +37,11 @@ public class MainActivity extends Activity implements View.OnClickListener{
      */
     private void initViews(){
         ly_content = (FrameLayout) findViewById(R.id.ly_content);
-        tv_index = (TextView) findViewById(R.id.tv_index);
-        tv_search = (TextView) findViewById(R.id.tv_search);
-        tv_community = (TextView) findViewById(R.id.tv_community);
-        tv_shopcar = (TextView) findViewById(R.id.tv_shopcar);
+        tv_shop = (TextView) findViewById(R.id.tv_shop);
+        tv_hall = (TextView) findViewById(R.id.tv_hall);
         tv_user = (TextView) findViewById(R.id.tv_user);
-        tv_index.setOnClickListener(this);
-        tv_search.setOnClickListener(this);
-        tv_community.setOnClickListener(this);
-        tv_shopcar.setOnClickListener(this);
+        tv_shop.setOnClickListener(this);
+        tv_hall.setOnClickListener(this);
         tv_user.setOnClickListener(this);
 
     }
@@ -77,25 +65,17 @@ public class MainActivity extends Activity implements View.OnClickListener{
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.tv_index:
+            case R.id.tv_shop:
 //                replaceFragment(indexFragment);
                   controller.showFragment(0);
                 break;
-            case R.id.tv_search:
+            case R.id.tv_hall:
 //                replaceFragment(searchFragment);
                 controller.showFragment(1);
                 break;
-            case R.id.tv_community:
+            case R.id.tv_user:
 //                replaceFragment(communityFragment);
                 controller.showFragment(2);
-                break;
-            case R.id.tv_shopcar:
-                controller.showFragment(3);
-//                replaceFragment(shopCarFragment);
-                break;
-            case R.id.tv_user:
-                controller.showFragment(4);
-//                replaceFragment(userFragment);
                 break;
         }
     }

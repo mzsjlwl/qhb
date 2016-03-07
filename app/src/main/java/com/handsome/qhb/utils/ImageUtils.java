@@ -21,7 +21,7 @@ public class ImageUtils {
         ImageLoader imageLoader = new ImageLoader(mQueue, new BitmapCache());
         ImageLoader.ImageListener listener = ImageLoader.getImageListener(imageView,
                 R.mipmap.ic_launcher, R.mipmap.ic_launcher);
-        imageLoader.get(Config.BASE_IMAGE_URL+url, listener);
+        imageLoader.get(url, listener);
         return imageView;
     }
 

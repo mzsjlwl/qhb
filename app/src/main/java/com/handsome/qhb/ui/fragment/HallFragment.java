@@ -8,14 +8,13 @@ import android.view.ViewGroup;
 
 import tab.com.handsome.handsome.R;
 
-
 /**
- * Created by zhang on 2016/2/20.
+ * Created by zhang on 2016/3/7.
  */
-public class ShopCarFragment extends Fragment {
+public class HallFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-       View view = inflater.inflate(R.layout.fragment_shopcar,container,false);
+        View view = inflater.inflate(R.layout.fragment_hall,container,false);
         return view;
     }
 }

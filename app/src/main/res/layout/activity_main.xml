@@ -17,41 +17,23 @@
         android:layout_height="56dp"
         >
         <TextView
-            android:id="@+id/tv_index"
+            android:id="@+id/tv_shop"
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/tab_menu_index"
+            android:drawableTop="@drawable/tab_menu_shop"
             android:gravity="center"
             android:padding="5dp"
-            android:text="@string/tab_menu_index"/>
+            android:text="@string/tab_menu_shop"/>
         <TextView
-            android:id="@+id/tv_search"
+            android:id="@+id/tv_hall"
             android:layout_width="1dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/tab_menu_search"
+            android:drawableTop="@drawable/tab_menu_hall"
             android:gravity="center"
             android:padding="5dp"
-            android:text="@string/tab_menu_search"/>
-        <TextView
-            android:id="@+id/tv_community"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/tab_menu_community"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="@string/tab_menu_community"/>
-        <TextView
-            android:id="@+id/tv_shopcar"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawableTop="@drawable/tab_menu_shopcar"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="@string/tab_menu_shopcar"/>
+            android:text="@string/tab_menu_hall"/>
         <TextView
             android:id="@+id/tv_user"
             android:layout_width="1dp"
@@ -61,5 +43,6 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="@string/tab_menu_user"/>
+
     </LinearLayout>
 </LinearLayout>

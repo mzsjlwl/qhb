@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
-
 
 import com.alibaba.fastjson.JSON;
 import com.android.volley.RequestQueue;
@@ -28,10 +26,8 @@ import com.handsome.qhb.bean.Slider;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.utils.ImageUtils;
 
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +37,10 @@ import java.util.concurrent.TimeUnit;
 
 import tab.com.handsome.handsome.R;
 
-
 /**
- * Created by zhang on 2016/2/20.
+ * Created by zhang on 2016/3/7.
  */
-public class IndexFragment extends Fragment {
-
+public class ShopFragment  extends Fragment{
     private ViewPager viewPager;
     // 滑动的图片集合
     private List<ImageView> imageViews;
@@ -54,7 +48,6 @@ public class IndexFragment extends Fragment {
     private List<Slider> sliderLists;
     //商品listView
     private ListView lv_products;
-    private GridView gv_products;
     //商品列表
     private List<Product> productLists;
     // 当前图片的索引号
@@ -73,25 +66,25 @@ public class IndexFragment extends Fragment {
     // 切换当前显示的图片
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
-           if(msg.what==0x123){
-               Log.d("0x123", "----->");
-               viewPager.setCurrentItem(currentItem);// 切换当前显示的图片
-           }
-           else if(msg.what==0x124){
-               Log.d("0x124", "----->");
-                   sliderLists = JSON.parseArray(msg.obj.toString(), Slider.class);
-               initSliderImage();
-               initSliderdots();
-           }else if(msg.what==0x125){
-               Log.d("0x125", "------>");
-               productLists = JSON.parseArray(msg.obj.toString(),Product.class);
-               initProductList();
-           }
+            if(msg.what==0x123){
+                Log.d("0x123", "----->");
+                viewPager.setCurrentItem(currentItem);// 切换当前显示的图片
+            }
+            else if(msg.what==0x124){
+                Log.d("0x124", "----->");
+                sliderLists = JSON.parseArray(msg.obj.toString(), Slider.class);
+                initSliderImage();
+                initSliderdots();
+            }else if(msg.what==0x125){
+                Log.d("0x125", "------>");
+                productLists = JSON.parseArray(msg.obj.toString(),Product.class);
+                initProductList();
+            }
         };
     };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-      View view = inflater.inflate(R.layout.fragment_index,container,false);
+        View view = inflater.inflate(R.layout.fragment_shop,container,false);
         dots = new ArrayList<View>();
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
         dot0 =view.findViewById(R.id.v_dot0);
@@ -105,13 +98,12 @@ public class IndexFragment extends Fragment {
         dots.add(dot3);
 
         //ListView
-        // lv_products = (ListView) view.findViewById(R.id.lv_products);
-        //GridView
-        gv_products = (GridView) view.findViewById(R.id.lv_products);
+         lv_products = (ListView) view.findViewById(R.id.lv_products);
+
 
         mQueue = Volley.newRequestQueue(getActivity());
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Config.BASE_URL+"slider.json", null,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Config.BASE_URL+"Slider/get_json", null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -169,8 +161,7 @@ public class IndexFragment extends Fragment {
 
     public void initProductList(){
         ProductAdapter productAdapter = new ProductAdapter(getActivity(),productLists,R.layout.product_list_items1,mQueue);
-        //lv_products.setAdapter(productAdapter);
-        gv_products.setAdapter(productAdapter);
+        lv_products.setAdapter(productAdapter);
     }
 
     public void onStartSlider() {
