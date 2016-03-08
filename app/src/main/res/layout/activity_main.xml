@@ -11,10 +11,11 @@
         android:layout_weight="1"
         >
     </FrameLayout>
+    <include layout="@layout/include_splitline"></include>
     <LinearLayout
         android:id="@+id/ly_tab_bar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="50dp"
         >
         <TextView
             android:id="@+id/tv_shop"

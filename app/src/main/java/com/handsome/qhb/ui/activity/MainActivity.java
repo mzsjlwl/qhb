@@ -14,7 +14,7 @@ import java.util.List;
 import tab.com.handsome.handsome.R;
 
 
-public class MainActivity extends Activity implements View.OnClickListener{
+public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     TextView tv_shop,tv_hall,tv_user;
     FrameLayout ly_content;

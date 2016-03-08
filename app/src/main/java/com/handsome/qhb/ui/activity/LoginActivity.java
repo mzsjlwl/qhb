@@ -5,7 +5,7 @@ import android.os.Bundle;
 
 import tab.com.handsome.handsome.R;
 
-public class LoginActivity extends Activity  {
+public class LoginActivity extends BaseActivity  {
 
 
     protected void onCreate(Bundle savedInstanceState) {
