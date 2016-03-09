@@ -103,7 +103,7 @@ public class ShopFragment  extends Fragment{
 
         mQueue = Volley.newRequestQueue(getActivity());
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Config.BASE_URL+"Slider/get_json", null,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Config.BASE_URL+"Slider/getJson", null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {

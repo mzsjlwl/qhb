@@ -28,12 +28,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp">
                 <TextView
-                    android:id="@+id/id_tv_roomName"
+                    android:id="@+id/tx_pname"
                     android:layout_alignParentLeft="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="商品名称"
-                    android:textSize="18sp"
+                    android:textSize="18dp"
                     android:textColor="#000000"/>
 
             </RelativeLayout>
@@ -47,32 +47,31 @@
                     <ImageButton
                         android:layout_height="match_parent"
                         android:layout_width="wrap_content"
-                        android:layout_weight="1"
                         android:id="@+id/ib_add"
                         />
                     <TextView
-                        android:layout_height="30dp"
+                        android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
                         android:layout_toRightOf="@+id/ib_add"
                         android:id="@+id/tv_num"
                         android:text="1"
-                        android:textSize="20dp"
+                        android:textSize="18dp"
                         />
                     <ImageButton
                         android:layout_height="match_parent"
                         android:layout_width="wrap_content"
                         android:layout_toRightOf="@+id/tv_num"
-                        android:layout_weight="0"/>
+                        />
 
                 <TextView
-                    android:id="@+id/id_tv_time"
+                    android:id="@+id/tx_price"
                     android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="99.9￥"
-                    android:textSize="20sp"
+                    android:textSize="20dp"
                     android:textColor="#88FA0206"/>
             </RelativeLayout>
         </LinearLayout>

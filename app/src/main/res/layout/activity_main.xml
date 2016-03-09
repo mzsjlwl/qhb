@@ -24,8 +24,9 @@
             android:layout_weight="1"
             android:drawableTop="@drawable/tab_menu_shop"
             android:gravity="center"
-            android:padding="5dp"
-            android:text="@string/tab_menu_shop"/>
+            android:padding="3dp"
+            android:text="@string/tab_menu_shop"
+            android:textSize="15dp"/>
         <TextView
             android:id="@+id/tv_hall"
             android:layout_width="1dp"
@@ -33,8 +34,9 @@
             android:layout_weight="1"
             android:drawableTop="@drawable/tab_menu_hall"
             android:gravity="center"
-            android:padding="5dp"
-            android:text="@string/tab_menu_hall"/>
+            android:padding="3dp"
+            android:text="@string/tab_menu_hall"
+            android:textSize="15dp"/>
         <TextView
             android:id="@+id/tv_user"
             android:layout_width="1dp"
@@ -42,8 +44,9 @@
             android:layout_weight="1"
             android:drawableTop="@drawable/tab_menu_user"
             android:gravity="center"
-            android:padding="5dp"
-            android:text="@string/tab_menu_user"/>
+            android:padding="3dp"
+            android:text="@string/tab_menu_user"
+            android:textSize="15dp"/>
 
     </LinearLayout>
 </LinearLayout>

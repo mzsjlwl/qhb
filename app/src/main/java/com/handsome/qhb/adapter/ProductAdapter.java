@@ -22,7 +22,7 @@ import tab.com.handsome.handsome.R;
     @Override
     public void convert(ViewHolder holder, Product product) {
         holder.setText(R.id.tx_pname,product.getPname());
-        holder.setText(R.id.tx_price, String.valueOf(product.getPrice()));
+        holder.setText(R.id.tx_price, String.valueOf(product.getPrice())+"￥");
         holder.setImage(R.id.iv_product,product.getPicture());
     }
 
