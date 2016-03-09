@@ -160,7 +160,7 @@ public class ShopFragment  extends Fragment{
     }
 
     public void initProductList(){
-        ProductAdapter productAdapter = new ProductAdapter(getActivity(),productLists,R.layout.product_list_items1,mQueue);
+        ProductAdapter productAdapter = new ProductAdapter(getActivity(),productLists,R.layout.product_list_items,mQueue);
         lv_products.setAdapter(productAdapter);
     }
 
