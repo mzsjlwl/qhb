@@ -1,5 +1,6 @@
 package com.handsome.qhb.ui.fragment;
 
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
@@ -59,9 +60,11 @@ public class ShopFragment extends Fragment {
     private View dot1;
     private View dot2;
     private View dot3;
-
+    //轮播时间
     private ScheduledExecutorService scheduledExecutorService;
 
+    //ActionBar
+    private ActionBar mActionBar;
 
     // 切换当前显示的图片
     private Handler handler = new Handler() {
@@ -102,9 +105,6 @@ public class ShopFragment extends Fragment {
         //ListView
         lv_products = (ListView) view.findViewById(R.id.lv_products);
 
-
-
-
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Config.BASE_URL + "Slider/getJson", null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -134,15 +134,25 @@ public class ShopFragment extends Fragment {
                 Log.e("TAG", error.getMessage(), error);
             }
         });
+
         RequestQueueController.getInstance().add(jsonObjectRequest);
+
         return view;
     }
 
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_shop, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
+
+//    public void initActionBar(){
+//        mActionBar = getActivity().getActionBar();
+//        mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+//        mActionBar.setDisplayShowCustomEnabled(true);
+//        mActionBar.setCustomView(R.layout.top_back_center_bar);
+//    }
 
     public void initSliderImage() {
         imageViews = new ArrayList<ImageView>();
@@ -163,7 +173,6 @@ public class ShopFragment extends Fragment {
 
     public void initSliderdots() {
         for (int i = 0; i < dots.size(); i++) {
-
             dots.get(i).setVisibility(View.VISIBLE);
         }
     }
@@ -204,10 +213,7 @@ public class ShopFragment extends Fragment {
     private class MyPageChangeListener implements ViewPager.OnPageChangeListener {
         private int oldPosition = 0;
 
-        /**
-         * This method will be invoked when a new page becomes selected.
-         * position: Position index of the new selected page.
-         */
+
         public void onPageSelected(int position) {
             currentItem = position;
             dots.get(oldPosition).setBackgroundResource(R.drawable.dot_normal);
@@ -215,12 +221,8 @@ public class ShopFragment extends Fragment {
             oldPosition = position;
         }
 
-        public void onPageScrollStateChanged(int arg0) {
+        public void onPageScrollStateChanged(int arg0) {}
 
-        }
-
-        public void onPageScrolled(int arg0, float arg1, int arg2) {
-
-        }
+        public void onPageScrolled(int arg0, float arg1, int arg2) {}
     }
 }

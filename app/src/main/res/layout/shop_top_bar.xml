@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:background="#000000">
+    <ImageButton
+        android:id="@+id/ib_back"
+        android:layout_height="wrap_content"
+        android:layout_width="25dp"
+        android:scaleType="fitXY"
+        android:layout_alignParentLeft="true"
+        android:layout_margin="12dp"
+        android:background="@mipmap/zf_back_btn"
+        ></ImageButton>
+
+    <ImageButton
+        android:id="@+id/ib_shopcar"
+        android:layout_height = "match_parent"
+        android:layout_width="25dp"
+        android:layout_margin="8dp"
+        android:scaleType="fitXY"
+        android:layout_alignParentRight="true"
+        android:background="@mipmap/gwc"
+        ></ImageButton>
+    <TextView
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_toRightOf="@+id/ib_back"
+        android:layout_toLeftOf="@+id/ib_shopcar"
+        android:gravity="center"
+        android:text="商城"
+        android:textSize="20dp"
+        android:textColor="#ffffff"
+        />
+</RelativeLayout>

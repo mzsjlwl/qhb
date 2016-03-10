@@ -14,7 +14,9 @@
     <!--android:layout_gravity="center"-->
     <!--/>-->
     <!--</FrameLayout>-->
+    <include layout="@layout/shop_top_bar"/>
     <include layout="@layout/banner"/>
+    <include layout="@layout/include_splitline"/>
     <ListView
     android:layout_width="wrap_content"
     android:layout_height="fill_parent"
