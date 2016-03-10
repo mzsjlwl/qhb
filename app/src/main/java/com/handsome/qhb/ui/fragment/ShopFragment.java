@@ -1,6 +1,5 @@
 package com.handsome.qhb.ui.fragment;
 
-import android.app.ActionBar;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,17 +7,18 @@ import android.os.Message;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.alibaba.fastjson.JSON;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handsome.qhb.adapter.ProductAdapter;
 import com.handsome.qhb.adapter.SliderAdapter;
 import com.handsome.qhb.bean.Product;
@@ -28,6 +28,7 @@ import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.RequestQueueController;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,7 +50,7 @@ public class ShopFragment extends Fragment {
     //滑动图片
     private List<Slider> sliderLists;
     //商品listView
-    private ListView lv_products;
+    private PullToRefreshListView mPullRefreshListView;
     //商品列表
     private List<Product> productLists;
     // 当前图片的索引号
@@ -63,8 +64,11 @@ public class ShopFragment extends Fragment {
     //轮播时间
     private ScheduledExecutorService scheduledExecutorService;
 
-    //ActionBar
-    private ActionBar mActionBar;
+    //商品分页Json
+    private JSONObject pageJson;
+
+    //RequestQueue对象
+    private RequestQueue mQueue = RequestQueueController.getInstance();
 
     // 切换当前显示的图片
     private Handler handler = new Handler() {
@@ -79,7 +83,16 @@ public class ShopFragment extends Fragment {
                 initSliderdots();
             } else if (msg.what == 0x125) {
                 LogUtils.d("0x125", "------>");
+                productLists = new ArrayList<Product>();
                 productLists = JSON.parseArray(msg.obj.toString(), Product.class);
+                initProductList();
+            } else if (msg.what == 0x126){
+                LogUtils.d("0x126","------->");
+                List<Product> nextProducts = new ArrayList<Product>();
+                nextProducts = JSON.parseArray(msg.obj.toString(),Product.class);
+                for(Product product:nextProducts){
+                    productLists.add(product);
+                }
                 initProductList();
             }
         }
@@ -103,7 +116,7 @@ public class ShopFragment extends Fragment {
         dots.add(dot3);
 
         //ListView
-        lv_products = (ListView) view.findViewById(R.id.lv_products);
+        mPullRefreshListView = (PullToRefreshListView ) view.findViewById(R.id.pull_refresh_list);
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Config.BASE_URL + "Slider/getJson", null,
                 new Response.Listener<JSONObject>() {
@@ -111,22 +124,8 @@ public class ShopFragment extends Fragment {
                     public void onResponse(JSONObject response) {
                         Message msg = new Message();
                         msg.what = 0x124;
-                        try {
-                            msg.obj = response.getString("slider");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                        msg.obj = response;
                         handler.handleMessage(msg);
-
-                        Message msg1 = new Message();
-                        msg1.what = 0x125;
-
-                        try {
-                            msg1.obj = response.getString("products");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        handler.handleMessage(msg1);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -135,24 +134,33 @@ public class ShopFragment extends Fragment {
             }
         });
 
-        RequestQueueController.getInstance().add(jsonObjectRequest);
+        JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Config.BASE_URL+"Product/getJson",null,
+                new Response.Listener<JSONObject>(){
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Message msg = new Message();
+                        msg.what = 0x125;
+                        try {
+                            msg.obj = response.getString("product");
+                            pageJson = new JSONObject(response.getString("page"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        handler.handleMessage(msg);
+                    }
+                },new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", error.getMessage(),error);
+            }
+
+        });
+
+        mQueue.add(jsonObjectRequest);
+        mQueue.add(jsonObjectRequest1);
 
         return view;
     }
-
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.menu_shop, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-//    public void initActionBar(){
-//        mActionBar = getActivity().getActionBar();
-//        mActionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-//        mActionBar.setDisplayShowCustomEnabled(true);
-//        mActionBar.setCustomView(R.layout.top_back_center_bar);
-//    }
 
     public void initSliderImage() {
         imageViews = new ArrayList<ImageView>();
@@ -179,7 +187,73 @@ public class ShopFragment extends Fragment {
 
     public void initProductList() {
         ProductAdapter productAdapter = new ProductAdapter(getActivity(), productLists, R.layout.product_list_items,RequestQueueController.getInstance());
-        lv_products.setAdapter(productAdapter);
+        mPullRefreshListView.setAdapter(productAdapter);
+        mPullRefreshListView
+                .setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+                    @Override
+                    public void onPullDownToRefresh(
+                            PullToRefreshBase<ListView> refreshView) {
+                        LogUtils.e("TAG", "onPullDownToRefresh");
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Config.BASE_URL+"Product/getJson",null,
+                                new Response.Listener<JSONObject>(){
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Message msg = new Message();
+                                        msg.what = 0x125;
+                                        try {
+                                            msg.obj = response.getString("product");
+                                            pageJson = new JSONObject(response.getString("page"));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        handler.handleMessage(msg);
+                                    }
+                                },new Response.ErrorListener(){
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("TAG",error.getMessage(),error);
+                            }
+                        });
+                        mQueue.add(jsonObjectRequest);
+                    }
+
+                    @Override
+                    public void onPullUpToRefresh(
+                            PullToRefreshBase<ListView> refreshView) {
+                        LogUtils.e("TAG", "onPullUpToRefresh");
+                        //这里写上拉加载更多的任务
+                        String url = "";
+                        try {
+                            url = pageJson.getString("next");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(url,null,
+                                new Response.Listener<JSONObject>(){
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Message msg = new Message();
+                                        msg.what = 0x125;
+                                        try {
+                                            msg.obj = response.getString("product");
+                                            //待完善
+                                            pageJson =new JSONObject(response.getString("page"));
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        handler.handleMessage(msg);
+                                    }
+                                },new Response.ErrorListener(){
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.e("TAG",error.getMessage(),error);
+                            }
+                        });
+                        mQueue.add(jsonObjectRequest);
+                    }
+                });
     }
 
     public void onStartSlider() {
