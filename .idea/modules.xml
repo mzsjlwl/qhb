@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/QHB.iml" filepath="$PROJECT_DIR$/QHB.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/qhb2.iml" filepath="$PROJECT_DIR$/qhb2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/qhb4.iml" filepath="$PROJECT_DIR$/qhb4.iml" />
-      <module fileurl="file://$PROJECT_DIR$/qhb5.iml" filepath="$PROJECT_DIR$/qhb5.iml" />
       <module fileurl="file://$PROJECT_DIR$/qhb7.iml" filepath="$PROJECT_DIR$/qhb7.iml" />
     </modules>
   </component>
