@@ -9,5 +9,11 @@
     <string name="tab_menu_shop">商城</string>
     <string name="tab_menu_hall">大厅</string>
 
+
     <string name="tab_menu_user">个人中心</string>
+    <string name="tx_telphone">手机号</string>
+    <string name="tx_password">密码</string>
+
+    <string name="tx_login">登录</string>
+    <string name="tx_register">注册</string>
 </resources>
