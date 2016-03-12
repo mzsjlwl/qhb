@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efeff4">
     <RelativeLayout
         android:id="@+id/rl_top"
         android:layout_width="match_parent"
@@ -15,7 +17,7 @@
             android:layout_alignParentLeft="true"
             android:layout_margin="12dp"
             android:background="@mipmap/zf_back_btn"
-            ></ImageButton>
+            />
         <TextView
             android:layout_height="match_parent"
             android:layout_width="match_parent"
@@ -115,4 +117,27 @@
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
         android:background="@drawable/et_bg_border"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:background="#ffffff"
+        >
+        <Button
+            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:background="@drawable/btn_js_border"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:text="@string/tx_js"
+            android:textColor="#ffffff"
+            android:paddingTop="2dp"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:id="@+id/btn_sub"
+
+            />
+    </RelativeLayout>
 </RelativeLayout>

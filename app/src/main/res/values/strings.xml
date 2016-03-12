@@ -18,9 +18,11 @@
     <string name="tx_login">登录</string>
     <string name="tx_register">注册</string>
     <string name="tx_update_data">修改资料</string>
+    <string name="tx_update_password">修改密码</string>
 
     <string name="tx_makesure">确定</string>
     <string name="tx_back">返回</string>
+    <string name="tx_logout">退出</string>
     
     <string name="tx_oldPassword">旧密码</string>
     <string name="tx_repeatPassword">重复密码</string>
@@ -38,5 +40,10 @@
     <string name="tx_totalPrice">合计</string>
     <string name="tx_liuyan">留言</string>
 
+    <string name="tx_js">结算</string>
     <string name="tx_gwcjs">购物结算</string>
+    <string name="tx_nackname">用户名</string>
+    <string name="tx_integral">积分</string>
+    <string name="tx_addMoney">充值</string>
+    <string name="tx_order_manager">订单管理</string>
 </resources>
