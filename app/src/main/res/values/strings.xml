@@ -11,9 +11,32 @@
 
 
     <string name="tab_menu_user">个人中心</string>
+    <string name="tx_name">姓名</string>
     <string name="tx_telphone">手机号</string>
     <string name="tx_password">密码</string>
 
     <string name="tx_login">登录</string>
     <string name="tx_register">注册</string>
+    <string name="tx_update_data">修改资料</string>
+
+    <string name="tx_makesure">确定</string>
+    <string name="tx_back">返回</string>
+    
+    <string name="tx_oldPassword">旧密码</string>
+    <string name="tx_repeatPassword">重复密码</string>
+
+    <string name="tx_address">收货地址</string>
+    <string name="tx_address_manage">地址管理</string>
+
+    <string name="tx_add">+</string>
+    <string name="tx_subtract">——</string>
+
+    <string name="tx_receName">收货人</string>
+    <string name="tx_recePhone">收货手机号码</string>
+
+    <string name="tx_contact">联系方式</string>
+    <string name="tx_totalPrice">合计</string>
+    <string name="tx_liuyan">留言</string>
+
+    <string name="tx_gwcjs">购物结算</string>
 </resources>

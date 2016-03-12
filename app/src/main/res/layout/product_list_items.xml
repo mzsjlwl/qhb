@@ -44,25 +44,37 @@
                 android:layout_height="0dp"
                 >
 
-                    <ImageButton
-                        android:layout_height="match_parent"
-                        android:layout_width="wrap_content"
-                        android:id="@+id/ib_add"
+                    <Button
+                        android:layout_height="20dp"
+                        android:layout_width="20dp"
+                        android:background="@drawable/btn_bg_border"
+                        android:id="@+id/btn_add"
+                        android:text="@string/tx_add"
+                        android:textColor="#ffffff"
+                        android:textStyle="bold"
+                        android:textSize="18dp"
                         />
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
                         android:layout_marginLeft="5dp"
                         android:layout_marginRight="5dp"
-                        android:layout_toRightOf="@+id/ib_add"
+                        android:layout_toRightOf="@+id/btn_add"
                         android:id="@+id/tv_num"
                         android:text="1"
                         android:textSize="18dp"
                         />
-                    <ImageButton
-                        android:layout_height="match_parent"
-                        android:layout_width="wrap_content"
+                    <Button
+                        android:layout_height="20dp"
+                        android:layout_width="20dp"
+                        android:background="@drawable/btn_bg_border"
                         android:layout_toRightOf="@+id/tv_num"
+                        android:text="@string/tx_subtract"
+                        android:textColor="#ffffff"
+                        android:paddingTop="2dp"
+                        android:textStyle="bold"
+                        android:textSize="16dp"
+                        android:id="@+id/btn_sub"
                         />
 
                 <TextView

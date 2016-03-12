@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/llfirst"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_alignParentLeft="true">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/iv_product"
+                android:src="@mipmap/test_icon"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llsecond"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/llfirst"
+            android:orientation="vertical"
+            android:layout_margin="5dp">
+
+                <TextView
+                    android:id="@+id/tx_pname"
+                    android:layout_alignParentLeft="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="￥15.55"
+                    android:textSize="18dp"
+                    android:textStyle="bold"
+                    android:textColor="#000000"/>
+                <TextView
+                    android:layout_height="wrap_content"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@+id/btn_add"
+                    android:id="@+id/tv_num"
+                    android:text="2016-12-19 22:22"
+                    android:textSize="13dp"
+                    />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llthird"
+            android:layout_width="70dp"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_alignParentRight="true">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:text="已完成"/>
+        </LinearLayout>
+</RelativeLayout>
