@@ -8,6 +8,7 @@
         android:id="@+id/rl_top"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_alignParentTop="true"
         android:background="#000000">
         <ImageButton
             android:id="@+id/ib_back"
@@ -29,12 +30,22 @@
             android:textColor="#ffffff"
             />
     </RelativeLayout>
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp">
 
+    </RelativeLayout>
     <LinearLayout
         android:id="@+id/ll_address"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-
+        android:layout_marginTop="10dp"
+        android:padding="20dp"
+        android:background="#ffffff"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="wrap_content"
@@ -46,8 +57,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/tx_receName"
                 android:textSize="18dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+
                 />
             <TextView
                 android:id="@+id/tv_recePhone"
@@ -55,8 +66,8 @@
                 android:layout_height="wrap_content"
                 android:text="@string/tx_recePhone"
                 android:textSize="18dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="20dp"
+
                 />
         </LinearLayout>
         <TextView
@@ -73,18 +84,28 @@
             android:layout_height="wrap_content"
             android:text="@string/tx_address"
             android:textSize="18dp"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="20dp"
             />
     </LinearLayout>
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical"
+        android:background="#ffffff">
+
+
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="30dp">
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+       >
 
     </ListView>
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp">
+        android:paddingTop="10dp">
         
         <TextView
             android:layout_width="wrap_content"
@@ -96,19 +117,20 @@
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="100dp"
+            android:layout_marginLeft="80dp"
             android:text="￥99.9"
             android:textSize="18dp"/>
     </LinearLayout>
     <TextView
         android:id="@+id/tv_liuyan"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="30dp"
+        android:paddingTop="15dp"
+        android:paddingLeft="30dp"
         android:text="@string/tx_liuyan"
         android:textSize="18dp"
-        android:textStyle="bold"/>
+        android:textStyle="bold"
+        android:background="#ffffff"/>
     <EditText
         android:id="@+id/et_liuyan"
         android:layout_width="match_parent"
@@ -116,21 +138,23 @@
         android:layout_marginTop="15dp"
         android:layout_marginLeft="30dp"
         android:layout_marginRight="30dp"
+        android:layout_marginBottom="15dp"
         android:background="@drawable/et_bg_border"/>
+    </LinearLayout>
+</LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="50dp"
         android:layout_alignParentBottom="true"
         android:background="#ffffff"
         >
         <Button
-            android:layout_height="40dp"
+            android:layout_height="35dp"
             android:layout_width="50dp"
             android:background="@drawable/btn_js_border"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
-            android:layout_marginBottom="5dp"
-            android:gravity="center"
+            android:layout_marginTop="8dp"
             android:text="@string/tx_js"
             android:textColor="#ffffff"
             android:paddingTop="2dp"
