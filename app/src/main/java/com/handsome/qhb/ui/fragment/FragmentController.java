@@ -36,8 +36,8 @@ public class FragmentController {
         fragments.add(new UserFragment());
 
         FragmentTransaction ft = fm.beginTransaction();
-        for(Fragment fragment : fragments) {
-            ft.add(containerId, fragment);
+        for(int i = 0;i<fragments.size();i++) {
+            ft.add(containerId,fragments.get(i),"TAG"+i);
         }
         ft.commit();
     }
@@ -45,6 +45,9 @@ public class FragmentController {
     public void showFragment(int position) {
         hideFragments();
         Fragment fragment = fragments.get(position);
+        if(fragment==null){
+            fragment = fm.findFragmentByTag("TAG"+position);
+        }
         FragmentTransaction ft = fm.beginTransaction();
         ft.show(fragment);
         ft.commit();
@@ -52,10 +55,14 @@ public class FragmentController {
 
     public void hideFragments() {
         FragmentTransaction ft = fm.beginTransaction();
-        for(Fragment fragment : fragments) {
-            if(fragment != null) {
-                ft.hide(fragment);
+        for(int i = 0;i<fragments.size();i++) {
+            Fragment fragment;
+            if(fragments.get(i)==null){
+                fragment = fm.findFragmentByTag("TAG"+i);
+            }else{
+                fragment = fragments.get(i);
             }
+            ft.hide(fragment);
         }
         ft.commit();
     }

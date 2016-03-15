@@ -14,16 +14,9 @@
     ></ImageButton>
 
 
-    <!--<ImageButton-->
-        <!--android:id="@+id/ib_shopcar"-->
-        <!--android:layout_height = "match_parent"-->
-        <!--android:layout_width="25dp"-->
-        <!--android:layout_margin="8dp"-->
-        <!--android:scaleType="fitXY"-->
-        <!--android:layout_alignParentRight="true"-->
-        <!--android:background="@mipmap/gwc"-->
-        <!--></ImageButton>-->
+
     <TextView
+        android:id="@+id/tv_title"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:layout_toRightOf="@+id/ib_back"

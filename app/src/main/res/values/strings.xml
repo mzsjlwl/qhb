@@ -33,8 +33,8 @@
     <string name="tx_add">+</string>
     <string name="tx_subtract">——</string>
 
-    <string name="tx_receName">收货人</string>
-    <string name="tx_recePhone">收货手机号码</string>
+    <string name="tx_receName">收货姓名</string>
+    <string name="tx_recePhone">手机号码</string>
 
     <string name="tx_contact">联系方式</string>
     <string name="tx_totalPrice">合计</string>
@@ -46,4 +46,9 @@
     <string name="tx_integral">积分</string>
     <string name="tx_addMoney">充值</string>
     <string name="tx_order_manager">订单管理</string>
+
+    <string name="tx_totalMoney">总数合计</string>
+    <string name="tx_orderStatus">订单状态</string>
+    <string name="tx_orderId">订单号码</string>
+    <string name="tx_orderTime">下单时间</string>
 </resources>

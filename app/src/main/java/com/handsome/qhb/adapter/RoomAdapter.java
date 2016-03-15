@@ -21,7 +21,7 @@ import tab.com.handsome.handsome.R;
         super(context,datas,layoutId,mQueue);
     }
     @Override
-    public void convert(ViewHolder holder, Room room) {
+    public void convert(int position,ViewHolder holder, Room room) {
         holder.setText(R.id.id_tv_roomName,room.getRoomName());
         holder.setText(R.id.id_tv_time, room.getRoomEndTime());
         holder.setText(R.id.id_tv_message,room.getRoomCreateTime());

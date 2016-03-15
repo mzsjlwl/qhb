@@ -21,6 +21,7 @@
             android:id="@+id/iv_user_photo"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:background="@mipmap/test_icon"
             android:layout_gravity="center_vertical|center"/>
         <EditText
             android:id="@+id/et_nackname"
@@ -34,7 +35,7 @@
 
 
         <TextView
-            android:id="@+id/tv_register"
+            android:id="@+id/tv_makesure"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -42,7 +43,8 @@
             android:layout_marginTop="40dp"
             android:text="@string/tx_makesure"
             android:textColor="#084ff5"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:clickable="true"/>
 
 
     </LinearLayout>

@@ -3,6 +3,7 @@
     package="tab.com.handsome.handsome" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <user-permission android:name="android.permission.CALL_PHONE"/>
 
     <application
         android:name="com.handsome.qhb.application.MyApplication"
@@ -13,7 +14,6 @@
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -22,6 +22,20 @@
             android:label="@string/title_activity_login" >
 
         </activity>
+        <activity android:name="com.handsome.qhb.ui.activity.RegisterActivity"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.GwcActivity"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.OrderActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.handsome.qhb.ui.activity.AddressActivity"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.AddressManagerActivity"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.UpdateDataActivity"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.OrderDetailActivity"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.UpdatePasswordActivity"></activity>
+
     </application>
 
 </manifest>

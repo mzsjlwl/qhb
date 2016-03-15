@@ -3,9 +3,11 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/update_data_top_bar"/>
-    <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <com.handsome.qhb.widget.RefreshListView
 
-    </ListView>
+        android:id="@+id/refreshlistview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </com.handsome.qhb.widget.RefreshListView>
 </LinearLayout>

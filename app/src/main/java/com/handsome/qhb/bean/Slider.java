@@ -1,9 +1,11 @@
 package com.handsome.qhb.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by zhang on 2016/3/3.
  */
-public class Slider {
+public class Slider implements Serializable {
     private int sid;
     private String image;
 

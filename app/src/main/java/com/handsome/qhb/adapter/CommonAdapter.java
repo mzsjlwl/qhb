@@ -4,9 +4,11 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
 import com.android.volley.RequestQueue;
+import com.handsome.qhb.bean.Product;
 import com.handsome.qhb.utils.ViewHolder;
 
 import java.util.List;
@@ -52,9 +54,8 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
      * @see android.widget.Adapter#getItemId(int)
      */
     @Override
-    public long getItemId(int position)
-    {
-        return position;
+    public long getItemId(int position) {
+        return 0;
     }
 
     /**
@@ -68,10 +69,16 @@ public abstract class CommonAdapter<T> extends BaseAdapter {
     {
         ViewHolder holder = ViewHolder.get(mContext, convertView, parent, mlayoutId, position,mQueue);
 
-        convert(holder, getItem(position));
+        convert(position,holder, getItem(position));
 
         return holder.getConvertView();
     }
 
-    public abstract void convert(ViewHolder holder, T t);
+
+
+
+
+
+
+    public abstract void convert(int position,ViewHolder holder, T t);
 }

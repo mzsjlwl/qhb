@@ -1,9 +1,11 @@
 package com.handsome.qhb.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by zhang on 2016/3/3.
  */
-public class Product {
+public class Product implements Serializable {
     private int pid;
     private String pname;
     private float price;
@@ -11,6 +13,7 @@ public class Product {
     private int sortId;
     private String picture;
     private String flag;
+    private int num;
 
     public int getPid() {
         return pid;
@@ -70,6 +73,15 @@ public class Product {
     public Product(){
 
     }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
     public Product(int pid,String pname,float price,String introduce,int sortId,String picture,String flag ){
         this.pid = pid;
         this.pname = pname;

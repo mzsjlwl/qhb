@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.handsome.qhb.bean.User;
 
 public class MyApplication extends Application {
 
@@ -13,6 +14,7 @@ public class MyApplication extends Application {
     public static Context getContext(){
         return context;
     }
+
 
     @Override
     public void onCreate() {

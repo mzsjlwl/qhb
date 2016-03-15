@@ -10,7 +10,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/iv_product"
+                android:id="@+id/iv_order"
                 android:src="@mipmap/test_icon"/>
         </LinearLayout>
         <LinearLayout
@@ -22,7 +22,7 @@
             android:layout_margin="5dp">
 
                 <TextView
-                    android:id="@+id/tx_pname"
+                    android:id="@+id/tx_totalMoney"
                     android:layout_alignParentLeft="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -36,8 +36,7 @@
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="5dp"
                     android:layout_marginTop="20dp"
-                    android:layout_toRightOf="@+id/btn_add"
-                    android:id="@+id/tv_num"
+                    android:id="@+id/tv_orderTime"
                     android:text="2016-12-19 22:22"
                     android:textSize="13dp"
                     />
@@ -49,6 +48,7 @@
             android:layout_margin="5dp"
             android:layout_alignParentRight="true">
             <TextView
+                android:id="@+id/tv_orderStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
