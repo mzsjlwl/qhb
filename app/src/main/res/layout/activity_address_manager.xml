@@ -32,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:background="@drawable/et_bg_border"
+            android:paddingLeft="10dp"
             />
         <TextView
             android:id="@+id/tv_recePhone"
@@ -52,7 +53,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:background="@drawable/et_bg_border"/>
+            android:background="@drawable/et_bg_border"
+            android:paddingLeft="10dp"/>
         <TextView
             android:id="@+id/tv_receAddr"
             android:layout_height="wrap_content"
@@ -72,7 +74,8 @@
             android:layout_marginTop="10dp"
             android:layout_marginLeft="30dp"
             android:layout_marginRight="30dp"
-            android:background="@drawable/et_bg_border"/>
+            android:background="@drawable/et_bg_border"
+            android:paddingLeft="10dp"/>
 
 
         <FrameLayout
@@ -91,6 +94,7 @@
             android:text="@string/tx_makesure"
             android:textSize="20dp"
             android:textColor="#084ff5"
+            android:clickable="true"
             />
         <TextView
             android:id="@+id/tv_back"
@@ -100,7 +104,8 @@
             android:layout_marginBottom="30dp"
             android:text="@string/tx_back"
             android:textColor="#084ff5"
-            android:textSize="20dp"/>
+            android:textSize="20dp"
+            android:clickable="true"/>
         <!--<Button-->
         <!--android:id="@+id/id_bt_login"-->
         <!--android:layout_width="match_parent"-->

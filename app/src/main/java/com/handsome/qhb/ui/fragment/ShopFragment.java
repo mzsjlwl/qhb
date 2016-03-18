@@ -2,6 +2,8 @@ package com.handsome.qhb.ui.fragment;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -22,8 +24,11 @@ import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.ProductAdapter;
 import com.handsome.qhb.adapter.SliderAdapter;
 import com.handsome.qhb.bean.Product;
+import com.handsome.qhb.bean.ShopCar;
 import com.handsome.qhb.bean.Slider;
 import com.handsome.qhb.config.Config;
+import com.handsome.qhb.db.UserDAO;
+import com.handsome.qhb.db.UserDBOpenHelper;
 import com.handsome.qhb.listener.OnRefreshListener;
 import com.handsome.qhb.ui.activity.GwcActivity;
 import com.handsome.qhb.ui.activity.LoginActivity;
@@ -36,8 +41,11 @@ import com.handsome.qhb.widget.RefreshListView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -69,7 +77,7 @@ public class ShopFragment extends Fragment {
     private View dot2;
     private View dot3;
     //轮播时间
-    private ScheduledExecutorService scheduledExecutorService;
+    public ScheduledExecutorService scheduledExecutorService;
 
     //商品分页Json
     private JSONObject pageJson;
@@ -86,8 +94,16 @@ public class ShopFragment extends Fragment {
     //加载商品信息消息
     private Message msg2 = new Message();
 
+    private Intent i ;
+
+    //购物车列表
+    private List<Product> shopCarList = new ArrayList<Product>();
+
     //RequestQueue对象
     private RequestQueue mQueue = RequestQueueController.getInstance();
+
+    //SQLiteDatabase
+    private SQLiteDatabase db ;
 
     // 切换当前显示的图片
     private Handler handler = new Handler() {
@@ -102,8 +118,11 @@ public class ShopFragment extends Fragment {
             } else if (msg.what == 0x125) {
                 LogUtils.d("0x125", "------>");
                 initProductList();
+            }else if(msg.what==0x126){
+                LogUtils.d("0x126","------>");
+                initProductList();
                 rListView.hideHeaderView();
-            } else if (msg.what == 0x126){
+            }else if (msg.what == 0x127){
                 LogUtils.d("0x126","------->");
                 initProductList();
                 rListView.hideFooterView();
@@ -114,60 +133,71 @@ public class ShopFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //异步加载轮播图片
-        JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Config.BASE_URL + "Slider/getJson", null,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        msg1.what = 0x124;
-                        msg1.obj = 1;
-                        try {
-                            sliderLists = gson.fromJson(response.getString("slider"), new TypeToken<List<Slider>>() {}.getType());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+        LogUtils.e("fragment", "oncreate");
+        db = UserDBOpenHelper.getInstance(getActivity()).getWritableDatabase();
+            //异步加载轮播图片
+            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Config.BASE_URL + "Slider/getJson", null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            msg1.what = 0x124;
+                            msg1.obj = 1;
+                            try {
+                                sliderLists = gson.fromJson(response.getString("slider"), new TypeToken<List<Slider>>() {}.getType());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            handler.handleMessage(msg1);
                         }
-                        handler.handleMessage(msg1);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("TAG", error.getMessage(), error);
-            }
-        });
-        //异步加载商品图片
-        JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Config.BASE_URL+"Product/getJson",null,
-                new Response.Listener<JSONObject>(){
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        msg2.what = 0x125;
-                        msg2.obj = 1;
-                        try {
-                            productLists = new ArrayList<Product>();
-                            productLists = gson.fromJson(response.getString("products"), new TypeToken<List<Product>>() {}.getType());
-                            pageJson = new JSONObject(response.getString("page"));
-                            nextpage = pageJson.getString("next");
-                            page =Integer.valueOf(pageJson.getString("nums"));
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("TAG", error.getMessage(), error);
+                }
+            });
+            mQueue.add(jsonObjectRequest1);
+            //异步加载商品图片
+            JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Config.BASE_URL+"Product/getJson",null,
+                    new Response.Listener<JSONObject>(){
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            msg2.what = 0x125;
+                            msg2.obj = 1;
+                            try {
+                                productLists = new ArrayList<Product>();
+                                //服务器端获取的product
+                                productLists = gson.fromJson(response.getString("products"), new TypeToken<List<Product>>() {}.getType());
+                                addShopCar();
+                                //存储到activity中
+                                getActivity().getIntent().putExtra("products",gson.toJson(productLists));
+                                pageJson = new JSONObject(response.getString("page"));
+                                nextpage = pageJson.getString("next");
+                                //存储到activity中
+                                getActivity().getIntent().putExtra("next",pageJson.getString("next"));
+                                page =Integer.valueOf(pageJson.getString("nums"));
+                                getActivity().getIntent().putExtra("page",pageJson.getString("nums"));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            handler.handleMessage(msg2);
 
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-                        handler.handleMessage(msg2);
-                        
-                    }
-                },new Response.ErrorListener(){
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("TAG", error.getMessage(),error);
-            }
+                    },new Response.ErrorListener(){
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.e("TAG", error.getMessage(),error);
+                }
 
-        });
-        mQueue.add(jsonObjectRequest1);
-        mQueue.add(jsonObjectRequest2);
+            });
+
+            mQueue.add(jsonObjectRequest2);
+
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        LogUtils.e("fragment", "oncreateview");
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
         dots = new ArrayList<View>();
         viewPager = (ViewPager) view.findViewById(R.id.viewPager);
@@ -182,16 +212,33 @@ public class ShopFragment extends Fragment {
         dots.add(dot3);
 
         shopCar = (ImageButton) view.findViewById(R.id.ib_shopcar);
-
         shopCar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (UserInfo.getInstance() == null) {
-                    Intent i = new Intent(getActivity(), LoginActivity.class);
+                    i = new Intent(getActivity(), LoginActivity.class);
+                    //启动登录activity
                     startActivity(i);
+                    //关闭mainactivity
+                    getActivity().finish();
                 } else {
-                    Intent i = new Intent(getActivity(), GwcActivity.class);
+                    List<Product> shopCarList = new ArrayList<Product>();
+                    //防止商品为加载就点击，出现空指针异常
+                    if(productLists==null){
+                        return;
+                    }
+                    for (Product p : productLists) {
+                        if (p.getNum() > 0) {
+                            shopCarList.add(p);
+                        }
+                    }
+                    i = new Intent(getActivity(), GwcActivity.class);
+                    Bundle b = new Bundle();
+                    b.putSerializable("shopCarList", (Serializable) shopCarList);
+                    i.putExtras(b);
+                    getActivity().setIntent(i);
                     startActivity(i);
+//                    shopCarList.clear();
                 }
             }
         });
@@ -208,6 +255,29 @@ public class ShopFragment extends Fragment {
             }
         }
         return view;
+
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if(sliderLists!=null&&sliderLists.size()!=0){
+            onStartSlider();
+            LogUtils.e("restartSlider","---->");
+        }
+        if(productLists!=null&&productLists.size()!=0){
+            String TAG = getActivity().getIntent().getStringExtra("TAG");
+            if(TAG!=null&&TAG.equals("ClearGWC")){
+
+                LogUtils.e("ClearGWC","------>");
+                clearShopCar();
+                Message msg = new Message();
+                msg.what = 0x125;
+                handler.handleMessage(msg);
+            }
+//            LogUtils.e("TAG",TAG);
+        }
+        LogUtils.e("fragment","onstart");
     }
 
     public void initSliderImage() {
@@ -234,7 +304,7 @@ public class ShopFragment extends Fragment {
     }
 
     public void initProductList() {
-        final ProductAdapter productAdapter = new ProductAdapter(getActivity(), productLists, R.layout.product_list_items,RequestQueueController.getInstance());
+         ProductAdapter productAdapter = new ProductAdapter(getActivity(), productLists, R.layout.product_list_items,RequestQueueController.getInstance());
         rListView.setAdapter(productAdapter);
         rListView.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -244,7 +314,7 @@ public class ShopFragment extends Fragment {
                             @Override
                             public void onResponse(JSONObject response) {
                                 Message msg = new Message();
-                                msg.what = 0x125;
+                                msg.what = 0x126;
                                 try {
                                     msg.obj = response.getString("products");
                                     pageJson = new JSONObject(response.getString("page"));
@@ -276,7 +346,7 @@ public class ShopFragment extends Fragment {
                             @Override
                             public void onResponse(JSONObject response) {
                                 Message msg = new Message();
-                                msg.what = 0x126;
+                                msg.what = 0x127;
                                 try {
                                     if(response.getString("products")==""){
                                         return;
@@ -305,6 +375,7 @@ public class ShopFragment extends Fragment {
         });
     }
 
+
     public void onStartSlider() {
         scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
         // 当Activity显示出来后，每两秒钟切换一次图片显示
@@ -313,8 +384,7 @@ public class ShopFragment extends Fragment {
 
     @Override
     public void onStop() {
-        // 当Activity不可见的时候停止切换
-        scheduledExecutorService.shutdown();
+        LogUtils.e("ShopFragment","onstop");
         super.onStop();
     }
 
@@ -346,5 +416,79 @@ public class ShopFragment extends Fragment {
         public void onPageScrollStateChanged(int arg0) {}
 
         public void onPageScrolled(int arg0, float arg1, int arg2) {}
+    }
+
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LogUtils.e("fragment","onResume");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        List<Product> shopCarList = new ArrayList<Product>();
+            if(productLists!=null){
+                for(Product p:productLists){
+                    if(p.getNum()>0){
+                        shopCarList.add(p);
+                    }
+                }
+                String product = gson.toJson(shopCarList);
+                if(UserInfo.getInstance()!=null) {
+                    if(UserDAO.find(db,UserInfo.getInstance().getUid())!=null){
+                        UserDAO.update(db,UserInfo.getInstance().getUid(),product);
+                    }else{
+                        UserDAO.insert(db,UserInfo.getInstance().getUid(), product);
+                    }
+
+                }
+            }
+        // 当Activity不可见的时候停止切换
+        scheduledExecutorService.shutdown();
+        LogUtils.e("fragment","onPause");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        LogUtils.e("fragment", "onDestroyView");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LogUtils.e("fragment", "onDestroy");
+    }
+
+    //获取本地购物车信息后填充商品数量
+    public void addShopCar(){
+        //本地获取的购物车
+        if(UserInfo.getInstance()!=null){
+            shopCarList = gson.fromJson(UserDAO.find(db, UserInfo.getInstance().getUid()), new TypeToken<List<Product>>() {
+            }.getType());
+            if(shopCarList!=null){
+                for(int i= 0;i<shopCarList.size();i++){
+                    for(int j = 0;j<productLists.size();j++){
+                        if(shopCarList.get(i).getPid()==productLists.get(j).getPid()){
+                            productLists.get(j).setNum(shopCarList.get(i).getNum());
+                        }
+                    }
+                }
+            }
+        }
+    }
+    public void clearShopCar(){
+        if(productLists!=null&&productLists.size()!=0){
+            for(int i = 0;i<productLists.size();i++){
+                productLists.get(i).setNum(0);
+            }
+        }
+    }
+
+    public ScheduledExecutorService getScheduledExecutorService(){
+        return this.scheduledExecutorService;
     }
 }

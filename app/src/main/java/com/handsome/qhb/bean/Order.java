@@ -1,38 +1,24 @@
 package com.handsome.qhb.bean;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 /**
  * Created by zhang on 2016/3/4.
  */
 public class Order  implements Serializable {
-    private Gson gson = new Gson();
     private int oid;
     private String products;
-    private float totalMoney;
-    private List<Products> productsList;
-
     private String receAddr;
     private String receName;
     private String recePhone;
-    private Date time;
+    private String time;
     private int state;
 
     public int getOid() {
         return oid;
-    }
-
-    public int getState() {
-        return state;
-    }
-
-    public void setState(int state) {
-        this.state = state;
     }
 
     public void setOid(int oid) {
@@ -46,29 +32,6 @@ public class Order  implements Serializable {
     public void setProducts(String products) {
         this.products = products;
     }
-
-    public float getTotalMoney() {
-        if(getProductsList()!=null){
-            for(Products products: getProductsList()){
-                totalMoney=totalMoney+products.getProduct().getPrice()*products.getNum();
-             }
-            return totalMoney;
-        }
-        return 0;
-    }
-
-
-
-    public List<Products> getProductsList() {
-        if(products!=null){
-            productsList =gson.fromJson(getProducts(), new TypeToken<List<Products>>() {
-            }.getType());
-            return productsList;
-        }
-        return null;
-    }
-
-
 
     public String getReceAddr() {
         return receAddr;
@@ -94,25 +57,30 @@ public class Order  implements Serializable {
         this.recePhone = recePhone;
     }
 
-    public Date getTime() {
+    public String getTime() {
         return time;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setTime(String time)  {
+
+        this.time= time;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
     }
 
     public Order(){
 
     }
 
-
-
-    public Order(int oid, String products, float totalMoney, List<Products> productsList, String receAddr, String receName, String recePhone, Date time,int state) {
+    public Order(int oid, String products, String receAddr, String receName, String recePhone, String time, int state) {
         this.oid = oid;
         this.products = products;
-        this.totalMoney = totalMoney;
-        this.productsList = productsList;
         this.receAddr = receAddr;
         this.receName = receName;
         this.recePhone = recePhone;
@@ -124,9 +92,7 @@ public class Order  implements Serializable {
     public String toString() {
         return "Order{" +
                 "oid=" + oid +
-                ", products='" + products + '\'' +
-                ", totalMoney=" + totalMoney +
-                ", productsList=" + productsList +
+                ", product='" + products + '\'' +
                 ", receAddr='" + receAddr + '\'' +
                 ", receName='" + receName + '\'' +
                 ", recePhone='" + recePhone + '\'' +

@@ -4,12 +4,15 @@
     android:layout_height="match_parent">
     <include layout="@layout/update_data_top_bar"/>
     <ListView
+        android:id="@+id/lv_products"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_weight="5">
     </ListView>
     <GridLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:columnCount="2">
         <TextView
             android:layout_height="wrap_content"
@@ -126,7 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_marginLeft="80dp"
             android:layout_marginTop="10dp"
-            android:id="@+id/tv_address"
+            android:id="@+id/tv_receAddr"
             android:text="梅州市嘉应学院飞马城"
             android:textSize="20dp"
             />

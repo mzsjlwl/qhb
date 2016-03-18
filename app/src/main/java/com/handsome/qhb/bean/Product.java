@@ -91,4 +91,18 @@ public class Product implements Serializable {
         this.picture = picture;
         this.flag = flag;
     }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "pid=" + pid +
+                ", pname='" + pname + '\'' +
+                ", price=" + price +
+                ", introduce='" + introduce + '\'' +
+                ", sortId=" + sortId +
+                ", picture='" + picture + '\'' +
+                ", flag='" + flag + '\'' +
+                ", num=" + num +
+                '}';
+    }
 }

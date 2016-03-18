@@ -1,6 +1,7 @@
 package com.handsome.qhb.ui.activity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.handsome.qhb.utils.RequestQueueController;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,14 +73,11 @@ public class LoginActivity extends BaseActivity  {
                                     User user =  gson.fromJson(jsonData.getString("user"),User.class);
                                     Intent i =new Intent(LoginActivity.this,MainActivity.class);
                                     Bundle b = new Bundle();
-                                    //由userFragment跳过来
-//                                    if(getIntent().getStringExtra("TAG")!=""){
-//                                        b.putString("TAG",getIntent().getStringExtra("TAG"));
-//                                        i = new Intent(LoginActivity.this,MainActivity.class);
-//                                    }else{
-//                                        i = new Intent(LoginActivity.this,GwcActivity.class);
-//                                    }
-                                    b.putSerializable("user",user);
+                                    SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
+                                    editor.putString("user",jsonData.getString("user"));
+                                    editor.putLong("date", new Date().getTime());
+                                    editor.commit();
+                                    b.putSerializable("user", user);
                                     i.putExtras(b);
                                     startActivity(i);
                                     finish();

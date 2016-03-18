@@ -38,6 +38,8 @@ public class RegisterActivity extends BaseActivity {
     private EditText et_password;
     //重复密码
     private EditText et_repeatPassword;
+    //标题
+    private TextView tv_title;
     //确定
     private TextView tv_makesure;
     //返回
@@ -52,7 +54,9 @@ public class RegisterActivity extends BaseActivity {
         et_repeatPassword = (EditText)findViewById(R.id.et_repeatPassword);
         tv_makesure = (TextView)findViewById(R.id.tv_makesure);
         tv_back = (TextView)findViewById(R.id.tv_back);
+        tv_title = (TextView) findViewById(R.id.tv_title);
 
+        tv_title.setText("用户注册");
         tv_makesure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -107,5 +111,7 @@ public class RegisterActivity extends BaseActivity {
                 startActivity(i);
             }
         });
+
+
     }
 }

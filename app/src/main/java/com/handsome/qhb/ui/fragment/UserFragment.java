@@ -13,9 +13,11 @@ import android.widget.Toast;
 
 import com.handsome.qhb.ui.activity.AddressActivity;
 import com.handsome.qhb.ui.activity.LoginActivity;
+import com.handsome.qhb.ui.activity.MainActivity;
 import com.handsome.qhb.ui.activity.OrderActivity;
 import com.handsome.qhb.ui.activity.UpdateDataActivity;
 import com.handsome.qhb.ui.activity.UpdatePasswordActivity;
+import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 
 import tab.com.handsome.handsome.R;
@@ -26,8 +28,6 @@ import tab.com.handsome.handsome.R;
  */
 
 public class UserFragment extends Fragment {
-
-
     //用户名
     private TextView tv_name;
     //积分
@@ -49,12 +49,10 @@ public class UserFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_user,container,false);
         tv_name = (TextView) view.findViewById(R.id.tv_name);
         tv_integral = (TextView)view.findViewById(R.id.tv_integral);
-
-
-
-        tv_name.setText(UserInfo.getInstance().getNackname().toString());
-        tv_integral.setText(String.valueOf(UserInfo.getInstance().getIntegral()));
-
+        if(UserInfo.getInstance()!=null) {
+            tv_name.setText(UserInfo.getInstance().getNackname().toString());
+            tv_integral.setText(String.valueOf(UserInfo.getInstance().getIntegral()));
+        }
 
         ll_update_data = (LinearLayout) view.findViewById(R.id.ll_update_data);
         ll_update_password = (LinearLayout) view.findViewById(R.id.ll_update_password);
@@ -101,6 +99,16 @@ public class UserFragment extends Fragment {
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), AddressActivity.class);
                 startActivity(i);
+            }
+        });
+
+        ll_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                UserInfo.setUser(null);
+                Intent i = new Intent(getActivity(),LoginActivity.class);
+                startActivity(i);
+                getActivity().finish();
             }
         });
         return view;

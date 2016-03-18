@@ -37,5 +37,6 @@
         android:textStyle="bold"
         android:textColor="#ffffff"
         android:text="@string/tx_add"
+        android:clickable="true"
         />
 </RelativeLayout>

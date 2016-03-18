@@ -1,6 +1,7 @@
 package com.handsome.qhb.adapter;
 
 import android.content.Context;
+import android.widget.ListView;
 
 import com.android.volley.RequestQueue;
 import com.handsome.qhb.bean.Product;
@@ -21,7 +22,7 @@ import tab.com.handsome.handsome.R;
         super(context,datas,layoutId,mQueue);
     }
     @Override
-    public void convert(int position,ViewHolder holder, Room room) {
+    public void convert(int position,ViewHolder holder,ListView listView ,Room room) {
         holder.setText(R.id.id_tv_roomName,room.getRoomName());
         holder.setText(R.id.id_tv_time, room.getRoomEndTime());
         holder.setText(R.id.id_tv_message,room.getRoomCreateTime());

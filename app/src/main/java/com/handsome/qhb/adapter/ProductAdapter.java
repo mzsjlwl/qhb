@@ -1,13 +1,16 @@
 package com.handsome.qhb.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import com.android.volley.RequestQueue;
 import com.handsome.qhb.bean.Product;
-import com.handsome.qhb.listener.OnRefreshListener;
+import com.handsome.qhb.ui.activity.LoginActivity;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.UserInfo;
 import com.handsome.qhb.utils.ViewHolder;
 
 import java.util.List;
@@ -24,35 +27,41 @@ import tab.com.handsome.handsome.R;
         super(context,datas,layoutId,mQueue);
     }
     @Override
-    public void convert(final int position,final ViewHolder holder, Product product) {
+    public void convert(final int position,final ViewHolder holder,final ListView listView, final Product product) {
         holder.setText(R.id.tx_pname, product.getPname());
         holder.setText(R.id.tx_price, String.valueOf(product.getPrice()) + "￥");
-        holder.setText(R.id.tv_num,String.valueOf(product.getNum()));
+        holder.setText(R.id.tv_num, String.valueOf(product.getNum()));
         holder.setImage(R.id.iv_product, product.getPicture());
         holder.getView(R.id.btn_add).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addNum(position);
+                if(UserInfo.getInstance()==null){
+                    Intent i = new Intent(mContext, LoginActivity.class);
+                    mContext.startActivity(i);
+                    ((Activity) mContext).finish();
+                    return;
+                }
+                addNum(listView,position);
             }
         });
         holder.getView(R.id.btn_sub).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                subNum(position);
+                subNum(listView,position);
             }
         });
     }
 
 
-    public void addNum(int position){
+    public void addNum(ListView listView,int position){
         Product product = super.mDatas.get(position);
         int num = product.getNum();
         num++;
         this.mDatas.get(position).setNum(num);
-        notifyDataSetChanged();
+        updateSingleRow(listView, position);
     }
 
-    public void subNum(int position){
+    public void subNum(ListView listView,int position){
         Product product = super.mDatas.get(position);
         int num = product.getNum();
         if(num<=0){
@@ -60,7 +69,18 @@ import tab.com.handsome.handsome.R;
         }
         num--;
         this.mDatas.get(position).setNum(num);
-        notifyDataSetChanged();
+        updateSingleRow(listView,position);
     }
+
+    private void updateSingleRow(ListView listView,int id){
+        LogUtils.e("position",String.valueOf(id));
+        if(listView!=null){
+            int start = listView.getFirstVisiblePosition();
+            View view = listView.getChildAt(id-start+1);
+            ViewHolder holder = ViewHolder.get(mContext, view, listView, mlayoutId,id,mQueue);
+            holder.setText(R.id.tv_num,String.valueOf(mDatas.get(id).getNum()));
+        }
+    }
+
 
 }

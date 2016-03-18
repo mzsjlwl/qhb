@@ -48,14 +48,7 @@ public class ViewHolder  {
         }
     }
 
-    /**
-     * 通过viewId获取控件
-     * @param viewId
-     * @return
-     * @return T
-     * @author Yann
-     * @date 2015-8-5 下午9:38:39
-     */
+
     public <T extends View>T getView(int viewId)
     {
         View view = mViews.get(viewId);
@@ -67,15 +60,7 @@ public class ViewHolder  {
         return (T) view;
     }
 
-    /**
-     * 给ID为viewId的TextView设置文字text，并返回this
-     * @param viewId
-     * @param text
-     * @return
-     * @return ViewHolder
-     * @author Yann
-     * @date 2015-8-5 下午11:05:17
-     */
+
     public ViewHolder setText(int viewId, String text)
     {
         TextView tv = getView(viewId);
