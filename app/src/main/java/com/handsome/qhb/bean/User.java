@@ -9,7 +9,7 @@ public class User implements Serializable {
     private int uid;
     private String username;
     private String nackname;
-    private int integral;
+    private float integral;
     private String photo;
     private String token;
 
@@ -37,7 +37,7 @@ public class User implements Serializable {
         this.nackname = nackname;
     }
 
-    public int getIntegral() {
+    public float getIntegral() {
         return integral;
     }
 
@@ -65,7 +65,7 @@ public class User implements Serializable {
 
     }
 
-    public User(int uid, String username, String nackname, int integral, String photo, String token) {
+    public User(int uid, String username, String nackname, float integral, String photo, String token) {
         this.uid = uid;
         this.username = username;
         this.nackname = nackname;

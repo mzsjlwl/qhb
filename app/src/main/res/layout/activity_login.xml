@@ -58,11 +58,17 @@
             android:background="@drawable/et_bg_border"
             android:paddingLeft="10dp"
             android:inputType="textPassword"/>
+        <ProgressBar
+
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="5">
+            android:layout_weight="10">
 
         </FrameLayout>
 
@@ -87,27 +93,7 @@
             android:textColor="#084ff5"
             android:textSize="20dp"
             android:clickable="true"/>
-        <!--<Button-->
-            <!--android:id="@+id/id_bt_login"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="登陆" />-->
 
-        <!--<Button-->
-            <!--android:id="@+id/id_bt_register"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="注册" />-->
-        <!--<CheckBox-->
-            <!--android:id="@+id/id_cb_savePassword"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="记住密码"/>-->
-        <!--<CheckBox-->
-            <!--android:id="@+id/id_cb_autoLogin"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="自动登陆"/>-->
 
     </LinearLayout>
 </LinearLayout>

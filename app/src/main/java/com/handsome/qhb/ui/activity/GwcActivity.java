@@ -1,9 +1,11 @@
 package com.handsome.qhb.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -64,6 +66,7 @@ public class GwcActivity extends BaseActivity {
     private TextView tv_totalPrice;
     private Button btn_sub;
     private EditText et_liuyan;
+    private float totalPrice = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +83,7 @@ public class GwcActivity extends BaseActivity {
         btn_sub = (Button)findViewById(R.id.btn_sub);
         et_liuyan = (EditText) findViewById(R.id.et_liuyan);
         shopCarList = (List<Product>)getIntent().getSerializableExtra("shopCarList");
-        float totalPrice = 0;
+
         if(shopCarList!=null) {
             for (int i = 0; i < shopCarList.size(); i++) {
                     totalPrice = totalPrice+shopCarList.get(i).getPrice()*shopCarList.get(i).getNum();
@@ -120,18 +123,31 @@ public class GwcActivity extends BaseActivity {
 
             @Override
             public void onClick(View view) {
-                if(shopCarList.size()<=0){
-                    LogUtils.e("shopCarList","null");
-                    Toast.makeText(GwcActivity.this,"你的购物车为空,请添加商品",Toast.LENGTH_LONG).show();
-                    return ;
-                }else{
-                    LogUtils.e("shopCarList",String.valueOf(shopCarList.size()));
+                if(UserInfo.getInstance()==null){
+                    return;
                 }
+                else if(shopCarList.size()<=0){
+                    LogUtils.e("shopCarList", "null");
+                    Toast toast = Toast.makeText(GwcActivity.this, "你的购物车为空,请添加商品", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.show();
+                    return ;
+                }else if(UserInfo.getInstance()!=null&&UserInfo.getInstance().getIntegral()<totalPrice){
+                    Toast toast =Toast.makeText(GwcActivity.this, "金额不足,请充值", Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.show();
+                    return;
+                }
+                final ProgressDialog progressDialog = new ProgressDialog(GwcActivity.this);
+                progressDialog.setMessage("提交中");
+                progressDialog.setCancelable(true);
+                progressDialog.show();
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Order/insert",
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 try {
+                                    progressDialog.dismiss();
                                     JSONObject jsonObject = new JSONObject(response);
                                     String status = jsonObject.getString("status");
                                     if(status == "0"){

@@ -1,5 +1,6 @@
 package com.handsome.qhb.ui.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,6 +26,8 @@ import com.handsome.qhb.utils.RequestQueueController;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,11 +61,17 @@ public class LoginActivity extends BaseActivity  {
             @Override
             public void onClick(View view) {
 
+                final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
+                progressDialog.setMessage("登录中");
+                progressDialog.setCancelable(true);
+                progressDialog.show();
                 StringRequest stringRequest = new StringRequest(Request.Method.POST,Config.BASE_URL+"User/login",
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 try {
+                                    progressDialog.dismiss();
+                                    LogUtils.e("response",response);
                                     JSONObject jsonObject = new JSONObject(response);
                                     String status = jsonObject.getString("status");
                                     if(status == "0"){
@@ -98,6 +107,8 @@ public class LoginActivity extends BaseActivity  {
                         Map<String, String> map = new HashMap<String, String>();
                         map.put("username",et_telphone.getText().toString());
                         map.put("password",et_password.getText().toString());
+                        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                        map.put("lastLoginTime", dateFormat.format(new Date()));
                         return map;
                     }
                 };

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#363636">
+        <ImageButton
+            android:id="@+id/ib_back"
+            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:scaleType="fitXY"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="12dp"
+            android:background="@mipmap/zf_back_btn"
+            ></ImageButton>
+
+        <TextView
+
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_toRightOf="@+id/ib_back"
+            android:layout_marginLeft="1dp"
+            android:gravity="center_vertical|center"
+            android:text="@string/tx_user_info"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_toRightOf="@+id/ib_back"
+            android:layout_marginLeft="1dp"
+            android:gravity="center_vertical|center"
+            android:text="@string/tx_user_photo"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            />
+
+        <ImageButton
+            android:id="@+id/ib_photo_menu"
+            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:scaleType="fitXY"
+            android:layout_alignParentRight="true"
+            android:layout_margin="12dp"
+            android:background="@mipmap/ic_launcher"
+            >
+        </ImageButton>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/iv_user_photo"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_centerInParent="true"
+        android:scaleType="fitXY"
+        android:background="#ffffff"
+        />
+    </RelativeLayout>
+</LinearLayout>
