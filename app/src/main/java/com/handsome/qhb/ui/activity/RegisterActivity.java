@@ -1,9 +1,12 @@
 package com.handsome.qhb.ui.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -64,6 +67,10 @@ public class RegisterActivity extends BaseActivity {
                     Toast.makeText(RegisterActivity.this, "两次密码不一致", Toast.LENGTH_LONG).show();
                     return;
                 }
+                ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
+                progressDialog.setMessage("注册中");
+                progressDialog.setCancelable(true);
+                progressDialog.show();
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"User/register",
                         new Response.Listener<String>() {
                             @Override
@@ -72,9 +79,14 @@ public class RegisterActivity extends BaseActivity {
                                     JSONObject jsonObject = new JSONObject(response);
                                     String status = jsonObject.getString("status");
                                     if(status == "0"){
-                                        Toast.makeText(RegisterActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
+                                        Toast toast = Toast.makeText(RegisterActivity.this,jsonObject.getString("info"),Toast.LENGTH_LONG);
+                                        toast.setGravity(Gravity.CENTER,0,0);
+                                        toast.show();
                                         return;
                                     }
+                                    Toast toast = Toast.makeText(RegisterActivity.this,"注册成功,请登录",Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
                                     Intent i = new Intent(RegisterActivity.this,LoginActivity.class);
                                     startActivity(i);
                                     finish();

@@ -51,4 +51,6 @@
     <string name="tx_orderStatus">订单状态</string>
     <string name="tx_orderId">订单号码</string>
     <string name="tx_orderTime">下单时间</string>
+    <string name="tx_user_info">个人信息</string>
+    <string name="tx_user_photo">个人头像</string>
 </resources>

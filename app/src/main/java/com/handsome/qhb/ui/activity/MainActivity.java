@@ -97,6 +97,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 //        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (v.getId()){
             case R.id.tv_shop:
+                shopFragment.getScheduledExecutorService().shutdown();
                 shopFragment.onStartSlider();
                 fragmentController.showFragment(0);
                 break;
