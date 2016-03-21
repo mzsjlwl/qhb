@@ -1,8 +1,10 @@
 package com.handsome.qhb.ui.activity;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -57,7 +59,7 @@ public class UpdatePhotoActivity extends BaseActivity {
     private static final int PHOTO_REQUEST_CUT = 3;
     //ImageView
     private ImageView iv_user_photo;
-    private Bitmap bitmap;
+    private File img;
     private String photo;
     private Gson gson = new Gson();
     @Override
@@ -106,7 +108,7 @@ public class UpdatePhotoActivity extends BaseActivity {
                 if(extras!=null){
                     Bitmap bm = extras.getParcelable("data");
                     Uri uri = saveBitmap(bm);
-                    crop(uri);
+                    crop(uri,PHOTO_REQUEST_CAMERA);
                 }
             }
         }else if(requestCode==PHOTO_REQUEST_GALLERY){
@@ -115,29 +117,43 @@ public class UpdatePhotoActivity extends BaseActivity {
             }
             Uri uri ;
             uri = data.getData();
-//            Uri fileUri = convertUri(uri);
-            crop(uri);
+            Uri fileUri = convertUri(uri);
+            crop(fileUri,PHOTO_REQUEST_GALLERY);
         }else if(requestCode==PHOTO_REQUEST_CUT){
             if(data==null){
                 return;
             }
             Bundle extras = data.getExtras();
             Bitmap bm = extras.getParcelable("data");
+//            LogUtils.e("data",extras.getString("data"));
+            int i = extras.getInt("qubie");
+            LogUtils.e("i",String.valueOf(i));
+            if(i!=0){
+                LogUtils.e("i",String.valueOf(i));
+                if(i==PHOTO_REQUEST_GALLERY){
+                    img.delete();
+                }
+            }
             iv_user_photo.setImageBitmap(bm);
             sendImage(bm);
         }
     }
 
+    /**
+     * 保存图片到sd卡
+     * @param bm
+     * @return
+     */
     private Uri saveBitmap(Bitmap bm){
         File tmpDir = new File(Environment.getExternalStorageDirectory()+"/photo");
-        if(!tmpDir.exists()){
+        if(!tmpDir.exists()) {
             tmpDir.mkdir();
-            LogUtils.e("mkdir","=======>");
+            LogUtils.e("mkdir", "=======>");
         }
-        File img = new File(tmpDir,System.currentTimeMillis()+".png");
+        img = new File(tmpDir,System.currentTimeMillis()+".png");
         try{
             FileOutputStream fos = new FileOutputStream(img);
-            bm.compress(Bitmap.CompressFormat.PNG,85,fos);
+            bm.compress(Bitmap.CompressFormat.PNG, 85, fos);
             fos.flush();
             fos.close();
             return Uri.fromFile(img);
@@ -150,6 +166,10 @@ public class UpdatePhotoActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 图片发送
+     * @param bm
+     */
     private void sendImage(Bitmap bm){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.PNG,60,stream);
@@ -170,7 +190,7 @@ public class UpdatePhotoActivity extends BaseActivity {
                                 return;
                             }
                             User user =  gson.fromJson(jsonObject.getString("data"),User.class);
-
+                            UserInfo.setUser(user);
                             Toast toast = Toast.makeText(UpdatePhotoActivity.this,jsonObject.getString("info"),Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER,0,0);
                             toast.show();
@@ -179,7 +199,7 @@ public class UpdatePhotoActivity extends BaseActivity {
 //                            editor.putLong("date", new Date().getTime());
 //                            editor.commit();
 
-                            finish();
+//                            finish();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -203,6 +223,11 @@ public class UpdatePhotoActivity extends BaseActivity {
         RequestQueueController.getInstance().add(stringRequest);
     }
 
+    /**
+     * Uri
+     * @param uri
+     * @return
+     */
     private Uri convertUri(Uri uri){
         InputStream is = null;
         try {
@@ -247,7 +272,7 @@ public class UpdatePhotoActivity extends BaseActivity {
      * 剪切图片
      * @param uri
      */
-    private void crop(Uri uri) {
+    private void crop(Uri uri,int i) {
         // 裁剪图片意图
         Intent intent = new Intent("com.android.camera.action.CROP");
         intent.setDataAndType(uri, "image/*");
@@ -263,6 +288,7 @@ public class UpdatePhotoActivity extends BaseActivity {
 //        // 取消人脸识别
 //        intent.putExtra("noFaceDetection", true);
         // true:不返回uri，false：返回uri
+        intent.putExtra("qubie",i);
         intent.putExtra("return-data", true);
         startActivityForResult(intent, PHOTO_REQUEST_CUT);
     }
