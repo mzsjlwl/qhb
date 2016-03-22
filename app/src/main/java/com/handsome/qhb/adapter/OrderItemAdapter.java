@@ -23,7 +23,7 @@ public class OrderItemAdapter extends  CommonAdapter<Products> {
     @Override
     public void convert(int position, ViewHolder holder,ListView listView, Products products) {
         holder.setText(R.id.tv_pname,products.getProduct().getPname());
-        holder.setText(R.id.tv_num,String.valueOf(products.getNum()));
+        holder.setText(R.id.tv_num,"X "+String.valueOf(products.getNum()));
         holder.setText(R.id.tv_price,String.valueOf(products.getProduct().getPrice()*products.getNum()));
     }
 }

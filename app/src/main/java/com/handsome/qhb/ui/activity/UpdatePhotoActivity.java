@@ -1,10 +1,8 @@
 package com.handsome.qhb.ui.activity;
 
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -27,6 +25,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
+import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.RequestQueueController;
 import com.handsome.qhb.utils.UserInfo;
@@ -69,7 +68,7 @@ public class UpdatePhotoActivity extends BaseActivity {
         ib_back = (ImageButton) findViewById(R.id.ib_back);
         ib_photo_menu = (ImageButton)findViewById(R.id.ib_photo_menu);
         iv_user_photo = (ImageView)findViewById(R.id.iv_user_photo);
-        iv_user_photo.setImageResource(R.mipmap.test_icon);
+        ImageUtils.imageLoader(RequestQueueController.getInstance(),UserInfo.getInstance().getPhoto(),iv_user_photo);
         ib_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -125,15 +124,6 @@ public class UpdatePhotoActivity extends BaseActivity {
             }
             Bundle extras = data.getExtras();
             Bitmap bm = extras.getParcelable("data");
-//            LogUtils.e("data",extras.getString("data"));
-            int i = extras.getInt("qubie");
-            LogUtils.e("i",String.valueOf(i));
-            if(i!=0){
-                LogUtils.e("i",String.valueOf(i));
-                if(i==PHOTO_REQUEST_GALLERY){
-                    img.delete();
-                }
-            }
             iv_user_photo.setImageBitmap(bm);
             sendImage(bm);
         }
@@ -180,7 +170,7 @@ public class UpdatePhotoActivity extends BaseActivity {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            LogUtils.e("response",response);
+                            LogUtils.e("response", response);
                             JSONObject jsonObject = new JSONObject(response);
                             String status = jsonObject.getString("status");
                             if(status == "0"){
@@ -189,8 +179,10 @@ public class UpdatePhotoActivity extends BaseActivity {
                                 toast.show();
                                 return;
                             }
+                            img.delete();
                             User user =  gson.fromJson(jsonObject.getString("data"),User.class);
                             UserInfo.setUser(user);
+                            LogUtils.e("user-refresh",user.toString());
                             Toast toast = Toast.makeText(UpdatePhotoActivity.this,jsonObject.getString("info"),Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER,0,0);
                             toast.show();
@@ -288,7 +280,6 @@ public class UpdatePhotoActivity extends BaseActivity {
 //        // 取消人脸识别
 //        intent.putExtra("noFaceDetection", true);
         // true:不返回uri，false：返回uri
-        intent.putExtra("qubie",i);
         intent.putExtra("return-data", true);
         startActivityForResult(intent, PHOTO_REQUEST_CUT);
     }
@@ -303,5 +294,11 @@ public class UpdatePhotoActivity extends BaseActivity {
         } else {
             return false;
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 }

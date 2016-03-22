@@ -1,17 +1,8 @@
 package com.handsome.qhb.ui.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -25,12 +16,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.handsome.qhb.bean.IdNum;
-import com.handsome.qhb.bean.OrderJson;
-import com.handsome.qhb.bean.Product;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
-import com.handsome.qhb.db.UserDAO;
+import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.RequestQueueController;
 import com.handsome.qhb.utils.UserInfo;
@@ -38,12 +26,7 @@ import com.handsome.qhb.utils.UserInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import tab.com.handsome.handsome.R;
@@ -74,7 +57,7 @@ public class UpdateDataActivity extends BaseActivity {
         et_nackname = (EditText)findViewById(R.id.et_nackname);
         tv_makesure = (TextView)findViewById(R.id.tv_makesure);
         iv_user_photo = (ImageView)findViewById(R.id.iv_user_photo);
-
+        ImageUtils.imageLoader(RequestQueueController.getInstance(),UserInfo.getInstance().getPhoto(),iv_user_photo);
         et_nackname.setText(UserInfo.getInstance().getNackname());
 
         ib_back.setOnClickListener(new View.OnClickListener() {

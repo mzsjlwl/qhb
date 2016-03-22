@@ -1,5 +1,6 @@
 package com.handsome.qhb.ui.activity;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -137,6 +138,14 @@ public class GwcActivity extends BaseActivity {
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
                     return;
+                }else if(tv_receAddr.getText().toString().equals("收货地址")
+                        ||tv_recePhone.getText().toString().equals("手机号码")
+                        ||tv_receName.getText().toString().equals("收货地址")){
+                    Toast toast = Toast.makeText(GwcActivity.this,"请填写收货信息",Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                    return ;
+
                 }
                 final ProgressDialog progressDialog = new ProgressDialog(GwcActivity.this);
                 progressDialog.setMessage("提交中");
@@ -156,6 +165,10 @@ public class GwcActivity extends BaseActivity {
                                     }
                                     LogUtils.e("data", jsonObject.getString("data"));
                                     UserDAO.update(db, UserInfo.getInstance().getUid(), "");
+                                    UserInfo.getInstance().setIntegral(UserInfo.getInstance().getIntegral() - totalPrice);
+                                    Toast toast = Toast.makeText(GwcActivity.this,"提交成功",Toast.LENGTH_LONG);
+                                    toast.setGravity(Gravity.CENTER,0,0);
+                                    toast.show();
                                     Intent i = new Intent(GwcActivity.this,MainActivity.class);
                                     i.putExtra("TAG", "ClearGWC");
                                     i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

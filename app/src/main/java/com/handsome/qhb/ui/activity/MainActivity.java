@@ -26,6 +26,8 @@ import com.handsome.qhb.ui.fragment.UserFragment;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -97,13 +99,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 //        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (v.getId()){
             case R.id.tv_shop:
-                shopFragment.getScheduledExecutorService().shutdown();
-                shopFragment.onStartSlider();
-                fragmentController.showFragment(0);
+                if(shopFragment!=null) {
+                    shopFragment.getScheduledExecutorService().shutdown();
+                    shopFragment.onStartSlider();
+                    fragmentController.showFragment(0);
+                }
                 break;
             case R.id.tv_hall:
-                shopFragment.getScheduledExecutorService().shutdown();
-                fragmentController.showFragment(1);
+                if(shopFragment!=null){
+                    shopFragment.getScheduledExecutorService().shutdown();
+                    fragmentController.showFragment(1);
+                }
                 break;
             case R.id.tv_user:
                 if(UserInfo.getInstance()==null){
@@ -111,8 +117,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     startActivity(i);
                     finish();
                 }else{
-                    shopFragment.getScheduledExecutorService().shutdown();
-                    fragmentController.showFragment(2);
+                    if(shopFragment!=null) {
+                        shopFragment.getScheduledExecutorService().shutdown();
+                        fragmentController.showFragment(2);
+                    }
                 }
                 break;
         }
@@ -152,6 +160,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     protected void onDestroy() {
         super.onDestroy();
         LogUtils.e("activity", "onDestroy");
+        SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
+        editor.putString("user", gson.toJson(UserInfo.getInstance()));
+        editor.putLong("date", new Date().getTime());
+        editor.commit();
     }
 
 

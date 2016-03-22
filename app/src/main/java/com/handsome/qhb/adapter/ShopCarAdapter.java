@@ -22,7 +22,7 @@ public class ShopCarAdapter extends CommonAdapter<Product> {
     @Override
     public void convert(int position, ViewHolder holder,ListView listView, Product product) {
         holder.setText(R.id.tv_pname,product.getPname());
-        holder.setText(R.id.tv_num,String.valueOf(product.getNum()));
+        holder.setText(R.id.tv_num,"X "+String.valueOf(product.getNum()));
         holder.setText(R.id.tv_price,String.valueOf(product.getNum()*product.getPrice()));
     }
 }

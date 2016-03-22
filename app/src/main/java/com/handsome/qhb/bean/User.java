@@ -41,7 +41,7 @@ public class User implements Serializable {
         return integral;
     }
 
-    public void setIntegral(int integral) {
+    public void setIntegral(float integral) {
         this.integral = integral;
     }
 

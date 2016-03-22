@@ -3,16 +3,32 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <include layout="@layout/update_data_top_bar"/>
-    <ListView
-        android:id="@+id/lv_products"
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="5">
-    </ListView>
+        android:layout_height="wrap_content">
+        <com.handsome.qhb.widget.ListViewForScrollView
+            android:id="@+id/lv_products"
+            android:layout_marginTop="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            >
+        </com.handsome.qhb.widget.ListViewForScrollView>
+    <!--<ListView-->
+        <!--android:id=""-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!-->-->
+    <!--</ListView>-->
     <GridLayout
+        android:layout_weight="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
         android:columnCount="2">
         <TextView
             android:layout_height="wrap_content"
@@ -135,4 +151,6 @@
             />
 
     </GridLayout>
+    </LinearLayout>
+    </ScrollView>
 </LinearLayout>

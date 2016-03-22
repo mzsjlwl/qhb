@@ -22,7 +22,9 @@ import com.handsome.qhb.ui.activity.OrderActivity;
 import com.handsome.qhb.ui.activity.UpdateDataActivity;
 import com.handsome.qhb.ui.activity.UpdatePasswordActivity;
 import com.handsome.qhb.ui.activity.UpdatePhotoActivity;
+import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.RequestQueueController;
 import com.handsome.qhb.utils.UserInfo;
 
 import tab.com.handsome.handsome.R;
@@ -68,7 +70,10 @@ public class UserFragment extends Fragment {
         ll_address = (LinearLayout)view.findViewById(R.id.ll_address);
         ll_logout = (LinearLayout)view.findViewById(R.id.ll_logout);
         iv_user_photo = (ImageView)view.findViewById(R.id.iv_user_photo);
-        iv_user_photo.setOnClickListener(new View.OnClickListener() {
+        if(UserInfo.getInstance()!=null) {
+            ImageUtils.imageLoader(RequestQueueController.getInstance(), UserInfo.getInstance().getPhoto(), iv_user_photo);
+        }
+            iv_user_photo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(getActivity(), UpdatePhotoActivity.class);
@@ -142,5 +147,15 @@ public class UserFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(UserInfo.getInstance()!=null) {
+            ImageUtils.imageLoader(RequestQueueController.getInstance(),UserInfo.getInstance().getPhoto(),iv_user_photo);
+            tv_name.setText(UserInfo.getInstance().getNackname().toString());
+            tv_integral.setText(String.valueOf(UserInfo.getInstance().getIntegral()));
+        }
     }
 }
