@@ -23,11 +23,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
+import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.RequestQueueController;
 import com.handsome.qhb.utils.UserInfo;
 
 import org.json.JSONException;
@@ -68,7 +68,7 @@ public class UpdatePhotoActivity extends BaseActivity {
         ib_back = (ImageButton) findViewById(R.id.ib_back);
         ib_photo_menu = (ImageButton)findViewById(R.id.ib_photo_menu);
         iv_user_photo = (ImageView)findViewById(R.id.iv_user_photo);
-        ImageUtils.imageLoader(RequestQueueController.getInstance(),UserInfo.getInstance().getPhoto(),iv_user_photo);
+        ImageUtils.imageLoader(MyApplication.getmQueue(),UserInfo.getInstance().getPhoto(),iv_user_photo);
         ib_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -212,7 +212,7 @@ public class UpdatePhotoActivity extends BaseActivity {
                 return map;
             }
         };
-        RequestQueueController.getInstance().add(stringRequest);
+        MyApplication.getmQueue().add(stringRequest);
     }
 
     /**

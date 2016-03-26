@@ -16,11 +16,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.RequestQueueController;
 import com.handsome.qhb.utils.UserInfo;
 
 import org.json.JSONException;
@@ -57,7 +57,7 @@ public class UpdateDataActivity extends BaseActivity {
         et_nackname = (EditText)findViewById(R.id.et_nackname);
         tv_makesure = (TextView)findViewById(R.id.tv_makesure);
         iv_user_photo = (ImageView)findViewById(R.id.iv_user_photo);
-        ImageUtils.imageLoader(RequestQueueController.getInstance(),UserInfo.getInstance().getPhoto(),iv_user_photo);
+        ImageUtils.imageLoader(MyApplication.getmQueue(),UserInfo.getInstance().getPhoto(),iv_user_photo);
         et_nackname.setText(UserInfo.getInstance().getNackname());
 
         ib_back.setOnClickListener(new View.OnClickListener() {
@@ -105,7 +105,7 @@ public class UpdateDataActivity extends BaseActivity {
                         return map;
                     }
                 };
-                RequestQueueController.getInstance().add(stringRequest);
+                MyApplication.getmQueue().add(stringRequest);
             }
         });
 

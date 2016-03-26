@@ -15,15 +15,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
-import com.handsome.qhb.bean.User;
+import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.config.Config;
-import com.handsome.qhb.utils.RequestQueueController;
 import com.handsome.qhb.utils.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,6 +32,7 @@ import tab.com.handsome.handsome.R;
  */
 
 public class UpdatePasswordActivity extends BaseActivity {
+
     //标题
     private TextView tv_title;
     //返回键
@@ -94,7 +93,6 @@ public class UpdatePasswordActivity extends BaseActivity {
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-
                                 }
                             }, new Response.ErrorListener() {
                         @Override
@@ -113,7 +111,7 @@ public class UpdatePasswordActivity extends BaseActivity {
                             return map;
                         }
                     };
-                    RequestQueueController.getInstance().add(stringRequest);
+                    MyApplication.getmQueue().add(stringRequest);
                 }
             }
         });

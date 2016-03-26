@@ -1,8 +1,7 @@
 package com.handsome.qhb.config;
 
 public class Config {
-
-    public static final String BASE_URL = "http://192.168.111.106:8033/QHB2/";
+    public static final String BASE_URL = "http://192.168.111.107/QHB/";
 
 
 //    public static final String BASE_IMAGE_URL = "http://10.0.3.2/QHB1/public/upload/";
@@ -10,7 +9,28 @@ public class Config {
 
 
     public static final String FINDROOM_URL = "http://192.168.0.110:8033/QHB/Room/findRoom";
-//
+    //
     public static final String USER_TAG = "user";
     public static final String ORDER_TAG = "order";
+    public static final long ACCESSID = 2100189658;
+    public static final String ACCESSKEY = "AQV87R7CL46K";
+    public static final String SECRETKEY = "92319602671d73ebab46ff60537e3754";
+
+    public static final int SLIDER_PICTURE = 1;
+    public static final int INIT_SLIDER_PICTURE = 2;
+    public static final int INIT_PRODUCT = 3;
+    public static final int REFERSH_PRODUCT = 4;
+    public static final int LoadMORE_PRODUCT = 5;
+    public static final int INITROOM_MESSAGE = 6;
+    public static final int ROOM_MESSAGE = 7;
+    public static final int CHAT_MESSAGE = 8;
+
+    public static final String XG_PUSH_URL = "http://openapi.xg.qq.com/v2/push/";
+
+    public static final int CHAT_FROM_MSG = 1;
+    public static final int CHAT_SEND_MSG = 0;
+
+
+    public static final int TYPE_NOTIFICATION =1;
+    public static final int TYPE_MESSAGE = 2;
 }

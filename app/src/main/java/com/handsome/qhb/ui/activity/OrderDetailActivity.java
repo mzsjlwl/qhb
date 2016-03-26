@@ -2,7 +2,6 @@ package com.handsome.qhb.ui.activity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -10,11 +9,9 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.OrderItemAdapter;
-import com.handsome.qhb.adapter.ShopCarAdapter;
+import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.Order;
-import com.handsome.qhb.bean.Product;
 import com.handsome.qhb.bean.Products;
-import com.handsome.qhb.utils.RequestQueueController;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +71,7 @@ public class OrderDetailActivity extends BaseActivity{
             String totalMoney = getIntent().getStringExtra("totalMoney");
             List<Products> productsList = new ArrayList<Products>();
             productsList = gson.fromJson(order.getProducts(),new TypeToken<List<Products>>(){}.getType());
-            OrderItemAdapter orderItemAdapter = new OrderItemAdapter(this,productsList,R.layout.gwc_list_items,RequestQueueController.getInstance());
+            OrderItemAdapter orderItemAdapter = new OrderItemAdapter(this,productsList,R.layout.gwc_list_items, MyApplication.getmQueue());
             lv_products.setAdapter(orderItemAdapter);
             tv_totalMoney.setText(totalMoney);
             if(order.getState()==0){

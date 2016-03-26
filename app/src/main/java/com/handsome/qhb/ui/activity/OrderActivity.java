@@ -15,11 +15,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.OrderAdapter;
+import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.Order;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.listener.OnRefreshListener;
 import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.RequestQueueController;
 import com.handsome.qhb.utils.UserInfo;
 import com.handsome.qhb.widget.RefreshListView;
 
@@ -122,11 +122,11 @@ public class OrderActivity extends BaseActivity {
                 Log.e("TAG", error.getMessage(), error);
             }
         });
-        RequestQueueController.getInstance().add(jsonObjectRequest);
+        MyApplication.getmQueue().add(jsonObjectRequest);
     }
 
     public void initOrderListView(){
-         OrderAdapter orderAdapter = new OrderAdapter(this,orderList,R.layout.order_list_items,RequestQueueController.getInstance());
+         OrderAdapter orderAdapter = new OrderAdapter(this,orderList,R.layout.order_list_items,MyApplication.getmQueue());
         if(orderAdapter!=null){
             refreshListView.setAdapter(orderAdapter);
             refreshListView.setOnRefreshListener(new OnRefreshListener() {
@@ -157,7 +157,7 @@ public class OrderActivity extends BaseActivity {
                             Log.e("TAG", error.getMessage(), error);
                         }
                     });
-                    RequestQueueController.getInstance().add(jsonObjectRequest);
+                    MyApplication.getmQueue().add(jsonObjectRequest);
                 }
                 @Override
                 public void onLoadingMore() {
@@ -197,7 +197,7 @@ public class OrderActivity extends BaseActivity {
                                 Log.e("TAG", error.getMessage(), error);
                             }
                         });
-                        RequestQueueController.getInstance().add(jsonObjectRequest);
+                        MyApplication.getmQueue().add(jsonObjectRequest);
                     }
                     }
 

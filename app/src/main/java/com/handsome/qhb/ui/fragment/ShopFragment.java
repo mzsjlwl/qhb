@@ -2,7 +2,6 @@ package com.handsome.qhb.ui.fragment;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,8 +22,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.ProductAdapter;
 import com.handsome.qhb.adapter.SliderAdapter;
+import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.Product;
-import com.handsome.qhb.bean.ShopCar;
 import com.handsome.qhb.bean.Slider;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.UserDAO;
@@ -34,7 +33,6 @@ import com.handsome.qhb.ui.activity.GwcActivity;
 import com.handsome.qhb.ui.activity.LoginActivity;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.RequestQueueController;
 import com.handsome.qhb.utils.UserInfo;
 import com.handsome.qhb.widget.RefreshListView;
 
@@ -43,9 +41,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -100,7 +96,7 @@ public class ShopFragment extends Fragment {
     private List<Product> shopCarList = new ArrayList<Product>();
 
     //RequestQueue对象
-    private RequestQueue mQueue = RequestQueueController.getInstance();
+    private RequestQueue mQueue = MyApplication.getmQueue();
 
     //SQLiteDatabase
     private SQLiteDatabase db ;
@@ -108,89 +104,90 @@ public class ShopFragment extends Fragment {
     // 切换当前显示的图片
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
-            if (msg.what == 0x123) {
+            if (msg.what == Config.SLIDER_PICTURE) {
                 LogUtils.d("0x123", "----->");
-                viewPager.setCurrentItem(currentItem);// 切换当前显示的图片
-            } else if (msg.what == 0x124) {
+                viewPager.setCurrentItem(currentItem,true);// 切换当前显示的图片
+            } else if (msg.what == Config.INIT_SLIDER_PICTURE) {
                 LogUtils.d("0x124", "----->");
                 initSliderImage();
                 initSliderdots();
-            } else if (msg.what == 0x125) {
+            } else if (msg.what == Config.INIT_PRODUCT) {
                 LogUtils.d("0x125", "------>");
                 initProductList();
-            }else if(msg.what==0x126){
+            }else if(msg.what==Config.REFERSH_PRODUCT){
                 LogUtils.d("0x126","------>");
                 initProductList();
                 rListView.hideHeaderView();
-            }else if (msg.what == 0x127){
-                LogUtils.d("0x126","------->");
+            }else if (msg.what == Config.LoadMORE_PRODUCT){
+                LogUtils.d("0x127","------->");
                 initProductList();
                 rListView.hideFooterView();
             }
         }
     };
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogUtils.e("fragment", "oncreate");
         db = UserDBOpenHelper.getInstance(getActivity()).getWritableDatabase();
-            //异步加载轮播图片
-            JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Config.BASE_URL + "Slider/getJson", null,
-                    new Response.Listener<JSONObject>() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            msg1.what = 0x124;
-                            msg1.obj = 1;
-                            try {
-                                sliderLists = gson.fromJson(response.getString("slider"), new TypeToken<List<Slider>>() {}.getType());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            handler.handleMessage(msg1);
+        //异步加载轮播图片
+        JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Config.BASE_URL + "Slider/getJson", null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        msg1.what = Config.INIT_SLIDER_PICTURE;
+                        msg1.obj = 1;
+                        try {
+                            sliderLists = gson.fromJson(response.getString("slider"), new TypeToken<List<Slider>>() {}.getType());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("TAG", error.getMessage(), error);
-                }
-            });
-            mQueue.add(jsonObjectRequest1);
-            //异步加载商品图片
-            JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Config.BASE_URL+"Product/getJson",null,
-                    new Response.Listener<JSONObject>(){
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            msg2.what = 0x125;
-                            msg2.obj = 1;
-                            try {
-                                productLists = new ArrayList<Product>();
-                                //服务器端获取的product
-                                productLists = gson.fromJson(response.getString("products"), new TypeToken<List<Product>>() {}.getType());
-                                addShopCar();
-                                //存储到activity中
-                                getActivity().getIntent().putExtra("products",gson.toJson(productLists));
-                                pageJson = new JSONObject(response.getString("page"));
-                                nextpage = pageJson.getString("next");
-                                //存储到activity中
-                                getActivity().getIntent().putExtra("next",pageJson.getString("next"));
-                                page =Integer.valueOf(pageJson.getString("nums"));
-                                getActivity().getIntent().putExtra("page",pageJson.getString("nums"));
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            handler.handleMessage(msg2);
-
+                        handler.handleMessage(msg1);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", error.getMessage(), error);
+            }
+        });
+        mQueue.add(jsonObjectRequest1);
+        //异步加载商品图片
+        JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Config.BASE_URL+"Product/getJson",null,
+                new Response.Listener<JSONObject>(){
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        msg2.what = Config.INIT_PRODUCT;
+                        msg2.obj = 1;
+                        try {
+                            productLists = new ArrayList<Product>();
+                            //服务器端获取的product
+                            productLists = gson.fromJson(response.getString("products"), new TypeToken<List<Product>>() {}.getType());
+                            addShopCar();
+                            //存储到activity中
+                            getActivity().getIntent().putExtra("products",gson.toJson(productLists));
+                            pageJson = new JSONObject(response.getString("page"));
+                            nextpage = pageJson.getString("next");
+                            //存储到activity中
+                            getActivity().getIntent().putExtra("next",pageJson.getString("next"));
+                            page =Integer.valueOf(pageJson.getString("nums"));
+                            getActivity().getIntent().putExtra("page",pageJson.getString("nums"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    },new Response.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("TAG", error.getMessage(),error);
-                }
+                        handler.handleMessage(msg2);
 
-            });
+                    }
+                },new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", error.getMessage(),error);
+            }
 
-            mQueue.add(jsonObjectRequest2);
+        });
+
+        mQueue.add(jsonObjectRequest2);
 
     }
 
@@ -272,7 +269,7 @@ public class ShopFragment extends Fragment {
                 LogUtils.e("ClearGWC","------>");
                 clearShopCar();
                 Message msg = new Message();
-                msg.what = 0x125;
+                msg.what = Config.INIT_PRODUCT;
                 handler.handleMessage(msg);
             }
 //            LogUtils.e("TAG",TAG);
@@ -285,7 +282,7 @@ public class ShopFragment extends Fragment {
         for (Slider s : sliderLists) {
             ImageView imageView = new ImageView(getActivity());
             //加载图片
-            imageView = ImageUtils.imageLoader(RequestQueueController.getInstance(), s.getImage(), imageView);
+            imageView = ImageUtils.imageLoader(MyApplication.getmQueue(), s.getImage(), imageView);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageViews.add(imageView);
         }
@@ -304,7 +301,7 @@ public class ShopFragment extends Fragment {
     }
 
     public void initProductList() {
-         ProductAdapter productAdapter = new ProductAdapter(getActivity(), productLists, R.layout.product_list_items,RequestQueueController.getInstance());
+        ProductAdapter productAdapter = new ProductAdapter(getActivity(), productLists, R.layout.product_list_items,MyApplication.getmQueue());
         rListView.setAdapter(productAdapter);
         rListView.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -314,7 +311,7 @@ public class ShopFragment extends Fragment {
                             @Override
                             public void onResponse(JSONObject response) {
                                 Message msg = new Message();
-                                msg.what = 0x126;
+                                msg.what = Config.REFERSH_PRODUCT;
                                 try {
                                     msg.obj = response.getString("products");
                                     pageJson = new JSONObject(response.getString("page"));
@@ -346,7 +343,7 @@ public class ShopFragment extends Fragment {
                             @Override
                             public void onResponse(JSONObject response) {
                                 Message msg = new Message();
-                                msg.what = 0x127;
+                                msg.what = Config.LoadMORE_PRODUCT;
                                 try {
                                     if(response.getString("products")==""){
                                         return;
@@ -395,7 +392,7 @@ public class ShopFragment extends Fragment {
         public void run() {
             synchronized (viewPager) {
                 currentItem = (currentItem + 1) % imageViews.size();
-                handler.sendEmptyMessage(0x123); // 通过Handler切换图片
+                handler.sendEmptyMessage(Config.SLIDER_PICTURE); // 通过Handler切换图片
             }
         }
     }
@@ -430,22 +427,22 @@ public class ShopFragment extends Fragment {
     public void onPause() {
         super.onPause();
         List<Product> shopCarList = new ArrayList<Product>();
-            if(productLists!=null){
-                for(Product p:productLists){
-                    if(p.getNum()>0){
-                        shopCarList.add(p);
-                    }
-                }
-                String product = gson.toJson(shopCarList);
-                if(UserInfo.getInstance()!=null) {
-                    if(UserDAO.find(db,UserInfo.getInstance().getUid())!=null){
-                        UserDAO.update(db,UserInfo.getInstance().getUid(),product);
-                    }else{
-                        UserDAO.insert(db,UserInfo.getInstance().getUid(), product);
-                    }
-
+        if(productLists!=null){
+            for(Product p:productLists){
+                if(p.getNum()>0){
+                    shopCarList.add(p);
                 }
             }
+            String product = gson.toJson(shopCarList);
+            if(UserInfo.getInstance()!=null) {
+                if(UserDAO.find(db,UserInfo.getInstance().getUid())!=null){
+                    UserDAO.update(db,UserInfo.getInstance().getUid(),product);
+                }else{
+                    UserDAO.insert(db,UserInfo.getInstance().getUid(), product);
+                }
+
+            }
+        }
         // 当Activity不可见的时候停止切换
         scheduledExecutorService.shutdown();
         LogUtils.e("fragment","onPause");

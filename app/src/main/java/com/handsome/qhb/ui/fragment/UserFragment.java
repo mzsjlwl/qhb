@@ -1,7 +1,6 @@
 package com.handsome.qhb.ui.fragment;
 
 import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,18 +12,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.ui.activity.AddressActivity;
 import com.handsome.qhb.ui.activity.LoginActivity;
-import com.handsome.qhb.ui.activity.MainActivity;
 import com.handsome.qhb.ui.activity.OrderActivity;
 import com.handsome.qhb.ui.activity.UpdateDataActivity;
 import com.handsome.qhb.ui.activity.UpdatePasswordActivity;
 import com.handsome.qhb.ui.activity.UpdatePhotoActivity;
 import com.handsome.qhb.utils.ImageUtils;
-import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.RequestQueueController;
 import com.handsome.qhb.utils.UserInfo;
 
 import tab.com.handsome.handsome.R;
@@ -71,7 +67,7 @@ public class UserFragment extends Fragment {
         ll_logout = (LinearLayout)view.findViewById(R.id.ll_logout);
         iv_user_photo = (ImageView)view.findViewById(R.id.iv_user_photo);
         if(UserInfo.getInstance()!=null) {
-            ImageUtils.imageLoader(RequestQueueController.getInstance(), UserInfo.getInstance().getPhoto(), iv_user_photo);
+            ImageUtils.imageLoader(MyApplication.getmQueue(), UserInfo.getInstance().getPhoto(), iv_user_photo);
         }
             iv_user_photo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,7 +149,7 @@ public class UserFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if(UserInfo.getInstance()!=null) {
-            ImageUtils.imageLoader(RequestQueueController.getInstance(),UserInfo.getInstance().getPhoto(),iv_user_photo);
+            ImageUtils.imageLoader(MyApplication.getmQueue(),UserInfo.getInstance().getPhoto(),iv_user_photo);
             tv_name.setText(UserInfo.getInstance().getNackname().toString());
             tv_integral.setText(String.valueOf(UserInfo.getInstance().getIntegral()));
         }

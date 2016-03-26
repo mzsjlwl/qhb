@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/chat_from_createDate"
+        style="@style/chat_date_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2012-09-01 18:30:20" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="50dp"
+            android:layout_marginLeft="10dp"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/chat_from_icon"
+                android:layout_width="49dp"
+                android:layout_height="49dp"
+                android:src="@mipmap/test_icon" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/chat_from_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="left"
+                    android:layout_marginRight="10dp"
+                    android:text="张上鑫"
+                    android:textColor="#444"
+                    android:textSize="12dp" />
+                <TextView
+                    android:id="@+id/chat_from_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/balloon_l2"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:minHeight="30dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="12dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:text="fdsaf"
+                    android:textColor="#000"
+                    android:textSize="18dp"
+                    />
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

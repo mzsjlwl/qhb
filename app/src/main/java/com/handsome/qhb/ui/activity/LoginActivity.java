@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +20,6 @@ import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.RequestQueueController;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -112,7 +110,7 @@ public class LoginActivity extends BaseActivity  {
                         return map;
                     }
                 };
-                RequestQueueController.getInstance().add(stringRequest);
+                MyApplication.getmQueue().add(stringRequest);
             }
         });
 

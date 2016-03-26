@@ -1,7 +1,5 @@
 package com.handsome.qhb.ui.activity;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,8 +15,8 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.config.Config;
-import com.handsome.qhb.utils.RequestQueueController;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -111,7 +109,7 @@ public class RegisterActivity extends BaseActivity {
                         return map;
                     }
                 };
-                RequestQueueController.getInstance().add(stringRequest);
+               MyApplication.getmQueue().add(stringRequest);
             }
 
         });

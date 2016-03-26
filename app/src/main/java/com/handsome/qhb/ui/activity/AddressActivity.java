@@ -5,19 +5,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.AddressAdapter;
+import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.Address;
-import com.handsome.qhb.bean.Product;
 import com.handsome.qhb.db.UserDAO;
 import com.handsome.qhb.db.UserDBOpenHelper;
 import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.RequestQueueController;
 import com.handsome.qhb.utils.UserInfo;
 
 import java.util.ArrayList;
@@ -124,7 +122,7 @@ public class AddressActivity extends BaseActivity{
             //获取list中最后一条的aid再加一
             size = addressList.get(addressList.size()-1).getAid()+1;
             LogUtils.e("size",String.valueOf(size));
-            AddressAdapter addressAdapter = new AddressAdapter(this,addressList,R.layout.address_list_items, RequestQueueController.getInstance());
+            AddressAdapter addressAdapter = new AddressAdapter(this,addressList,R.layout.address_list_items, MyApplication.getmQueue());
             lv_address.setAdapter(addressAdapter);
         }else{
             size = 0;

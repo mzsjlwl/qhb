@@ -1,14 +1,16 @@
 package com.handsome.qhb.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by handsome on 2016/3/8.
  */
-public class Room {
-    int id;
+public class Room implements Serializable {
     int rid;
+    int sortId;
     int roomGameNum;
     String roomName;
-    int roomMember;
+    String roomMember;
     String roomPassword;
     String roomCreater;
     String roomCreateTime;
@@ -24,12 +26,12 @@ public class Room {
         this.flag = flag;
     }
 
-    public int getId() {
-        return id;
+    public int getSortId() {
+        return sortId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setSortId(int sortId) {
+        this.sortId = sortId;
     }
 
     public int getRid() {
@@ -56,11 +58,11 @@ public class Room {
         this.roomName = roomName;
     }
 
-    public int getRoomMember() {
+    public String getRoomMember() {
         return roomMember;
     }
 
-    public void setRoomMember(int roomMember) {
+    public void setRoomMember(String roomMember) {
         this.roomMember = roomMember;
     }
 
@@ -102,5 +104,40 @@ public class Room {
 
     public void setRoomState(String roomState) {
         this.roomState = roomState;
+    }
+
+    public Room(){
+
+    }
+
+    public Room(int rid, int sortId, int roomGameNum, String roomName, String roomMember, String roomPassword, String roomCreater, String roomCreateTime, String roomEndTime, String roomState, String flag) {
+        this.rid = rid;
+        this.sortId = sortId;
+        this.roomGameNum = roomGameNum;
+        this.roomName = roomName;
+        this.roomMember = roomMember;
+        this.roomPassword = roomPassword;
+        this.roomCreater = roomCreater;
+        this.roomCreateTime = roomCreateTime;
+        this.roomEndTime = roomEndTime;
+        this.roomState = roomState;
+        this.flag = flag;
+    }
+
+    @Override
+    public String toString() {
+        return "Room{" +
+                "rid=" + rid +
+                ", sortId=" + sortId +
+                ", roomGameNum=" + roomGameNum +
+                ", roomName='" + roomName + '\'' +
+                ", roomMember=" + roomMember +
+                ", roomPassword='" + roomPassword + '\'' +
+                ", roomCreater='" + roomCreater + '\'' +
+                ", roomCreateTime='" + roomCreateTime + '\'' +
+                ", roomEndTime='" + roomEndTime + '\'' +
+                ", roomState='" + roomState + '\'' +
+                ", flag='" + flag + '\'' +
+                '}';
     }
 }

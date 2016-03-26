@@ -106,9 +106,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                 }
                 break;
             case R.id.tv_hall:
-                if(shopFragment!=null){
-                    shopFragment.getScheduledExecutorService().shutdown();
-                    fragmentController.showFragment(1);
+                if(UserInfo.getInstance()==null){
+                    Intent i = new Intent(this, LoginActivity.class);
+                    startActivity(i);
+                    finish();
+                }else{
+                    if(shopFragment!=null) {
+                        shopFragment.getScheduledExecutorService().shutdown();
+                        fragmentController.showFragment(1);
+                    }
                 }
                 break;
             case R.id.tv_user:

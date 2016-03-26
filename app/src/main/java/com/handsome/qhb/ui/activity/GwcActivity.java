@@ -1,6 +1,5 @@
 package com.handsome.qhb.ui.activity;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -24,24 +23,20 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.ShopCarAdapter;
+import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.Address;
 import com.handsome.qhb.bean.IdNum;
 import com.handsome.qhb.bean.OrderJson;
 import com.handsome.qhb.bean.Product;
-import com.handsome.qhb.bean.Products;
-import com.handsome.qhb.bean.Slider;
-import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.UserDAO;
 import com.handsome.qhb.db.UserDBOpenHelper;
 import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.RequestQueueController;
 import com.handsome.qhb.utils.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,7 +85,7 @@ public class GwcActivity extends BaseActivity {
                     totalPrice = totalPrice+shopCarList.get(i).getPrice()*shopCarList.get(i).getNum();
             }
             tv_totalPrice.setText("￥"+String.valueOf(totalPrice));
-            ShopCarAdapter shopCarAdapter = new ShopCarAdapter(this,shopCarList,R.layout.gwc_list_items, RequestQueueController.getInstance());
+            ShopCarAdapter shopCarAdapter = new ShopCarAdapter(this,shopCarList,R.layout.gwc_list_items, MyApplication.getmQueue());
             listView.setAdapter(shopCarAdapter);
         }else{
             shopCarList = gson.fromJson(UserDAO.find(db,UserInfo.getInstance().getUid()),new TypeToken<List<Product>>() {
@@ -100,7 +95,7 @@ public class GwcActivity extends BaseActivity {
                     totalPrice = totalPrice+shopCarList.get(i).getPrice()*shopCarList.get(i).getNum();
                 }
                 tv_totalPrice.setText("￥"+String.valueOf(totalPrice));
-                ShopCarAdapter shopCarAdapter = new ShopCarAdapter(this,shopCarList,R.layout.gwc_list_items, RequestQueueController.getInstance());
+                ShopCarAdapter shopCarAdapter = new ShopCarAdapter(this,shopCarList,R.layout.gwc_list_items, MyApplication.getmQueue());
                 listView.setAdapter(shopCarAdapter);
             }
         }
@@ -204,7 +199,7 @@ public class GwcActivity extends BaseActivity {
                         return map;
                     }
                 };
-                RequestQueueController.getInstance().add(stringRequest);
+                MyApplication.getmQueue().add(stringRequest);
             }
         });
 
