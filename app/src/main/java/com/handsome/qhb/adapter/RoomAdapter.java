@@ -53,7 +53,6 @@ public class RoomAdapter extends CommonAdapter<Room> {
     public void convert(int position,ViewHolder holder,ListView listView ,Room room) {
         holder.setText(R.id.id_tv_roomName,room.getRoomName());
         holder.setText(R.id.id_tv_time, room.getRoomEndTime());
-        holder.setText(R.id.id_tv_message,room.getRoomCreateTime());
         holder.getView(R.id.room_list_items).setOnClickListener(new RoomItemOnclick(position));
     }
 
@@ -69,6 +68,11 @@ public class RoomAdapter extends CommonAdapter<Room> {
             progressDialog.setMessage("请求中");
             progressDialog.setCancelable(true);
             progressDialog.show();
+            Intent i = new Intent(mContext, ChatActivity.class);
+            Bundle b = new Bundle();
+            b.putSerializable("room", mDatas.get(position));
+            i.putExtras(b);
+            mContext.startActivity(i);
             StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/enterRoom",
                     new Response.Listener<String>() {
                         @Override
@@ -82,11 +86,13 @@ public class RoomAdapter extends CommonAdapter<Room> {
                                     Toast.makeText(mContext, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
                                     return;
                                 }
-                                Intent i = new Intent(mContext, ChatActivity.class);
-                                Bundle b = new Bundle();
-                                b.putSerializable("room", mDatas.get(position));
-                                i.putExtras(b);
-                                mContext.startActivity(i);
+                                //设置房间打开转态,消息直接呈现，无通知功能;
+                                mDatas.get(position).setFlag("1");
+//                                Intent i = new Intent(mContext, ChatActivity.class);
+//                                Bundle b = new Bundle();
+//                                b.putSerializable("room", mDatas.get(position));
+//                                i.putExtras(b);
+//                                mContext.startActivity(i);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

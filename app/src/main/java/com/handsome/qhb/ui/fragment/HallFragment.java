@@ -69,6 +69,11 @@ public class HallFragment extends Fragment  {
                             }else{
                                 Gson gson = new Gson();
                                 List<Room> roomList = gson.fromJson(jsonObject.getString("data"),new TypeToken<List<Room>>(){}.getType());
+                                if(roomList!=null){
+                                    for(Room r:roomList){
+                                        MyApplication.addRooms(r.getRid());
+                                    }
+                                }
                                 Message message = new Message();
                                 message.what = Config.INITROOM_MESSAGE;
                                 message.obj = roomList;
@@ -97,4 +102,5 @@ public class HallFragment extends Fragment  {
         roomAdapter = new RoomAdapter(getActivity(),roomList,R.layout.room_list_items,MyApplication.getmQueue());
         lv_room.setAdapter(roomAdapter);
     }
+
 }

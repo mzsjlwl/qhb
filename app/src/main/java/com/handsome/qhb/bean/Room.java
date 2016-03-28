@@ -1,22 +1,25 @@
 package com.handsome.qhb.bean;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by handsome on 2016/3/8.
  */
 public class Room implements Serializable {
-    int rid;
-    int sortId;
-    int roomGameNum;
-    String roomName;
-    String roomMember;
-    String roomPassword;
-    String roomCreater;
-    String roomCreateTime;
-    String roomEndTime;
-    String roomState;
-    String flag;
+    private int rid;
+    private int sortId;
+    private int roomGameNum;
+    private String roomName;
+    private String roomMember;
+    private String roomPassword;
+    private String roomCreater;
+    private String roomCreateTime;
+    private String roomEndTime;
+    private String roomState;
+    private String flag;
+    private List<ChatMessage> chatMessageList= new ArrayList<ChatMessage>();
 
     public String getFlag() {
         return flag;
@@ -106,11 +109,20 @@ public class Room implements Serializable {
         this.roomState = roomState;
     }
 
+
+    public List<ChatMessage> getChatMessageList() {
+        return chatMessageList;
+    }
+
+    public void setChatMessageList(List<ChatMessage> chatMessageList) {
+        this.chatMessageList = chatMessageList;
+    }
+
     public Room(){
 
     }
 
-    public Room(int rid, int sortId, int roomGameNum, String roomName, String roomMember, String roomPassword, String roomCreater, String roomCreateTime, String roomEndTime, String roomState, String flag) {
+    public Room(int rid, int sortId, int roomGameNum, String roomName, String roomMember, String roomPassword, String roomCreater, String roomCreateTime, String roomEndTime, String roomState, String flag, List<ChatMessage> chatMessageList) {
         this.rid = rid;
         this.sortId = sortId;
         this.roomGameNum = roomGameNum;
@@ -122,6 +134,7 @@ public class Room implements Serializable {
         this.roomEndTime = roomEndTime;
         this.roomState = roomState;
         this.flag = flag;
+        this.chatMessageList = chatMessageList;
     }
 
     @Override
@@ -131,13 +144,14 @@ public class Room implements Serializable {
                 ", sortId=" + sortId +
                 ", roomGameNum=" + roomGameNum +
                 ", roomName='" + roomName + '\'' +
-                ", roomMember=" + roomMember +
+                ", roomMember='" + roomMember + '\'' +
                 ", roomPassword='" + roomPassword + '\'' +
                 ", roomCreater='" + roomCreater + '\'' +
                 ", roomCreateTime='" + roomCreateTime + '\'' +
                 ", roomEndTime='" + roomEndTime + '\'' +
                 ", roomState='" + roomState + '\'' +
                 ", flag='" + flag + '\'' +
+                ", chatMessageList=" + chatMessageList +
                 '}';
     }
 }

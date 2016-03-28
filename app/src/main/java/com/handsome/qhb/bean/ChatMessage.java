@@ -4,20 +4,26 @@ package com.handsome.qhb.bean;
  * Created by zhang on 2016/3/24.
  */
 public class ChatMessage {
-    private int msgId;
+    //若为空,则为普通信息，若不为空,则根据type获取红包的id
+    private int id;
     private int rid;
     private int uid;
     private String content;
     private String  nackname;
     private String date;
+    //消息是否发送成功，用于让加载框失效
     private int status;
+    //消失类型，用于区别普通消息，红包消息,猜单双消息
+    private int type;
+    //红包轮发次数
+    private int round;
 
-    public int getMsgId() {
-        return msgId;
+    public int getId() {
+        return id;
     }
 
-    public void setMsgId(int msgId) {
-        this.msgId = msgId;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getUid() {
@@ -61,9 +67,22 @@ public class ChatMessage {
         this.status = status;
     }
 
-    public ChatMessage(){
-
+    public int getType() {
+        return type;
     }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public int getRound() {
+        return round;
+    }
+
+    public void setRound(int round) {
+        this.round = round;
+    }
+
 
 
     public String getDate() {
@@ -74,26 +93,35 @@ public class ChatMessage {
         this.date = date;
     }
 
-    public ChatMessage(int msgId, int rid, int uid, String content, String nackname, String date, int status) {
-        this.msgId = msgId;
+    public ChatMessage(){
+
+    }
+
+
+    public ChatMessage(int id, int rid, int uid, String content, String nackname, String date, int status, int type, int round) {
+        this.id = id;
         this.rid = rid;
         this.uid = uid;
         this.content = content;
         this.nackname = nackname;
         this.date = date;
         this.status = status;
+        this.type = type;
+        this.round = round;
     }
 
     @Override
     public String toString() {
         return "ChatMessage{" +
-                "msgId=" + msgId +
+                "id=" + id +
                 ", rid=" + rid +
                 ", uid=" + uid +
                 ", content='" + content + '\'' +
                 ", nackname='" + nackname + '\'' +
                 ", date='" + date + '\'' +
                 ", status=" + status +
+                ", type=" + type +
+                ", round=" + round +
                 '}';
     }
 }

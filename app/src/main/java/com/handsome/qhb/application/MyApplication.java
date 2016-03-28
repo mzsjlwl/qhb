@@ -1,6 +1,7 @@
 package com.handsome.qhb.application;
 
 import android.app.Application;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
@@ -22,6 +23,7 @@ import com.handsome.qhb.utils.LogUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyApplication extends Application {
@@ -32,12 +34,17 @@ public class MyApplication extends Application {
     private static Handler chatHandler;
     private static String Tag;
     private static TelephonyManager tm;
+    private static NotificationManager nm;
+    private static List<Integer> rooms = new ArrayList<Integer>();
 
     @Override
     public void onCreate() {
         super.onCreate();
         context = getApplicationContext();
+        //获取ID作为tag
         tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+        //获取消息通知
+        nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
     public synchronized static Context getContext(){
@@ -70,6 +77,18 @@ public class MyApplication extends Application {
 
     public synchronized static String getTag(){
         return tm.getDeviceId();
+    }
+
+    public synchronized static NotificationManager getNotificationManager(){
+        return nm;
+    }
+
+    public synchronized  static List<Integer> getRooms(){
+        return rooms;
+    }
+
+    public synchronized  static void addRooms(Integer i){
+        rooms.add(i);
     }
 
 }

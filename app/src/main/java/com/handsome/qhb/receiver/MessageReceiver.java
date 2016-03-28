@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.ChatMessage;
+import com.handsome.qhb.bean.RandomBonus;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.utils.LogUtils;
@@ -28,6 +29,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
     private Gson gson = new Gson();
     private List<Room>  roomList = new ArrayList<Room>();
     private ChatMessage chatMessage;
+    private RandomBonus randomBonus;
 
 
 
@@ -55,7 +57,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
     public void onTextMessage(Context context, XGPushTextMessage xgPushTextMessage) {
 
         LogUtils.e("title==>", xgPushTextMessage.getTitle());
-        if(xgPushTextMessage.getTitle().equals("initRoom")) {
+        if(xgPushTextMessage.getTitle().equals("Room")) {
             roomList = gson.fromJson(xgPushTextMessage.getContent(), new TypeToken<List<Room>>() {
             }.getType());
             if (roomList != null) {
@@ -69,13 +71,37 @@ public class MessageReceiver extends XGPushBaseReceiver {
             }
         }else if(xgPushTextMessage.getTitle().equals("chat")){
             chatMessage = gson.fromJson(xgPushTextMessage.getContent(),new TypeToken<ChatMessage>(){}.getType());
+            if(!isInRoomList(chatMessage.getRid())){
+                return;
+            }
             Message message = new Message();
             message.what = Config.CHAT_MESSAGE;
             message.obj = chatMessage;
             MyApplication.getChatHandler().handleMessage(message);
             LogUtils.e("xgmsg","chat");
-        }else if(xgPushTextMessage.getTitle().equals("hb")){
-
+        }else if(xgPushTextMessage.getTitle().equals("RandomBonus")){
+            //randomBonus = gson.fromJson(xgPushTextMessage.getContent(),RandomBonus.class);
+            chatMessage = gson.fromJson(xgPushTextMessage.getContent(),ChatMessage.class);
+            //判断是否有这个房间,若没有则不响应
+            if(!isInRoomList(chatMessage.getRid())){
+                return;
+            }
+            Message message = new Message();
+            message.what = Config.RANDOMBONUS_MESSAGE;
+            message.obj = chatMessage;
+            MyApplication.getChatHandler().handleMessage(message);
+            LogUtils.e("randombonus","=====>message");
+        }else if(xgPushTextMessage.getTitle().equals("CDSBonus")){
+            chatMessage = gson.fromJson(xgPushTextMessage.getContent(),ChatMessage.class);
+            //判断是否有这个房间,若没有则不响应
+            if(!isInRoomList(chatMessage.getRid())){
+                return;
+            }
+            Message message = new Message();
+            message.what = Config.CDSBONUS_MESSAGE;
+            message.obj = message;
+            MyApplication.getChatHandler().handleMessage(message);
+            LogUtils.e("CDSBonus","=======>message");
         }
 
         LogUtils.e("not Room", xgPushTextMessage.getContent());
@@ -92,4 +118,17 @@ public class MessageReceiver extends XGPushBaseReceiver {
 
     }
 
+    public boolean isInRoomList(int rid){
+        int i = 0;
+        for(;i<MyApplication.getRooms().size();i++){
+            if(MyApplication.getRooms().get(i)==rid){
+                break;
+            }
+        }
+
+        if(i==MyApplication.getRooms().size()){
+            return false;
+        }
+        return true;
+    }
 }

@@ -51,13 +51,23 @@
                 android:layout_height="0dp"
                 >
                 <TextView
-                    android:id="@+id/id_tv_message"
+                    android:id="@+id/id_tv_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:textSize="14sp"
+                    android:textColor="#88000000"
+                    android:text="[4条]"
+                    />
+                <TextView
+                    android:id="@+id/id_tv_content"
                     android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/id_tv_num"
                     android:textSize="14sp"
                     android:textColor="#88000000"
-                    android:text="[4条]他说草拟吗了，怎么办大哥"/>
+                    android:text="他说草拟吗了，怎么办大哥"/>
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

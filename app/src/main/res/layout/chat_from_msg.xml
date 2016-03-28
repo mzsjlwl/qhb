@@ -50,14 +50,14 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center_vertical"
-                    android:minHeight="30dp"
                     android:paddingLeft="15dp"
                     android:paddingRight="12dp"
                     android:paddingTop="4dp"
                     android:paddingBottom="4dp"
-                    android:text="fdsaf"
+                    android:text=""
                     android:textColor="#000"
                     android:textSize="18dp"
+
                     />
             </LinearLayout>
 

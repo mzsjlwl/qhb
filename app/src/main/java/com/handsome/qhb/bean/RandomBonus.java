@@ -5,11 +5,10 @@ import java.util.Arrays;
 /**
  * Created by zhang on 2016/3/26.
  */
-public class HB {
+public class RandomBonus {
     private int id;
-    private float[] hb;
+    private float[] bonus;
     private int rid;
-    private int type;
 
     public int getId() {
         return id;
@@ -19,12 +18,12 @@ public class HB {
         this.id = id;
     }
 
-    public float[] getHb() {
-        return hb;
+    public float[] getBonus() {
+        return bonus;
     }
 
-    public void setHb(float[] hb) {
-        this.hb = hb;
+    public void setBonus(float[] bonus) {
+        this.bonus = bonus;
     }
 
     public int getRid() {
@@ -35,31 +34,21 @@ public class HB {
         this.rid = rid;
     }
 
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
-    }
-
-    public HB(){
+    public RandomBonus(){
 
     }
-    public HB(int id, float[] hb, int rid, int type) {
+    public RandomBonus(int id, float[] bonus, int rid) {
         this.id = id;
-        this.hb = hb;
+        this.bonus = bonus;
         this.rid = rid;
-        this.type = type;
     }
 
     @Override
     public String toString() {
-        return "HB{" +
+        return "RandomBonus{" +
                 "id=" + id +
-                ", hb=" + Arrays.toString(hb) +
+                ", bonus=" + Arrays.toString(bonus) +
                 ", rid=" + rid +
-                ", type=" + type +
                 '}';
     }
 }

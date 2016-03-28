@@ -22,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.MsgAdapter;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.ChatMessage;
+import com.handsome.qhb.bean.RandomBonus;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.bean.XGMessage;
 import com.handsome.qhb.config.Config;
@@ -69,6 +70,14 @@ public class ChatActivity extends BaseActivity {
                 ChatMessage chatMessage = new ChatMessage();
                 chatMessage = (ChatMessage) msg.obj;
                 ReceiverMessage(chatMessage);
+            }else if(msg.what==Config.RANDOMBONUS_MESSAGE){
+                ChatMessage chatMessage = new ChatMessage();
+                chatMessage = (ChatMessage)msg.obj;
+                ReceiverRandomBonus(chatMessage);
+            }else if(msg.what==Config.CDSBONUS_MESSAGE){
+                ChatMessage chatMessage = new ChatMessage();
+                chatMessage = (ChatMessage)msg.obj;
+                ReceiverCDSBonus(chatMessage);
             }
         }
     };
@@ -85,17 +94,6 @@ public class ChatActivity extends BaseActivity {
         ib_chat_send = (ImageButton)findViewById(R.id.ib_chat_send);
         ib_back = (ImageButton)findViewById(R.id.ib_back);
         lv_chat = (ListView)findViewById(R.id.lv_chat);
-//        ChatMessage chatMessage = new ChatMessage();
-//        chatMessage.setContent("fsdfsdf");
-//        chatMessage.setNackname("张上鑫");
-//
-//
-//        ChatMessage chatMessage1 = new ChatMessage();
-//        chatMessage1.setContent("lalla");
-//        chatMessage1.setNackname("zhangsx");
-//        chatM
-//        messageList.add(chatMessage);
-//        messageList.add(chatMessage1);
         msgAdapter = new MsgAdapter(this, messageList);
         lv_chat.setAdapter(msgAdapter);
         room = (Room) getIntent().getSerializableExtra("room");
@@ -106,41 +104,42 @@ public class ChatActivity extends BaseActivity {
         ib_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/exitRoom",
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    LogUtils.e("room",response);
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    String status = jsonObject.getString("status");
-                                    if(status.equals(0)){
-                                        LogUtils.e("room", jsonObject.getString("info"));
-                                        Toast toast = Toast.makeText(ChatActivity.this,jsonObject.getString("info"),Toast.LENGTH_LONG);
-                                        toast.setGravity(Gravity.CENTER,0,0);
-                                        toast.show();
-                                    }else{
-                                        finish();
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("TAG", error.getMessage(), error);
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> map = new HashMap<String, String>();
-                        map.put("rid", String.valueOf(room.getRid()));
-                        map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
-                        return map;
-                    }
-                };
-                MyApplication.getmQueue().add(stringRequest);
+//                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/exitRoom",
+//                        new Response.Listener<String>() {
+//                            @Override
+//                            public void onResponse(String response) {
+//                                try {
+//                                    LogUtils.e("room",response);
+//                                    JSONObject jsonObject = new JSONObject(response);
+//                                    String status = jsonObject.getString("status");
+//                                    if(status.equals(0)){
+//                                        LogUtils.e("room", jsonObject.getString("info"));
+//                                        Toast toast = Toast.makeText(ChatActivity.this,jsonObject.getString("info"),Toast.LENGTH_LONG);
+//                                        toast.setGravity(Gravity.CENTER,0,0);
+//                                        toast.show();
+//                                    }else{
+//                                        finish();
+//                                    }
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Log.e("TAG", error.getMessage(), error);
+//                    }
+//                }){
+//                    @Override
+//                    protected Map<String, String> getParams() throws AuthFailureError {
+//                        Map<String, String> map = new HashMap<String, String>();
+//                        map.put("rid", String.valueOf(room.getRid()));
+//                        map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+//                        return map;
+//                    }
+//                };
+//                MyApplication.getmQueue().add(stringRequest);
+                finish();
             }
         });
 
@@ -153,6 +152,7 @@ public class ChatActivity extends BaseActivity {
                 Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 message.setDate(format.format(new Date()));
                 message.setRid(room.getRid());
+                message.setNackname(UserInfo.getInstance().getNackname());
                 messageList.add(message);
                 msgAdapter.notifyDataSetChanged();
                 lv_chat.setSelection(messageList.size() - 1);
@@ -231,5 +231,34 @@ public class ChatActivity extends BaseActivity {
             lv_chat.setSelection(messageList.size() - 1);
         }
     }
+
+    public void ReceiverRandomBonus(ChatMessage msg){
+        if(msg.getRid()==room.getRid()){
+            ChatMessage chatMessage = new ChatMessage();
+            //chatMessage.setStatus(1);
+            chatMessage.setType(Config.TYPE_RANDOMBONUS);
+            chatMessage.setUid(msg.getUid());
+            Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            chatMessage.setDate(format.format(new Date()));
+            chatMessage.setUid(msg.getUid());
+            messageList.add(chatMessage);
+            msgAdapter.notifyDataSetChanged();
+            lv_chat.setSelection(messageList.size()-1);
+        }
+    }
+
+    public void ReceiverCDSBonus(ChatMessage msg){
+        if(msg.getRid()==room.getRid()){
+            ChatMessage chatMessage =  new ChatMessage();
+            //chatMessage.setStatus(1);
+            chatMessage.setType(Config.TYPE_CDSBONUS);
+            chatMessage.setUid(msg.getUid());
+            messageList.add(chatMessage);
+            msgAdapter.notifyDataSetChanged();
+            lv_chat.setSelection(messageList.size()-1);
+        }
+    }
+
+
 
 }
