@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efeff4">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#000000">
+        <ImageButton
+            android:id="@+id/ib_back"
+            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:scaleType="fitXY"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="12dp"
+            android:background="@mipmap/zf_back_btn"
+
+            ></ImageButton>
+
+        <TextView
+            android:id="@+id/tv_bonus_detail"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_toRightOf="@+id/ib_back"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical|left"
+            android:text="@string/tx_bonus_detail"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            />
+
+
+    </RelativeLayout>
+    <LinearLayout
+
+        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:background="#ffffff"
+        android:orientation="vertical"
+        android:layout_weight="1"
+
+        >
+
+        <ImageView
+            android:id="@+id/iv_user_photo"
+            android:layout_height="70dp"
+            android:layout_width="70dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:background="@mipmap/test_icon"
+            android:scaleType="fitXY">
+
+        </ImageView>
+        <TextView
+            android:id="@+id/tv_user_nackname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="20dp"
+            android:text="monmon"
+            />
+    </LinearLayout>
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="3">
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/lv_bonus">
+
+        </ListView>
+
+    </LinearLayout>
+
+</LinearLayout>

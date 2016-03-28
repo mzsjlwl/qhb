@@ -53,4 +53,6 @@
     <string name="tx_orderTime">下单时间</string>
     <string name="tx_user_info">个人信息</string>
     <string name="tx_user_photo">个人头像</string>
+
+    <string name="tx_bonus_detail">红包详情</string>
 </resources>

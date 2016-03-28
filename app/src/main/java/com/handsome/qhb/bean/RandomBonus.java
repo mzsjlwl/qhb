@@ -1,54 +1,55 @@
 package com.handsome.qhb.bean;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 /**
  * Created by zhang on 2016/3/26.
  */
-public class RandomBonus {
-    private int id;
-    private float[] bonus;
-    private int rid;
-
-    public int getId() {
-        return id;
+public class RandomBonus implements Serializable{
+    private String user;
+    private int bonus;
+    private String time;
+    public String getUser() {
+        return user;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setUser(String user) {
+        this.user = user;
     }
 
-    public float[] getBonus() {
+    public int getBonus() {
         return bonus;
     }
 
-    public void setBonus(float[] bonus) {
+    public void setBonus(int bonus) {
         this.bonus = bonus;
     }
 
-    public int getRid() {
-        return rid;
+    public String getTime() {
+        return time;
     }
 
-    public void setRid(int rid) {
-        this.rid = rid;
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public RandomBonus(){
 
     }
-    public RandomBonus(int id, float[] bonus, int rid) {
-        this.id = id;
+
+    public RandomBonus(String user, int bonus, String time) {
+        this.user = user;
         this.bonus = bonus;
-        this.rid = rid;
+        this.time = time;
     }
 
     @Override
     public String toString() {
         return "RandomBonus{" +
-                "id=" + id +
-                ", bonus=" + Arrays.toString(bonus) +
-                ", rid=" + rid +
+                "user='" + user + '\'' +
+                ", bonus=" + bonus +
+                ", time='" + time + '\'' +
                 '}';
     }
 }

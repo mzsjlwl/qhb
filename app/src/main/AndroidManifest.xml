@@ -60,6 +60,7 @@
         <activity android:name="com.handsome.qhb.ui.activity.UpdatePasswordActivity"></activity>
         <activity android:name="com.handsome.qhb.ui.activity.UpdatePhotoActivity"></activity>
         <activity android:name="com.handsome.qhb.ui.activity.ChatActivity"/>
+        <activity android:name="com.handsome.qhb.ui.activity.BonusActivity"/>
         <!-- 【必须】 信鸽receiver广播接收 -->
         <receiver
             android:name="com.tencent.android.tpush.XGPushReceiver"

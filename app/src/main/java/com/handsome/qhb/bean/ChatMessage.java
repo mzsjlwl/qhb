@@ -1,9 +1,11 @@
 package com.handsome.qhb.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by zhang on 2016/3/24.
  */
-public class ChatMessage {
+public class ChatMessage implements Serializable{
     //若为空,则为普通信息，若不为空,则根据type获取红包的id
     private int id;
     private int rid;

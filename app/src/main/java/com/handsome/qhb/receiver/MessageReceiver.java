@@ -74,10 +74,12 @@ public class MessageReceiver extends XGPushBaseReceiver {
             if(!isInRoomList(chatMessage.getRid())){
                 return;
             }
-            Message message = new Message();
-            message.what = Config.CHAT_MESSAGE;
-            message.obj = chatMessage;
-            MyApplication.getChatHandler().handleMessage(message);
+            if(MyApplication.getChatHandler()!=null){
+                Message message = new Message();
+                message.what = Config.CHAT_MESSAGE;
+                message.obj = chatMessage;
+                MyApplication.getChatHandler().handleMessage(message);
+            }
             LogUtils.e("xgmsg","chat");
         }else if(xgPushTextMessage.getTitle().equals("RandomBonus")){
             //randomBonus = gson.fromJson(xgPushTextMessage.getContent(),RandomBonus.class);
@@ -86,10 +88,14 @@ public class MessageReceiver extends XGPushBaseReceiver {
             if(!isInRoomList(chatMessage.getRid())){
                 return;
             }
-            Message message = new Message();
-            message.what = Config.RANDOMBONUS_MESSAGE;
-            message.obj = chatMessage;
-            MyApplication.getChatHandler().handleMessage(message);
+
+            if(MyApplication.getChatHandler()!=null){
+                Message message = new Message();
+                message.what = Config.RANDOMBONUS_MESSAGE;
+                message.obj = chatMessage;
+                MyApplication.getChatHandler().handleMessage(message);
+            }
+
             LogUtils.e("randombonus","=====>message");
         }else if(xgPushTextMessage.getTitle().equals("CDSBonus")){
             chatMessage = gson.fromJson(xgPushTextMessage.getContent(),ChatMessage.class);

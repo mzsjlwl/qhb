@@ -38,4 +38,6 @@ public class Config {
 
     public static final int TYPE_RANDOMBONUS=1;
     public static final int TYPE_CDSBONUS=2;
+    public static final int TYPE_RANDOMBONUS_OPENED = 3;
+    public static final int TYPE_CDSBONUS_OPENED = 4;
 }
