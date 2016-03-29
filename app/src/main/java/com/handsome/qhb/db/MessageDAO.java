@@ -29,7 +29,7 @@ public class MessageDAO  {
                 chatMessage.setType(cursor.getInt(cursor.getColumnIndex("type")));
                 chatMessage.setUid(cursor.getInt(cursor.getColumnIndex("uid")));
                 chatMessage.setDate(cursor.getString(cursor.getColumnIndex("date")));
-//                chatMessage.setBonus_total(cursor.getInt(cursor.getColumnIndex("round")));
+                chatMessage.setBonus_total(cursor.getFloat(cursor.getColumnIndex("bonus_total")));
                 messageList.add(chatMessage);
             }while(cursor.moveToNext());
         }
