@@ -160,7 +160,6 @@ public class GwcActivity extends BaseActivity {
                                     }
                                     LogUtils.e("data", jsonObject.getString("data"));
                                     UserDAO.update(db, UserInfo.getInstance().getUid(), "");
-                                    UserInfo.getInstance().setIntegral(UserInfo.getInstance().getIntegral() - totalPrice);
                                     Toast toast = Toast.makeText(GwcActivity.this,"提交成功",Toast.LENGTH_LONG);
                                     toast.setGravity(Gravity.CENTER,0,0);
                                     toast.show();

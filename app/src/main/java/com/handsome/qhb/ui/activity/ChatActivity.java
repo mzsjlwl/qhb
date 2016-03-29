@@ -243,6 +243,10 @@ public class ChatActivity extends BaseActivity {
 
             chatMessage.setDate(format.format(new Date()));
             chatMessage.setId(msg.getId());
+
+            if(msg.getUid()==UserInfo.getInstance().getUid()){
+                UserInfo.getInstance().setIntegral(UserInfo.getInstance().getIntegral() - msg.getBonus_total());
+            }
             messageList.add(chatMessage);
             msgAdapter.notifyDataSetChanged();
             lv_chat.setSelection(messageList.size() - 1);
@@ -258,7 +262,7 @@ public class ChatActivity extends BaseActivity {
             chatMessage.setNackname("系统");
             messageList.add(chatMessage);
             msgAdapter.notifyDataSetChanged();
-            lv_chat.setSelection(messageList.size()-1);
+            lv_chat.setSelection(messageList.size() - 1);
         }
     }
 

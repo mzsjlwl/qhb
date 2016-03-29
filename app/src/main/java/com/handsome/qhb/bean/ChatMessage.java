@@ -17,8 +17,8 @@ public class ChatMessage implements Serializable{
     private int status;
     //消失类型，用于区别普通消息，红包消息,猜单双消息
     private int type;
-    //红包轮发次数
-    private int round;
+    //红包总钱数
+    private float bonus_total;
 
     public int getId() {
         return id;
@@ -77,15 +77,14 @@ public class ChatMessage implements Serializable{
         this.type = type;
     }
 
-    public int getRound() {
-        return round;
+
+    public float getBonus_total() {
+        return bonus_total;
     }
 
-    public void setRound(int round) {
-        this.round = round;
+    public void setBonus_total(float bonus_total) {
+        this.bonus_total = bonus_total;
     }
-
-
 
     public String getDate() {
         return date;
@@ -100,7 +99,7 @@ public class ChatMessage implements Serializable{
     }
 
 
-    public ChatMessage(int id, int rid, int uid, String content, String nackname, String date, int status, int type, int round) {
+    public ChatMessage(int id, int rid, int uid, String content, String nackname, String date, int status, int type, float bonus_total) {
         this.id = id;
         this.rid = rid;
         this.uid = uid;
@@ -109,7 +108,7 @@ public class ChatMessage implements Serializable{
         this.date = date;
         this.status = status;
         this.type = type;
-        this.round = round;
+        this.bonus_total = bonus_total;
     }
 
     @Override
@@ -123,7 +122,7 @@ public class ChatMessage implements Serializable{
                 ", date='" + date + '\'' +
                 ", status=" + status +
                 ", type=" + type +
-                ", round=" + round +
+                ", bonus_total=" + bonus_total +
                 '}';
     }
 }
