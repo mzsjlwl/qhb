@@ -266,6 +266,9 @@ public class ChatActivity extends BaseActivity {
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
 
-
+    }
 }

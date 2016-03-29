@@ -12,7 +12,7 @@ import java.util.List;
  * Created by zhang on 2016/3/29.
  */
 public class RoomDAO {
-    public static List<Room> find (SQLiteDatabase db,Integer uid){
+    public static List<Room> query(SQLiteDatabase db,Integer uid){
         Cursor cursor = db.rawQuery("select * from room where uid = ?",new String[]{String.valueOf(uid)});
 
         List<Room> roomList = new ArrayList<Room>();

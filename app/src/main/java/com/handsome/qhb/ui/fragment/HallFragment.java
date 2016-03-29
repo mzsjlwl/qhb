@@ -1,6 +1,7 @@
 package com.handsome.qhb.ui.fragment;
 
 import android.app.Fragment;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,9 +20,14 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.RoomAdapter;
 import com.handsome.qhb.application.MyApplication;
+import com.handsome.qhb.bean.Product;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.config.Config;
+import com.handsome.qhb.db.RoomDAO;
+import com.handsome.qhb.db.UserDAO;
+import com.handsome.qhb.db.UserDBOpenHelper;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.UserInfo;
 import com.tencent.android.tpush.XGPushManager;
 
 import org.json.JSONException;
@@ -41,6 +47,7 @@ public class HallFragment extends Fragment  {
     private static List<Room> roomList = new ArrayList<Room>();
     private RoomAdapter roomAdapter;
     private RequestQueue requestQueue = MyApplication.getmQueue();
+    private SQLiteDatabase db ;
 
     public Handler handler = new Handler(){
         @Override
@@ -51,6 +58,13 @@ public class HallFragment extends Fragment  {
             }
         }
     };
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        db = UserDBOpenHelper.getInstance(getActivity()).getWritableDatabase();
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_hall,container,false);
         lv_room = (ListView) view.findViewById(R.id.lv_room);
@@ -93,6 +107,30 @@ public class HallFragment extends Fragment  {
         return view;
     }
 
+
+    @Override
+    public void onPause() {
+        super.onPause();
+       List<Room> rooms = new ArrayList<Room>();
+        if(UserInfo.getInstance()!=null&&rooms!=null){
+            rooms = RoomDAO.query(db,UserInfo.getInstance().getUid());
+        }
+        if(roomList!=null&&rooms!=null){
+            for(int i = 0;i<roomList.size();i++){
+                int j = 0;
+                for(;j< rooms.size();j++){
+                    if(rooms.get(j).getRid()==roomList.get(i).getRid()){
+                        break;
+                    }
+                }
+                if(j==rooms.size()){
+                    RoomDAO.insert(db,roomList.get(i).getRid(),UserInfo.getInstance().getUid(),
+                           roomList.get(i).getRoomName(),roomList.get(i).getRoomCreater());
+                }
+            }
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
@@ -102,5 +140,7 @@ public class HallFragment extends Fragment  {
         roomAdapter = new RoomAdapter(getActivity(),roomList,R.layout.room_list_items,MyApplication.getmQueue());
         lv_room.setAdapter(roomAdapter);
     }
+
+
 
 }
