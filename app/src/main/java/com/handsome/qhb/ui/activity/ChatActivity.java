@@ -240,6 +240,7 @@ public class ChatActivity extends BaseActivity {
             chatMessage.setUid(msg.getUid());
             chatMessage.setNackname("系统");
             Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
             chatMessage.setDate(format.format(new Date()));
             chatMessage.setId(msg.getId());
             messageList.add(chatMessage);

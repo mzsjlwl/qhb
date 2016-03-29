@@ -99,7 +99,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 //        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (v.getId()){
             case R.id.tv_shop:
-                if(shopFragment!=null) {
+                if(shopFragment!=null&&shopFragment.getScheduledExecutorService()!=null) {
                     shopFragment.getScheduledExecutorService().shutdown();
                     shopFragment.onStartSlider();
                     fragmentController.showFragment(0);
@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     startActivity(i);
                     finish();
                 }else{
-                    if(shopFragment!=null) {
+                    if(shopFragment!=null&&shopFragment.getScheduledExecutorService()!=null) {
                         shopFragment.getScheduledExecutorService().shutdown();
                         fragmentController.showFragment(1);
                     }
@@ -123,7 +123,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     startActivity(i);
                     finish();
                 }else{
-                    if(shopFragment!=null) {
+                    if(shopFragment!=null&&shopFragment.getScheduledExecutorService()!=null) {
                         shopFragment.getScheduledExecutorService().shutdown();
                         fragmentController.showFragment(2);
                     }
