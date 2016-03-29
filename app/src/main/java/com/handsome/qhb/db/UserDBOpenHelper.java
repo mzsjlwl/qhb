@@ -11,20 +11,20 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class UserDBOpenHelper extends SQLiteOpenHelper {
 
-    public static final String DATABASE_NAME = "user.db";
+    public static final String DATABASE_NAME = "all.db";
     public static final String CREATE_SHOPCAR = "create table shopcar"+
             "(cid integer primary key AUTOINCREMENT,"+
             "uid integer,"+
             "product text,address text)";
     public static final String CREATE_ROOMLIST = "create table room "+
             "(id integer primary key AUTOINCREMENT,"+
-            "rid integer,uid integer"+
-            "roomName varchar(255),"+
-            "roomCreater varchar(255))";
+            "rid integer,uid integer,"+
+            "roomName text,"+
+            "roomCreater text)";
     public static final String CREATE_MESSAGE = "create table message"+
-            "(mid integer primary key AUTOINCREMENT,)"+
-            "(id integer,rid integer,uid integer,content varchar(255),"+
-            "nackname varchar(255),date varchar(50),status integer,"+
+            "(mid integer primary key AUTOINCREMENT,"+
+            "id integer,rid integer,uid integer,content text,"+
+            "nackname text,date text,status integer,"+
             "type integer,round integer)";
 
     private static  UserDBOpenHelper userDBOpenHelper;
@@ -49,7 +49,10 @@ public class UserDBOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("drop table if exists user");
+        db.execSQL("drop table if exists shopcar");
+        db.execSQL("drop table if exists room");
+        db.execSQL("drop table if exists message");
+
         onCreate(db);
     }
 

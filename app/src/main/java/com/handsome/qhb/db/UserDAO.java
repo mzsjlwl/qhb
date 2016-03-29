@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class UserDAO {
     public static String find (SQLiteDatabase db,Integer uid){
-        Cursor cursor = db.rawQuery("select * from user where uid = ?",new String[]{String.valueOf(uid)});
+        Cursor cursor = db.rawQuery("select * from shopcar where uid = ?",new String[]{String.valueOf(uid)});
         if(cursor.moveToFirst()){
             String product = cursor.getString(cursor.getColumnIndex("product"));
             return product;
@@ -22,23 +22,23 @@ public class UserDAO {
     }
 
     public static void insert(SQLiteDatabase db,Integer uid,String product){
-        db.execSQL("insert into user(uid,product) values(?,?)", new String[]{
+        db.execSQL("insert into shopcar(uid,product) values(?,?)", new String[]{
                 String.valueOf(uid), product
         });
     }
 
     public static void update(SQLiteDatabase db,Integer uid,String product){
-        db.execSQL("update user set product = ? where uid = ?", new String[]{
+        db.execSQL("update shopcar set product = ? where uid = ?", new String[]{
                 product, String.valueOf(uid)});
     }
     public static void delete(SQLiteDatabase db,Integer uid){
-        db.execSQL("update user set product = ? where uid = ?",new String[]{
+        db.execSQL("update shopcar set product = ? where uid = ?",new String[]{
                 "",String.valueOf(uid)
         } );
     }
 
     public static String findAddress(SQLiteDatabase db,Integer uid){
-        Cursor cursor = db.rawQuery("select * from user where uid = ?",new String[]{String.valueOf(uid)});
+        Cursor cursor = db.rawQuery("select * from shopcar where uid = ?",new String[]{String.valueOf(uid)});
         if(cursor.moveToFirst()){
             String address  = cursor.getString(cursor.getColumnIndex("address"));
             return address;

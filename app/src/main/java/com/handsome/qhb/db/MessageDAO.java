@@ -46,9 +46,9 @@ public class MessageDAO  {
 //        db.execSQL("update room set product = ? where uid = ?", new String[]{
 //                product, String.valueOf(uid)});
 //    }
-    public static void delete(SQLiteDatabase db,Integer rid,Integer uid ){
-        db.execSQL("delete from room  where uid = ? and rid = ?",new String[]{
-                "",String.valueOf(uid)
-        } );
-    }
+//    public static void delete(SQLiteDatabase db,Integer rid,Integer uid ){
+//        db.execSQL("delete from room  where uid = ? and rid = ?",new String[]{
+//                "",String.valueOf(uid)
+//        } );
+//    }
 }
