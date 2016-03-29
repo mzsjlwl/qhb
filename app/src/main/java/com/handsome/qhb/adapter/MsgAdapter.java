@@ -135,8 +135,6 @@ public class MsgAdapter extends BaseAdapter{
             viewHolder.content.setText("");
             viewHolder.content.setOnClickListener(new RandomBonusOnclickListener(position));
             viewHolder.nickname.setText(chatMessage.getNackname());
-
-
         }else if(chatMessage.getType()==Config.TYPE_CDSBONUS){
 
         }else {

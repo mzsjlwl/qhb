@@ -8,7 +8,7 @@ import java.util.Arrays;
  */
 public class RandomBonus implements Serializable{
     private User user;
-    private int bonus;
+    private float bonus;
     private String time;
     public User getUser() {
         return user;
@@ -18,7 +18,7 @@ public class RandomBonus implements Serializable{
         this.user = user;
     }
 
-    public int getBonus() {
+    public float getBonus() {
         return bonus;
     }
 
@@ -38,7 +38,7 @@ public class RandomBonus implements Serializable{
 
     }
 
-    public RandomBonus(User user, int bonus, String time) {
+    public RandomBonus(User user, float bonus, String time) {
         this.user = user;
         this.bonus = bonus;
         this.time = time;
