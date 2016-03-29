@@ -25,7 +25,7 @@ public class UserDBOpenHelper extends SQLiteOpenHelper {
             "(mid integer primary key AUTOINCREMENT,"+
             "id integer,rid integer,uid integer,content text,"+
             "nackname text,date text,status integer,"+
-            "type integer,round integer)";
+            "type integer,bonus_total float)";
 
     private static  UserDBOpenHelper userDBOpenHelper;
     public UserDBOpenHelper(Context context,String name,SQLiteDatabase.CursorFactory factory,int version){
@@ -35,7 +35,7 @@ public class UserDBOpenHelper extends SQLiteOpenHelper {
 
     public static synchronized  UserDBOpenHelper getInstance(Context context){
         if(userDBOpenHelper==null){
-            userDBOpenHelper = new UserDBOpenHelper(context,DATABASE_NAME,null,4);
+            userDBOpenHelper = new UserDBOpenHelper(context,DATABASE_NAME,null,5);
 
         }
         return userDBOpenHelper;
