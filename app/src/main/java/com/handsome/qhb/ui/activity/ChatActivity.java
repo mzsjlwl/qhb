@@ -240,7 +240,7 @@ public class ChatActivity extends BaseActivity {
             chatMessage.setUid(msg.getUid());
             Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             chatMessage.setDate(format.format(new Date()));
-            chatMessage.setUid(msg.getUid());
+            chatMessage.setId(msg.getId());
             messageList.add(chatMessage);
             msgAdapter.notifyDataSetChanged();
             lv_chat.setSelection(messageList.size()-1);

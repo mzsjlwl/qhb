@@ -85,6 +85,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
             //randomBonus = gson.fromJson(xgPushTextMessage.getContent(),RandomBonus.class);
             chatMessage = gson.fromJson(xgPushTextMessage.getContent(),ChatMessage.class);
             //判断是否有这个房间,若没有则不响应
+            LogUtils.e("RandomBonus ==>",chatMessage.toString());
             if(!isInRoomList(chatMessage.getRid())){
                 return;
             }
