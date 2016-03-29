@@ -134,11 +134,8 @@ public class MsgAdapter extends BaseAdapter{
             viewHolder.content.setPadding(0,0,0,0);
             viewHolder.content.setText("");
             viewHolder.content.setOnClickListener(new RandomBonusOnclickListener(position));
-            if(chatMessage.getUid()==0){
-                viewHolder.nickname.setText("系统");
-            }else{
-                viewHolder.nickname.setText(chatMessage.getNackname());
-            }
+            viewHolder.nickname.setText(chatMessage.getNackname());
+
 
         }else if(chatMessage.getType()==Config.TYPE_CDSBONUS){
 
