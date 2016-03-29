@@ -7,14 +7,14 @@ import java.util.Arrays;
  * Created by zhang on 2016/3/26.
  */
 public class RandomBonus implements Serializable{
-    private String user;
+    private User user;
     private int bonus;
     private String time;
-    public String getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -38,7 +38,7 @@ public class RandomBonus implements Serializable{
 
     }
 
-    public RandomBonus(String user, int bonus, String time) {
+    public RandomBonus(User user, int bonus, String time) {
         this.user = user;
         this.bonus = bonus;
         this.time = time;

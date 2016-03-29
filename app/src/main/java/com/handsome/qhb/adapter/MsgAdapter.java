@@ -253,7 +253,9 @@ public class MsgAdapter extends BaseAdapter{
                                         return;
                                     }
                                     String data = jsonObject.getString("data");
+                                    LogUtils.e("data========>",data);
                                     JSONObject jsonObject1 = new JSONObject(data);
+                                    LogUtils.e("randombonus==========>",jsonObject1.getString("randombonus"));
                                     bonusList = gson.fromJson(jsonObject1.getString("randombonus"),new TypeToken<List<RandomBonus>>(){}.getType());
                                     Intent i = new Intent(context, BonusActivity.class);
                                     Bundle b = new Bundle();

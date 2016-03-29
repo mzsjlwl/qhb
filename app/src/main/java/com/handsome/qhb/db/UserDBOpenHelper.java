@@ -52,7 +52,6 @@ public class UserDBOpenHelper extends SQLiteOpenHelper {
         db.execSQL("drop table if exists shopcar");
         db.execSQL("drop table if exists room");
         db.execSQL("drop table if exists message");
-
         onCreate(db);
     }
 

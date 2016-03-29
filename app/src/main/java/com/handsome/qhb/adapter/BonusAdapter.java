@@ -27,7 +27,8 @@ public class BonusAdapter extends CommonAdapter<RandomBonus> {
     }
     @Override
     public void convert(int position, ViewHolder holder, ListView listView, RandomBonus randomBonus) {
-        user = gson.fromJson(randomBonus.getUser(),User.class);
+//        user = gson.fromJson(randomBonus.getUser(),User.class);
+        user = randomBonus.getUser();
         holder.setImage(R.id.iv_user_photo, user.getPhoto());
         if(user.getUid()==0){
             holder.setText(R.id.tv_user_nackname,"系统的红包");
