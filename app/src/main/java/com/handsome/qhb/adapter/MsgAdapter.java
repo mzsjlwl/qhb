@@ -32,6 +32,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +51,7 @@ public class MsgAdapter extends BaseAdapter{
     private List<RandomBonus> bonusList = new ArrayList<RandomBonus>();
     private Context context;
     private Gson gson = new Gson();
+    private Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     public MsgAdapter(Context context, List<ChatMessage> datas)
     {
@@ -89,7 +92,6 @@ public class MsgAdapter extends BaseAdapter{
     public View getView(int position, View convertView, ViewGroup parent) {
         ChatMessage chatMessage = mDatas.get(position);
 
-        LogUtils.e("getView", "=====>");
         ViewHolder viewHolder = null;
 
         if (convertView == null)
@@ -103,7 +105,6 @@ public class MsgAdapter extends BaseAdapter{
                         .findViewById(R.id.chat_from_createDate);
                 viewHolder.content = (TextView) convertView
                         .findViewById(R.id.chat_from_content);
-                //viewHolder.content.setBackgroundResource(R.drawable.balloon_l2);
                 viewHolder.nickname = (TextView) convertView
                         .findViewById(R.id.chat_from_name);
                 viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_progressBar);
@@ -116,18 +117,16 @@ public class MsgAdapter extends BaseAdapter{
                         .findViewById(R.id.chat_send_createDate);
                 viewHolder.content = (TextView) convertView
                         .findViewById(R.id.chat_send_content);
-                //viewHolder.content.setBackgroundResource(R.drawable.balloon_r2);
-
                 viewHolder.nickname = (TextView) convertView
                         .findViewById(R.id.chat_send_name);
                 viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_progressBar);
                 convertView.setTag(viewHolder);
             }
 
-        } else
-        {
+        } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+
         viewHolder.createDate.setText(chatMessage.getDate());
         if(chatMessage.getType()== Config.TYPE_RANDOMBONUS){
             viewHolder.content.setBackgroundResource(R.mipmap.cds1);
@@ -154,8 +153,6 @@ public class MsgAdapter extends BaseAdapter{
             if(viewHolder.progressBar!=null){
                 viewHolder.progressBar.setVisibility(View.INVISIBLE);
             }
-            LogUtils.e("chatMessage", "1");
-
         }
 
         return convertView;
@@ -191,7 +188,6 @@ public class MsgAdapter extends BaseAdapter{
                             public void onResponse(String response) {
                                 try {
                                     progressDialog.dismiss();
-                                    LogUtils.e("response", response);
                                     JSONObject jsonObject = new JSONObject(response);
                                     String status = jsonObject.getString("status");
                                     if(status == "0"){
@@ -222,6 +218,7 @@ public class MsgAdapter extends BaseAdapter{
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> map = new HashMap<String, String>();
                         map.put("id",String.valueOf(mDatas.get(position).getId()));
+                        map.put("count",String.valueOf(mDatas.get(position).getBonus_total()));
                         return map;
                     }
                 };
@@ -240,7 +237,6 @@ public class MsgAdapter extends BaseAdapter{
                             public void onResponse(String response) {
                                 try {
                                     progressDialog.dismiss();
-                                    LogUtils.e("response", response);
                                     JSONObject jsonObject = new JSONObject(response);
                                     String status = jsonObject.getString("status");
                                     if(status == "0"){
@@ -248,9 +244,7 @@ public class MsgAdapter extends BaseAdapter{
                                         return;
                                     }
                                     String data = jsonObject.getString("data");
-                                    LogUtils.e("data========>",data);
                                     JSONObject jsonObject1 = new JSONObject(data);
-                                    LogUtils.e("randombonus==========>",jsonObject1.getString("randombonus"));
                                     bonusList = gson.fromJson(jsonObject1.getString("randombonus"),new TypeToken<List<RandomBonus>>(){}.getType());
                                     Intent i = new Intent(context, BonusActivity.class);
                                     Bundle b = new Bundle();
@@ -278,9 +272,7 @@ public class MsgAdapter extends BaseAdapter{
                     }
                 };
                 MyApplication.getmQueue().add(stringRequest);
-
             }
-
         }
     }
 

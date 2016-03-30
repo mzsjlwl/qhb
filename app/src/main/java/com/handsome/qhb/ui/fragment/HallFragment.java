@@ -20,9 +20,11 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.RoomAdapter;
 import com.handsome.qhb.application.MyApplication;
+import com.handsome.qhb.bean.ChatMessage;
 import com.handsome.qhb.bean.Product;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.config.Config;
+import com.handsome.qhb.db.MessageDAO;
 import com.handsome.qhb.db.RoomDAO;
 import com.handsome.qhb.db.UserDAO;
 import com.handsome.qhb.db.UserDBOpenHelper;
@@ -33,7 +35,14 @@ import com.tencent.android.tpush.XGPushManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+import java.text.Format;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import tab.com.handsome.handsome.R;
@@ -48,13 +57,19 @@ public class HallFragment extends Fragment  {
     private RoomAdapter roomAdapter;
     private RequestQueue requestQueue = MyApplication.getmQueue();
     private SQLiteDatabase db ;
+    private Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     public Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             if(msg.what== Config.INITROOM_MESSAGE){
                 LogUtils.e("0x128","-------->");
-                refreshMessage((List<Room>)msg.obj);
+                roomList = (List<Room>)msg.obj;
+                refreshMessage();
+            }else if(msg.what == Config.ADD_MESSAGE){
+                ChatMessage chatMessage = new ChatMessage();
+                chatMessage = (ChatMessage) msg.obj;
+                addChatMessage(chatMessage);
             }
         }
     };
@@ -62,14 +77,17 @@ public class HallFragment extends Fragment  {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        db = UserDBOpenHelper.getInstance(getActivity()).getWritableDatabase();
+        db = MyApplication.getSQLiteDatabase();
+        if(UserInfo.getInstance()!=null){
+            LogUtils.e("UserInfo===>",String.valueOf(UserInfo.getInstance().getUid()));
+            roomList = RoomDAO.query(MyApplication.getSQLiteDatabase(),UserInfo.getInstance().getUid());
+        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_hall,container,false);
         lv_room = (ListView) view.findViewById(R.id.lv_room);
         MyApplication.setRoomHandler(handler);
-        XGPushManager.registerPush(getActivity());
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/sendRoomPHP",
                 new Response.Listener<String>() {
                     @Override
@@ -82,10 +100,20 @@ public class HallFragment extends Fragment  {
                                 LogUtils.e("room","服务器发送失败");
                             }else{
                                 Gson gson = new Gson();
-                                List<Room> roomList = gson.fromJson(jsonObject.getString("data"),new TypeToken<List<Room>>(){}.getType());
-                                if(roomList!=null){
-                                    for(Room r:roomList){
-                                        MyApplication.addRooms(r.getRid());
+                                List<Room> roomLists = gson.fromJson(jsonObject.getString("data"),new TypeToken<List<Room>>(){}.getType());
+                                if(roomList!=null&&roomLists!=null){
+                                    for(int i = 0;i<roomLists.size();i++){
+                                        int j = 0;
+                                        for(;j<roomList.size();j++){
+                                            if(roomList.get(j).getRid()==roomLists.get(i).getRid()){
+                                                break;
+                                            }
+                                        }
+                                        if(j==roomList.size()) {
+                                            Room r = new Room();
+                                            r = roomLists.get(i);
+                                            roomList.add(r);
+                                        }
                                     }
                                 }
                                 Message message = new Message();
@@ -109,13 +137,25 @@ public class HallFragment extends Fragment  {
 
 
     @Override
+    public void onStart() {
+        super.onStart();
+//        if(roomList==null){
+//            roomList = new ArrayList<Room>();
+//            if(UserInfo.getInstance()!=null){
+//                roomList = RoomDAO.query(MyApplication.getSQLiteDatabase(),UserInfo.getInstance().getUid());
+//            }
+//        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
+        //先从数据库中获取房间信息
        List<Room> rooms = new ArrayList<Room>();
         if(UserInfo.getInstance()!=null&&rooms!=null){
             rooms = RoomDAO.query(db,UserInfo.getInstance().getUid());
         }
-        if(roomList!=null&&rooms!=null){
+        if(roomList!=null&&rooms!=null&&UserInfo.getInstance()!=null){
             for(int i = 0;i<roomList.size();i++){
                 int j = 0;
                 for(;j< rooms.size();j++){
@@ -125,7 +165,8 @@ public class HallFragment extends Fragment  {
                 }
                 if(j==rooms.size()){
                     RoomDAO.insert(db,roomList.get(i).getRid(),UserInfo.getInstance().getUid(),
-                           roomList.get(i).getRoomName(),roomList.get(i).getRoomCreater());
+                           roomList.get(i).getRoomName(),roomList.get(i).getRoomCreater(),format.format(new Date())
+                            );
                 }
             }
         }
@@ -134,13 +175,45 @@ public class HallFragment extends Fragment  {
     @Override
     public void onResume() {
         super.onResume();
+        if(roomAdapter!=null){
+            roomAdapter.notifyDataSetChanged();
+        }
+//        roomList.clear();
     }
 
-    public void refreshMessage(List<Room> roomList){
+
+    public void refreshMessage(){
         roomAdapter = new RoomAdapter(getActivity(),roomList,R.layout.room_list_items,MyApplication.getmQueue());
         lv_room.setAdapter(roomAdapter);
     }
 
+    public void addChatMessage(ChatMessage msg){
+        for(int i = 0;i<roomList.size();i++){
+            if(roomList.get(i).getRid()==msg.getRid()){
+//                String lastTime = format.format(new Date());
+//                roomList.get(i).setLastTime(lastTime);
+                roomList.get(i).getChatMessageList().add(msg);
+            }
+            LogUtils.e("roomList===>",roomList.get(i).getLastTime());
+        }
+        Collections.sort(roomList, new Comparator<Room>() {
+            @Override
+            public int compare(Room room, Room t1) {
 
+                        String s1 = room.getLastTime();
+                        String s2 = t1.getLastTime();
+                        LogUtils.e("s1====>",s1);
+                        LogUtils.e("s2===>",s2);
+                        if(s2.compareTo(s1)==0){
+                            return Integer.valueOf(t1.getRid()).compareTo(Integer.valueOf(
+                                    room.getRid()
+                            ));
+                        }else{
+                            return s2.compareTo(s1);
+                        }
+            }
+        });
+        roomAdapter.notifyDataSetChanged();
+    }
 
 }

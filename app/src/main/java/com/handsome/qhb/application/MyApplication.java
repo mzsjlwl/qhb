@@ -3,6 +3,7 @@ package com.handsome.qhb.application;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
 import android.os.Message;
 import android.telephony.TelephonyManager;
@@ -18,7 +19,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.config.Config;
+import com.handsome.qhb.db.UserDBOpenHelper;
 import com.handsome.qhb.utils.LogUtils;
+import com.tencent.android.tpush.XGPushManager;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,10 +35,10 @@ public class MyApplication extends Application {
     private static RequestQueue mQueue;
     private static Handler roomHandler;
     private static Handler chatHandler;
-    private static String Tag;
+    private static int rid ;
     private static TelephonyManager tm;
     private static NotificationManager nm;
-    private static List<Integer> rooms = new ArrayList<Integer>();
+    private static SQLiteDatabase db;
 
     @Override
     public void onCreate() {
@@ -45,6 +48,8 @@ public class MyApplication extends Application {
         tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         //获取消息通知
         nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
+        XGPushManager.registerPush(context);
+
     }
 
     public synchronized static Context getContext(){
@@ -62,19 +67,25 @@ public class MyApplication extends Application {
         return roomHandler;
     }
 
+
     public synchronized  static void setRoomHandler(Handler hallHandler){
         roomHandler = hallHandler;
+
     }
 
     public synchronized  static Handler getChatHandler(){
         return chatHandler;
     }
 
-    public synchronized  static void setChatHandler(Handler handler){
+
+    public synchronized  static void setChatHandler(Handler handler,int id){
         chatHandler= handler;
+        rid = id;
     }
 
-
+    public synchronized static int getRoomId(){
+        return rid;
+    }
     public synchronized static String getTag(){
         return tm.getDeviceId();
     }
@@ -83,12 +94,12 @@ public class MyApplication extends Application {
         return nm;
     }
 
-    public synchronized  static List<Integer> getRooms(){
-        return rooms;
-    }
 
-    public synchronized  static void addRooms(Integer i){
-        rooms.add(i);
+    public synchronized  static SQLiteDatabase getSQLiteDatabase(){
+        if(db==null){
+            db = UserDBOpenHelper.getInstance(context).getWritableDatabase();
+        }
+        return db;
     }
 
 }

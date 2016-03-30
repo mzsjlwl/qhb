@@ -20,24 +20,26 @@ public class RoomDAO {
             do{
                 Room room = new Room();
                 room.setRid(cursor.getInt(cursor.getColumnIndex("rid")));
-                room.setRoomCreater(cursor.getString(cursor.getColumnIndex("roomCreate")));
+                room.setRoomCreater(cursor.getString(cursor.getColumnIndex("roomCreater")));
                 room.setRoomName(cursor.getString(cursor.getColumnIndex("roomName")));
+                room.setLastTime(cursor.getString(cursor.getColumnIndex("lastTime")));
                 roomList.add(room);
             }while(cursor.moveToNext());
         }
         return roomList;
     }
 
-    public static void insert(SQLiteDatabase db,Integer rid,Integer uid,String roomName,String roomCreater){
-        db.execSQL("insert into room(rid,uid,roomName,roomCreater) values(?,?,?,?)", new String[]{
-                String.valueOf(rid),String.valueOf(uid),roomName,roomCreater
+    public static void insert(SQLiteDatabase db,Integer rid,Integer uid,String roomName,String roomCreater,String lastTime){
+        db.execSQL("insert into room(rid,uid,roomName,roomCreater,lastTime) values(?,?,?,?,?)", new String[]{
+                String.valueOf(rid),String.valueOf(uid),roomName,roomCreater,lastTime
         });
     }
 
-//    public static void update(SQLiteDatabase db,Integer uid,String product){
-//        db.execSQL("update room set product = ? where uid = ?", new String[]{
-//                product, String.valueOf(uid)});
-//    }
+    public static void update(SQLiteDatabase db,String lastTime,Integer rid){
+        db.execSQL("update room set lastTime = ? where rid = ?", new String[]{
+                lastTime, String.valueOf(rid)});
+    }
+
     public static void delete(SQLiteDatabase db,Integer rid,Integer uid ){
         db.execSQL("delete from room  where uid = ? and rid = ?",new String[]{
                 "",String.valueOf(uid)

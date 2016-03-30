@@ -131,7 +131,7 @@ public class ShopFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         LogUtils.e("fragment", "oncreate");
-        db = UserDBOpenHelper.getInstance(getActivity()).getWritableDatabase();
+        db = MyApplication.getSQLiteDatabase();
         //异步加载轮播图片
         JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Config.BASE_URL + "Slider/getJson", null,
                 new Response.Listener<JSONObject>() {

@@ -22,10 +22,13 @@ public class Config {
     public static final int REFERSH_PRODUCT = 4;
     public static final int LoadMORE_PRODUCT = 5;
     public static final int INITROOM_MESSAGE = 6;
+
     public static final int ROOM_MESSAGE = 7;
     public static final int CHAT_MESSAGE = 8;
     public static final int RANDOMBONUS_MESSAGE = 9;
     public static final int CDSBONUS_MESSAGE = 10;
+    public static final int ADD_MESSAGE=11;
+
 
     public static final String XG_PUSH_URL = "http://openapi.xg.qq.com/v2/push/";
 

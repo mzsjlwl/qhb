@@ -17,10 +17,12 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.handsome.qhb.application.MyApplication;
+import com.handsome.qhb.bean.ChatMessage;
 import com.handsome.qhb.bean.Product;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
+import com.handsome.qhb.db.MessageDAO;
 import com.handsome.qhb.ui.activity.ChatActivity;
 import com.handsome.qhb.ui.activity.MainActivity;
 import com.handsome.qhb.ui.activity.OrderDetailActivity;
@@ -33,6 +35,7 @@ import org.json.JSONObject;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -46,14 +49,35 @@ import tab.com.handsome.handsome.R;
  */
 public class RoomAdapter extends CommonAdapter<Room> {
 
+    public ChatMessage chatMessage;
+    public List<ChatMessage> chatMessageList = new ArrayList<ChatMessage>();
     public RoomAdapter(Context context, List<Room> datas, int layoutId, RequestQueue mQueue){
         super(context,datas,layoutId,mQueue);
     }
     @Override
     public void convert(int position,ViewHolder holder,ListView listView ,Room room) {
-        holder.setText(R.id.id_tv_roomName,room.getRoomName());
-        holder.setText(R.id.id_tv_time, room.getRoomEndTime());
+        holder.setText(R.id.id_tv_roomName, room.getRoomName());
+        holder.setText(R.id.id_tv_time, room.getLastTime());
         holder.getView(R.id.room_list_items).setOnClickListener(new RoomItemOnclick(position));
+        if(room.getChatMessageList().size()==0){
+            chatMessageList = MessageDAO.query(MyApplication.getSQLiteDatabase(),room.getRid());
+            holder.setText(R.id.id_tv_num,"");
+            holder.setText(R.id.id_tv_content,"");
+            if(chatMessageList!=null&&chatMessageList.size()>0){
+                holder.setText(R.id.id_tv_content,
+                        chatMessageList.get(chatMessageList.size()-1).getNackname()
+                                +" : "
+                                +chatMessageList.get(chatMessageList.size()-1).getContent());
+                holder.setText(R.id.id_tv_time,chatMessageList.get(chatMessageList.size()-1).getDate());
+            }
+        }else {
+            chatMessage = room.getChatMessageList().get(room.getChatMessageList().size()-1);
+            holder.setText(R.id.id_tv_num,"[ "+room.getChatMessageList().size()+"条 ]");
+            holder.setText(R.id.id_tv_content,chatMessage.getNackname()+" : "+chatMessage.getContent());
+            holder.setText(R.id.id_tv_time,chatMessage.getDate());
+
+        }
+
     }
 
     class RoomItemOnclick implements View.OnClickListener{
@@ -63,7 +87,7 @@ public class RoomAdapter extends CommonAdapter<Room> {
         }
         @Override
         public void onClick(View view) {
-
+            mDatas.get(position).getChatMessageList().clear();
             final ProgressDialog progressDialog = new ProgressDialog(mContext);
             progressDialog.setMessage("请求中");
             progressDialog.setCancelable(true);
@@ -86,13 +110,6 @@ public class RoomAdapter extends CommonAdapter<Room> {
                                     Toast.makeText(mContext, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
                                     return;
                                 }
-                                //设置房间打开转态,消息直接呈现，无通知功能;
-                                mDatas.get(position).setFlag("1");
-//                                Intent i = new Intent(mContext, ChatActivity.class);
-//                                Bundle b = new Bundle();
-//                                b.putSerializable("room", mDatas.get(position));
-//                                i.putExtras(b);
-//                                mContext.startActivity(i);
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }

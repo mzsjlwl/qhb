@@ -20,6 +20,9 @@ public class Room implements Serializable {
     private String roomState;
     private String flag;
     private List<ChatMessage> chatMessageList= new ArrayList<ChatMessage>();
+    private String lastTime;
+
+
 
     public String getFlag() {
         return flag;
@@ -118,11 +121,20 @@ public class Room implements Serializable {
         this.chatMessageList = chatMessageList;
     }
 
+
+    public String getLastTime() {
+        return lastTime;
+    }
+
+    public void setLastTime(String lastTime) {
+        this.lastTime = lastTime;
+    }
+
     public Room(){
 
     }
 
-    public Room(int rid, int sortId, int roomGameNum, String roomName, String roomMember, String roomPassword, String roomCreater, String roomCreateTime, String roomEndTime, String roomState, String flag, List<ChatMessage> chatMessageList) {
+    public Room(int rid, int sortId, int roomGameNum, String roomName, String roomMember, String roomPassword, String roomCreater, String roomCreateTime, String roomEndTime, String roomState, String flag, List<ChatMessage> chatMessageList, String lastTime) {
         this.rid = rid;
         this.sortId = sortId;
         this.roomGameNum = roomGameNum;
@@ -135,6 +147,7 @@ public class Room implements Serializable {
         this.roomState = roomState;
         this.flag = flag;
         this.chatMessageList = chatMessageList;
+        this.lastTime = lastTime;
     }
 
     @Override
@@ -152,6 +165,7 @@ public class Room implements Serializable {
                 ", roomState='" + roomState + '\'' +
                 ", flag='" + flag + '\'' +
                 ", chatMessageList=" + chatMessageList +
+                ", lastTime='" + lastTime + '\'' +
                 '}';
     }
 }

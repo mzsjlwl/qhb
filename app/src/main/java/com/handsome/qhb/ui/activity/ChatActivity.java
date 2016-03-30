@@ -26,6 +26,7 @@ import com.handsome.qhb.bean.RandomBonus;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.bean.XGMessage;
 import com.handsome.qhb.config.Config;
+import com.handsome.qhb.db.MessageDAO;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.SignUtil;
 import com.handsome.qhb.utils.UserInfo;
@@ -84,19 +85,29 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyApplication.setChatHandler(handler);
+
         if(getIntent().getSerializableExtra("room")==null){
             return;
         }
         setContentView(R.layout.activity_chat);
+
         tv_room_title = (TextView) findViewById(R.id.tv_room_title);
         et_chat_msg = (EditText)findViewById(R.id.et_chat_msg);
         ib_chat_send = (ImageButton)findViewById(R.id.ib_chat_send);
         ib_back = (ImageButton)findViewById(R.id.ib_back);
         lv_chat = (ListView)findViewById(R.id.lv_chat);
+        room = (Room) getIntent().getSerializableExtra("room");
+        MyApplication.setChatHandler(handler,room.getRid());
+        messageList = MessageDAO.query(MyApplication.getSQLiteDatabase(),room.getRid());
+        for(int i = 0;i<messageList.size();i++){
+            if(messageList.get(i).getStatus()==0){
+                messageList.get(i).setStatus(1);
+            }
+        }
         msgAdapter = new MsgAdapter(this, messageList);
         lv_chat.setAdapter(msgAdapter);
-        room = (Room) getIntent().getSerializableExtra("room");
+        lv_chat.setSelection(messageList.size() - 1);
+
 
         tv_room_title.setText(room.getRoomName());
 
@@ -104,6 +115,7 @@ public class ChatActivity extends BaseActivity {
         ib_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+//                是否退群
 //                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/exitRoom",
 //                        new Response.Listener<String>() {
 //                            @Override
@@ -149,7 +161,7 @@ public class ChatActivity extends BaseActivity {
                 message = new ChatMessage();
                 message.setUid(UserInfo.getInstance().getUid());
                 message.setContent(et_chat_msg.getText().toString());
-                Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
                 message.setDate(format.format(new Date()));
                 message.setRid(room.getRid());
                 message.setNackname(UserInfo.getInstance().getNackname());
@@ -216,16 +228,22 @@ public class ChatActivity extends BaseActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(MyApplication.getChatHandler()==null){
+            MyApplication.setChatHandler(handler,room.getRid());
+        }
+    }
+
     public void ReceiverMessage(ChatMessage message) {
         if (message.getRid() == room.getRid()) {
             if (message.getUid() == UserInfo.getInstance().getUid()) {
                 messageList.get(messageList.size() - 1).setStatus(1);
                 msgAdapter.notifyDataSetChanged();
                 lv_chat.setSelection(messageList.size() - 1);
-                LogUtils.e("Receiver", "same");
                 return;
             }
-            LogUtils.e("Receiver", "different");
             messageList.add(message);
             msgAdapter.notifyDataSetChanged();
             lv_chat.setSelection(messageList.size() - 1);
@@ -233,24 +251,9 @@ public class ChatActivity extends BaseActivity {
     }
 
     public void ReceiverRandomBonus(ChatMessage msg){
-        if(msg.getRid()==room.getRid()){
-            ChatMessage chatMessage = new ChatMessage();
-            //chatMessage.setStatus(1);
-            chatMessage.setType(Config.TYPE_RANDOMBONUS);
-            chatMessage.setUid(msg.getUid());
-            chatMessage.setNackname("系统");
-            Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-            chatMessage.setDate(format.format(new Date()));
-            chatMessage.setId(msg.getId());
-
-            if(msg.getUid()==UserInfo.getInstance().getUid()){
-                UserInfo.getInstance().setIntegral(UserInfo.getInstance().getIntegral() - msg.getBonus_total());
-            }
-            messageList.add(chatMessage);
+            messageList.add(msg);
             msgAdapter.notifyDataSetChanged();
             lv_chat.setSelection(messageList.size() - 1);
-        }
     }
 
     public void ReceiverCDSBonus(ChatMessage msg){
@@ -269,6 +272,6 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-
+        MyApplication.setChatHandler(null,0);
     }
 }

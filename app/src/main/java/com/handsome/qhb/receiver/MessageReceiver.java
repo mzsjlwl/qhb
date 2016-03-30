@@ -1,6 +1,11 @@
 package com.handsome.qhb.receiver;
 
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.content.Context;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Message;
 
 import com.google.gson.Gson;
@@ -10,15 +15,23 @@ import com.handsome.qhb.bean.ChatMessage;
 import com.handsome.qhb.bean.RandomBonus;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.config.Config;
+import com.handsome.qhb.db.MessageDAO;
+import com.handsome.qhb.db.RoomDAO;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.UserInfo;
 import com.tencent.android.tpush.XGPushBaseReceiver;
 import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import tab.com.handsome.handsome.R;
 
 /**
  * Created by zhang on 2016/3/22.
@@ -28,9 +41,12 @@ public class MessageReceiver extends XGPushBaseReceiver {
 
     private Gson gson = new Gson();
     private List<Room>  roomList = new ArrayList<Room>();
+    private List<Room> rooms = new ArrayList<Room>();
     private ChatMessage chatMessage;
+    private static final int NOTIFYID_1 = 1;
     private RandomBonus randomBonus;
-
+    private Bitmap LargeBitmap = BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.mipmap.test_icon);
+    private Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 
     @Override
@@ -55,64 +71,84 @@ public class MessageReceiver extends XGPushBaseReceiver {
 
     @Override
     public void onTextMessage(Context context, XGPushTextMessage xgPushTextMessage) {
-
+        if(UserInfo.getInstance()==null){
+            return;
+        }
         LogUtils.e("title==>", xgPushTextMessage.getTitle());
         if(xgPushTextMessage.getTitle().equals("Room")) {
             roomList = gson.fromJson(xgPushTextMessage.getContent(), new TypeToken<List<Room>>() {
             }.getType());
             if (roomList != null) {
-                for (int i = 0; i < roomList.size(); i++) {
-                    LogUtils.e("tongzhi====>", roomList.get(i).toString());
-                }
                 Message message = new Message();
                 message.what = Config.INITROOM_MESSAGE;
                 message.obj = roomList;
                 MyApplication.getRoomHandler().handleMessage(message);
             }
-        }else if(xgPushTextMessage.getTitle().equals("chat")){
-            chatMessage = gson.fromJson(xgPushTextMessage.getContent(),new TypeToken<ChatMessage>(){}.getType());
-            if(!isInRoomList(chatMessage.getRid())){
+        }else {
+            rooms = RoomDAO.query(MyApplication.getSQLiteDatabase(), UserInfo.getInstance().getUid());
+            chatMessage = gson.fromJson(xgPushTextMessage.getContent(), ChatMessage.class);
+            String time = format.format(new Date());
+            chatMessage.setDate(time);
+            chatMessage.setStatus(1);
+            int i = 0;
+            for(;i<rooms.size();i++){
+                if(rooms.get(i).getRid()==chatMessage.getRid()){
+                    RoomDAO.update(MyApplication.getSQLiteDatabase(),time,chatMessage.getRid());
+                    break;
+                }
+            }
+            if(i==rooms.size()){
                 return;
             }
-            if(MyApplication.getChatHandler()!=null){
+            Notification.Builder mBuilder = new Notification.Builder(MyApplication.getContext());
+            mBuilder.setContentTitle("楼下购");
+            if(xgPushTextMessage.getTitle().equals("chat")){
+                mBuilder.setContentText(chatMessage.getNackname()+" : "+chatMessage.getContent())
+                        .setTicker("收到" + chatMessage.getNackname() + "发送过来的信息");
+                if(MyApplication.getChatHandler()!=null&&MyApplication.getRoomId()==chatMessage.getRid()){
+                    Message message = new Message();
+                    message.what = Config.CHAT_MESSAGE;
+                    message.obj = chatMessage;
+                    MyApplication.getChatHandler().handleMessage(message);
+                }else{
+                    Message message = new Message();
+                    message.what = Config.ADD_MESSAGE;
+                    message.obj = chatMessage;
+                    MyApplication.getRoomHandler().handleMessage(message);
+                }
+            }else if(xgPushTextMessage.getTitle().equals("RandomBonus")){
+                mBuilder.setContentText(chatMessage.getNackname()+chatMessage.getContent())
+                        .setTicker("收到" + chatMessage.getNackname() + "发送过来的信息");
+                chatMessage.setType(Config.TYPE_RANDOMBONUS);
+                if(MyApplication.getChatHandler()!=null&&MyApplication.getRoomId()==chatMessage.getRid()){
+                    Message message = new Message();
+                    message.what = Config.RANDOMBONUS_MESSAGE;
+                    message.obj = chatMessage;
+                    MyApplication.getChatHandler().handleMessage(message);
+                }else{
+                    Message message = new Message();
+                    message.what = Config.ADD_MESSAGE;
+                    message.obj = chatMessage;
+                    MyApplication.getRoomHandler().handleMessage(message);
+                }
+
+            }else if(xgPushTextMessage.getTitle().equals("CDSBonus")){
+                //判断是否有这个房间,若没有则不响应
                 Message message = new Message();
-                message.what = Config.CHAT_MESSAGE;
+                message.what = Config.CDSBONUS_MESSAGE;
                 message.obj = chatMessage;
                 MyApplication.getChatHandler().handleMessage(message);
             }
-            LogUtils.e("xgmsg","chat");
-        }else if(xgPushTextMessage.getTitle().equals("RandomBonus")){
-            //randomBonus = gson.fromJson(xgPushTextMessage.getContent(),RandomBonus.class);
-            chatMessage = gson.fromJson(xgPushTextMessage.getContent(),ChatMessage.class);
-            //判断是否有这个房间,若没有则不响应
-            LogUtils.e("RandomBonus ==>",chatMessage.toString());
-            if(!isInRoomList(chatMessage.getRid())){
-                return;
-            }
+            mBuilder.setWhen(System.currentTimeMillis())
+                    .setSmallIcon(R.mipmap.test_icon)
+                    .setLargeIcon(LargeBitmap)
+                    .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
+                    .setAutoCancel(true);
+            MyApplication.getNotificationManager().notify(NOTIFYID_1, mBuilder.build());
+            MessageDAO.insert(MyApplication.getSQLiteDatabase(), 0, chatMessage.getRid(), chatMessage.getUid(), chatMessage.getContent(),
+                    chatMessage.getNackname(), chatMessage.getDate(), chatMessage.getStatus(), chatMessage.getType(), chatMessage.getBonus_total());
 
-            if(MyApplication.getChatHandler()!=null){
-                Message message = new Message();
-                message.what = Config.RANDOMBONUS_MESSAGE;
-                message.obj = chatMessage;
-                MyApplication.getChatHandler().handleMessage(message);
-            }
-
-            LogUtils.e("randombonus","=====>message");
-        }else if(xgPushTextMessage.getTitle().equals("CDSBonus")){
-            chatMessage = gson.fromJson(xgPushTextMessage.getContent(),ChatMessage.class);
-            //判断是否有这个房间,若没有则不响应
-            if(!isInRoomList(chatMessage.getRid())){
-                return;
-            }
-            Message message = new Message();
-            message.what = Config.CDSBONUS_MESSAGE;
-            message.obj = message;
-            MyApplication.getChatHandler().handleMessage(message);
-            LogUtils.e("CDSBonus","=======>message");
         }
-
-        LogUtils.e("not Room", xgPushTextMessage.getContent());
-
     }
 
     @Override
@@ -125,17 +161,4 @@ public class MessageReceiver extends XGPushBaseReceiver {
 
     }
 
-    public boolean isInRoomList(int rid){
-        int i = 0;
-        for(;i<MyApplication.getRooms().size();i++){
-            if(MyApplication.getRooms().get(i)==rid){
-                break;
-            }
-        }
-
-        if(i==MyApplication.getRooms().size()){
-            return false;
-        }
-        return true;
-    }
 }
