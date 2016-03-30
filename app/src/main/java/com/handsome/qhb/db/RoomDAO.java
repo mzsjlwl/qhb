@@ -40,6 +40,13 @@ public class RoomDAO {
                 lastTime, String.valueOf(rid)});
     }
 
+    public static void updateMessage(SQLiteDatabase db,String chatMessage,Integer rid){
+        db.execSQL("update room set chatMessage = ? where rid = ?",new String[]{
+                chatMessage,String.valueOf(rid)
+        });
+    }
+
+
     public static void delete(SQLiteDatabase db,Integer rid,Integer uid ){
         db.execSQL("delete from room  where uid = ? and rid = ?",new String[]{
                 "",String.valueOf(uid)
