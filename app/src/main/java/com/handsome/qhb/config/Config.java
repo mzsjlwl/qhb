@@ -28,6 +28,7 @@ public class Config {
     public static final int RANDOMBONUS_MESSAGE = 9;
     public static final int CDSBONUS_MESSAGE = 10;
     public static final int ADD_MESSAGE=11;
+    public static final int ROOM_REFRESH_LASTMESSAGE = 12;
 
 
     public static final String XG_PUSH_URL = "http://openapi.xg.qq.com/v2/push/";

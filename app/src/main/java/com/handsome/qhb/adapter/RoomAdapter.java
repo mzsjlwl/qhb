@@ -23,6 +23,7 @@ import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.MessageDAO;
+import com.handsome.qhb.db.RoomDAO;
 import com.handsome.qhb.ui.activity.ChatActivity;
 import com.handsome.qhb.ui.activity.MainActivity;
 import com.handsome.qhb.ui.activity.OrderDetailActivity;
@@ -57,27 +58,21 @@ public class RoomAdapter extends CommonAdapter<Room> {
     @Override
     public void convert(int position,ViewHolder holder,ListView listView ,Room room) {
         holder.setText(R.id.id_tv_roomName, room.getRoomName());
-        holder.setText(R.id.id_tv_time, room.getLastTime());
         holder.getView(R.id.room_list_items).setOnClickListener(new RoomItemOnclick(position));
-        if(room.getChatMessageList().size()==0){
-            chatMessageList = MessageDAO.query(MyApplication.getSQLiteDatabase(),room.getRid());
-            holder.setText(R.id.id_tv_num,"");
-            holder.setText(R.id.id_tv_content,"");
-            if(chatMessageList!=null&&chatMessageList.size()>0){
+        if(room.getLastMessage()!=null){
+            holder.setText(R.id.id_tv_time, room.getLastMessage().getDate());
+            if(room.getChatMessageList().size()==0){
+                holder.setText(R.id.id_tv_num,"");
                 holder.setText(R.id.id_tv_content,
-                        chatMessageList.get(chatMessageList.size()-1).getNackname()
-                                +" : "
-                                +chatMessageList.get(chatMessageList.size()-1).getContent());
-                holder.setText(R.id.id_tv_time,chatMessageList.get(chatMessageList.size()-1).getDate());
+                        room.getLastMessage().getNackname()+" : "+
+                room.getLastMessage().getContent());
+            }else {
+                chatMessage = room.getChatMessageList().get(room.getChatMessageList().size()-1);
+                holder.setText(R.id.id_tv_num,"[ "+room.getChatMessageList().size()+"条 ]");
+                holder.setText(R.id.id_tv_content,chatMessage.getNackname()+" : "+chatMessage.getContent());
+                holder.setText(R.id.id_tv_time,chatMessage.getDate());
             }
-        }else {
-            chatMessage = room.getChatMessageList().get(room.getChatMessageList().size()-1);
-            holder.setText(R.id.id_tv_num,"[ "+room.getChatMessageList().size()+"条 ]");
-            holder.setText(R.id.id_tv_content,chatMessage.getNackname()+" : "+chatMessage.getContent());
-            holder.setText(R.id.id_tv_time,room.getLastTime());
-
         }
-
     }
 
     class RoomItemOnclick implements View.OnClickListener{
@@ -97,6 +92,8 @@ public class RoomAdapter extends CommonAdapter<Room> {
             b.putSerializable("room", mDatas.get(position));
             i.putExtras(b);
             mContext.startActivity(i);
+            //数据库更新
+            RoomDAO.update(MyApplication.getSQLiteDatabase(),"",mDatas.get(position).getRid());
             StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/enterRoom",
                     new Response.Listener<String>() {
                         @Override

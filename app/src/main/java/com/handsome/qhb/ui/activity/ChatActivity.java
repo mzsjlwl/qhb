@@ -161,7 +161,7 @@ public class ChatActivity extends BaseActivity {
                 message = new ChatMessage();
                 message.setUid(UserInfo.getInstance().getUid());
                 message.setContent(et_chat_msg.getText().toString());
-                Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 message.setDate(format.format(new Date()));
                 message.setRid(room.getRid());
                 message.setNackname(UserInfo.getInstance().getNackname());

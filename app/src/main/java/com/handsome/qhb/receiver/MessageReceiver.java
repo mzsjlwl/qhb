@@ -46,7 +46,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
     private static final int NOTIFYID_1 = 1;
     private RandomBonus randomBonus;
     private Bitmap LargeBitmap = BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.mipmap.test_icon);
-    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
     @Override
@@ -94,7 +94,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
             int i = 0;
             for(;i<rooms.size();i++){
                 if(rooms.get(i).getRid()==chatMessage.getRid()){
-                    RoomDAO.update(MyApplication.getSQLiteDatabase(),time,chatMessage.getRid());
+                    RoomDAO.update(MyApplication.getSQLiteDatabase(),MyApplication.getGson().toJson(chatMessage),chatMessage.getRid());
                     break;
                 }
             }
@@ -112,7 +112,11 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     Message message = new Message();
                     message.what = Config.CHAT_MESSAGE;
                     message.obj = chatMessage;
+                    Message message1 = new Message();
+                    message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
+                    message1.obj = chatMessage;
                     MyApplication.getChatHandler().handleMessage(message);
+                    MyApplication.getRoomHandler().handleMessage(message1);
                 }else{
                     //更新房间信息
                     Message message = new Message();
@@ -131,7 +135,13 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     Message message = new Message();
                     message.what = Config.RANDOMBONUS_MESSAGE;
                     message.obj = chatMessage;
+
+                    Message message1 = new Message();
+                    message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
+                    message1.obj = chatMessage;
+
                     MyApplication.getChatHandler().handleMessage(message);
+                    MyApplication.getRoomHandler().handleMessage(message1);
                 }else{
                     //更新房间信息
                     Message message = new Message();

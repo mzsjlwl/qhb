@@ -57,7 +57,7 @@ public class HallFragment extends Fragment  {
     private RoomAdapter roomAdapter;
     private RequestQueue requestQueue = MyApplication.getmQueue();
     private SQLiteDatabase db ;
-    private Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public Handler handler = new Handler(){
         @Override
@@ -70,12 +70,17 @@ public class HallFragment extends Fragment  {
                 ChatMessage chatMessage = new ChatMessage();
                 chatMessage = (ChatMessage) msg.obj;
                 addChatMessage(chatMessage);
+            }else if(msg.what==Config.ROOM_REFRESH_LASTMESSAGE){
+                ChatMessage chatMessage = new ChatMessage();
+                chatMessage = (ChatMessage)msg.obj;
+                refreshLastMessage(chatMessage);
             }
         }
     };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        LogUtils.e("HallFragment","oncreate");
         super.onCreate(savedInstanceState);
         db = MyApplication.getSQLiteDatabase();
         if(UserInfo.getInstance()!=null){
@@ -149,8 +154,9 @@ public class HallFragment extends Fragment  {
 
     @Override
     public void onPause() {
+        LogUtils.e("hallFragment====>", "onPause");
         super.onPause();
-        //先从数据库中获取房间信息
+        //先从数据库中获取房间信息,对比后更新房间数据
        List<Room> rooms = new ArrayList<Room>();
         if(UserInfo.getInstance()!=null&&rooms!=null){
             rooms = RoomDAO.query(db,UserInfo.getInstance().getUid());
@@ -160,6 +166,12 @@ public class HallFragment extends Fragment  {
                 int j = 0;
                 for(;j< rooms.size();j++){
                     if(rooms.get(j).getRid()==roomList.get(i).getRid()){
+                        //更新未读消息
+                        if(roomList.get(i).getChatMessageList()!=null&&roomList.get(i).getChatMessageList().size()!=0){
+                            RoomDAO.update(MyApplication.getSQLiteDatabase(),
+                                    MyApplication.getGson().toJson(roomList.get(i).getChatMessageList()),
+                                    roomList.get(i).getRid());
+                        }
                         break;
                     }
                 }
@@ -170,6 +182,9 @@ public class HallFragment extends Fragment  {
                 }
             }
         }
+
+
+
     }
 
     @Override
@@ -191,17 +206,16 @@ public class HallFragment extends Fragment  {
         for(int i = 0;i<roomList.size();i++){
             if(roomList.get(i).getRid()==msg.getRid()){
                 roomList.get(i).getChatMessageList().add(msg);
-                roomList.get(i).setLastTime(msg.getDate());
+                roomList.get(i).setLastMessage(msg);
 
             }
-            LogUtils.e("roomList===>",roomList.get(i).getLastTime());
         }
         Collections.sort(roomList, new Comparator<Room>() {
             @Override
             public int compare(Room room, Room t1) {
 
-                        String s1 = room.getLastTime();
-                        String s2 = t1.getLastTime();
+                        String s1 = room.getLastMessage().getDate();
+                        String s2 = t1.getLastMessage().getDate();
                         LogUtils.e("s1====>",s1);
                         LogUtils.e("s2===>",s2);
                         if(s2.compareTo(s1)==0){
@@ -214,5 +228,37 @@ public class HallFragment extends Fragment  {
             }
         });
         roomAdapter.notifyDataSetChanged();
+    }
+
+    public void refreshLastMessage(ChatMessage msg){
+        //设置数据
+        for(int i = 0;i<roomList.size();i++){
+            if(roomList.get(i).getRid()==msg.getRid()){
+                roomList.get(i).setLastMessage(msg);
+            }
+        }
+        //排序
+        Collections.sort(roomList, new Comparator<Room>() {
+            @Override
+            public int compare(Room room, Room t1) {
+                if(room.getLastMessage()==null||t1.getLastMessage()==null){
+                    return t1.getLastMessage()==null?-1:1;
+                }
+                String s1 = room.getLastMessage().getDate();
+                String s2 = t1.getLastMessage().getDate();
+                LogUtils.e("s1====>",s1);
+                LogUtils.e("s2===>",s2);
+                if(s2.compareTo(s1)==0){
+                    return Integer.valueOf(t1.getRid()).compareTo(Integer.valueOf(
+                            room.getRid()
+                    ));
+                }else{
+                    return s2.compareTo(s1);
+                }
+            }
+        });
+        //更新数据
+        roomAdapter.notifyDataSetChanged();
+
     }
 }

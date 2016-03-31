@@ -2,6 +2,7 @@ package com.handsome.qhb.db;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.TextUtils;
 
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.application.MyApplication;
@@ -27,7 +28,12 @@ public class RoomDAO {
                 room.setRid(cursor.getInt(cursor.getColumnIndex("rid")));
                 room.setRoomCreater(cursor.getString(cursor.getColumnIndex("roomCreater")));
                 room.setRoomName(cursor.getString(cursor.getColumnIndex("roomName")));
-                room.setLastTime(cursor.getString(cursor.getColumnIndex("lastTime")));
+                if(TextUtils.isEmpty(cursor.getString(cursor.getColumnIndex("lastMessage")))){
+                    ChatMessage chatMessage  = new ChatMessage();
+                    chatMessage = MyApplication.getGson().fromJson(cursor.getString(cursor.getColumnIndex("lastMessage")),
+                            ChatMessage.class);
+                    room.setLastMessage(chatMessage);
+                }
                 List<ChatMessage> chatMessageList = new ArrayList<ChatMessage>();
                 chatMessageList = MyApplication.getGson().fromJson(cursor.getString(cursor.getColumnIndex("chatMessage")),
                         new TypeToken<List<ChatMessage>>(){}.getType());
@@ -38,15 +44,15 @@ public class RoomDAO {
         return roomList;
     }
 
-    public static void insert(SQLiteDatabase db,Integer rid,Integer uid,String roomName,String roomCreater,String lastTime,String chatMessage){
-        db.execSQL("insert into room(rid,uid,roomName,roomCreater,lastTime,chatMessage) values(?,?,?,?,?,?)", new String[]{
-                String.valueOf(rid),String.valueOf(uid),roomName,roomCreater,lastTime,chatMessage
+    public static void insert(SQLiteDatabase db,Integer rid,Integer uid,String roomName,String roomCreater,String lastMessage,String chatMessage){
+        db.execSQL("insert into room(rid,uid,roomName,roomCreater,lastMessage,chatMessage) values(?,?,?,?,?,?)", new String[]{
+                String.valueOf(rid),String.valueOf(uid),roomName,roomCreater,lastMessage,chatMessage
         });
     }
 
-    public static void update(SQLiteDatabase db,String lastTime,Integer rid){
-        db.execSQL("update room set lastTime = ? where rid = ?", new String[]{
-                lastTime, String.valueOf(rid)});
+    public static void update(SQLiteDatabase db,String lastMessage,Integer rid){
+        db.execSQL("update room set lastMessage = ? where rid = ?", new String[]{
+                lastMessage, String.valueOf(rid)});
     }
 
     public static void updateMessage(SQLiteDatabase db,String chatMessage,Integer rid){
