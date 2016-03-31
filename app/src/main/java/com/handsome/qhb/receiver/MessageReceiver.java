@@ -102,30 +102,37 @@ public class MessageReceiver extends XGPushBaseReceiver {
             }
             Notification.Builder mBuilder = new Notification.Builder(MyApplication.getContext());
             mBuilder.setContentTitle("楼下购");
+            //普通消息
             if(xgPushTextMessage.getTitle().equals("chat")){
                 mBuilder.setContentText(chatMessage.getNackname()+" : "+chatMessage.getContent())
                         .setTicker("收到" + chatMessage.getNackname() + "发送过来的信息");
+                //判断该房间是否正打开
                 if(MyApplication.getChatHandler()!=null&&MyApplication.getRoomId()==chatMessage.getRid()){
                     Message message = new Message();
                     message.what = Config.CHAT_MESSAGE;
                     message.obj = chatMessage;
                     MyApplication.getChatHandler().handleMessage(message);
                 }else{
+                    //更新房间信息
                     Message message = new Message();
                     message.what = Config.ADD_MESSAGE;
                     message.obj = chatMessage;
                     MyApplication.getRoomHandler().handleMessage(message);
                 }
+
             }else if(xgPushTextMessage.getTitle().equals("RandomBonus")){
+                //红包消息
                 mBuilder.setContentText(chatMessage.getNackname()+chatMessage.getContent())
                         .setTicker("收到" + chatMessage.getNackname() + "发送过来的信息");
                 chatMessage.setType(Config.TYPE_RANDOMBONUS);
+                //判断该房间是否正打开
                 if(MyApplication.getChatHandler()!=null&&MyApplication.getRoomId()==chatMessage.getRid()){
                     Message message = new Message();
                     message.what = Config.RANDOMBONUS_MESSAGE;
                     message.obj = chatMessage;
                     MyApplication.getChatHandler().handleMessage(message);
                 }else{
+                    //更新房间信息
                     Message message = new Message();
                     message.what = Config.ADD_MESSAGE;
                     message.obj = chatMessage;
@@ -145,7 +152,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
                     .setAutoCancel(true);
             MyApplication.getNotificationManager().notify(NOTIFYID_1, mBuilder.build());
-            MessageDAO.insert(MyApplication.getSQLiteDatabase(), 0, chatMessage.getRid(), chatMessage.getUid(), chatMessage.getContent(),
+            MessageDAO.insert(MyApplication.getSQLiteDatabase(), chatMessage.getId(), chatMessage.getRid(), chatMessage.getUid(), chatMessage.getContent(),
                     chatMessage.getNackname(), chatMessage.getDate(), chatMessage.getStatus(), chatMessage.getType(), chatMessage.getBonus_total());
 
         }

@@ -22,6 +22,7 @@ public class MessageDAO  {
         if(cursor.moveToFirst()){
             do{
                 ChatMessage chatMessage = new ChatMessage();
+                chatMessage.setId(cursor.getInt(cursor.getColumnIndex("id")));
                 chatMessage.setRid(cursor.getInt(cursor.getColumnIndex("rid")));
                 chatMessage.setNackname(cursor.getString(cursor.getColumnIndex("nackname")));
                 chatMessage.setContent(cursor.getString(cursor.getColumnIndex("content")));

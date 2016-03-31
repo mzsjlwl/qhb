@@ -20,7 +20,7 @@ public class UserDBOpenHelper extends SQLiteOpenHelper {
             "(id integer primary key AUTOINCREMENT,"+
             "rid integer,uid integer,"+
             "roomName text,"+
-            "roomCreater text,lastTime text)";
+            "roomCreater text,lastTime text,chatMessage text)";
     public static final String CREATE_MESSAGE = "create table message"+
             "(mid integer primary key AUTOINCREMENT,"+
             "id integer,rid integer,uid integer,content text,"+
@@ -35,7 +35,7 @@ public class UserDBOpenHelper extends SQLiteOpenHelper {
 
     public static synchronized  UserDBOpenHelper getInstance(Context context){
         if(userDBOpenHelper==null){
-            userDBOpenHelper = new UserDBOpenHelper(context,DATABASE_NAME,null,6);
+            userDBOpenHelper = new UserDBOpenHelper(context,DATABASE_NAME,null,7);
 
         }
         return userDBOpenHelper;

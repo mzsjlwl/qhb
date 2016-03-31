@@ -39,6 +39,7 @@ public class MyApplication extends Application {
     private static TelephonyManager tm;
     private static NotificationManager nm;
     private static SQLiteDatabase db;
+    private static Gson gson;
 
     @Override
     public void onCreate() {
@@ -100,6 +101,13 @@ public class MyApplication extends Application {
             db = UserDBOpenHelper.getInstance(context).getWritableDatabase();
         }
         return db;
+    }
+
+    public synchronized  static Gson getGson(){
+        if(gson==null){
+            gson = new Gson();
+        }
+        return gson;
     }
 
 }
