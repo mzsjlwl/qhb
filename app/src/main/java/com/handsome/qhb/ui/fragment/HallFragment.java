@@ -138,6 +138,7 @@ public class HallFragment extends Fragment  {
     @Override
     public void onStart() {
         super.onStart();
+        LogUtils.e("hallFragment====>","onstart");
 //        if(roomList==null){
 //            roomList = new ArrayList<Room>();
 //            if(UserInfo.getInstance()!=null){
@@ -190,6 +191,8 @@ public class HallFragment extends Fragment  {
         for(int i = 0;i<roomList.size();i++){
             if(roomList.get(i).getRid()==msg.getRid()){
                 roomList.get(i).getChatMessageList().add(msg);
+                roomList.get(i).setLastTime(msg.getDate());
+
             }
             LogUtils.e("roomList===>",roomList.get(i).getLastTime());
         }

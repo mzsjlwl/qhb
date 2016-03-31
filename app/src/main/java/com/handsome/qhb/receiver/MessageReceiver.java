@@ -46,7 +46,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
     private static final int NOTIFYID_1 = 1;
     private RandomBonus randomBonus;
     private Bitmap LargeBitmap = BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.mipmap.test_icon);
-    private Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 
     @Override
@@ -88,6 +88,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
             rooms = RoomDAO.query(MyApplication.getSQLiteDatabase(), UserInfo.getInstance().getUid());
             chatMessage = gson.fromJson(xgPushTextMessage.getContent(), ChatMessage.class);
             String time = format.format(new Date());
+            LogUtils.e("time===>",time);
             chatMessage.setDate(time);
             chatMessage.setStatus(1);
             int i = 0;

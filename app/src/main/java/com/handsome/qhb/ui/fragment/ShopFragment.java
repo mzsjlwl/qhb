@@ -274,7 +274,7 @@ public class ShopFragment extends Fragment {
             }
 //            LogUtils.e("TAG",TAG);
         }
-        LogUtils.e("fragment","onstart");
+        LogUtils.e("shopfragment","onstart");
     }
 
     public void initSliderImage() {

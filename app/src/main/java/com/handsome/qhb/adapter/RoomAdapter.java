@@ -74,7 +74,7 @@ public class RoomAdapter extends CommonAdapter<Room> {
             chatMessage = room.getChatMessageList().get(room.getChatMessageList().size()-1);
             holder.setText(R.id.id_tv_num,"[ "+room.getChatMessageList().size()+"条 ]");
             holder.setText(R.id.id_tv_content,chatMessage.getNackname()+" : "+chatMessage.getContent());
-            holder.setText(R.id.id_tv_time,chatMessage.getDate());
+            holder.setText(R.id.id_tv_time,room.getLastTime());
 
         }
 
