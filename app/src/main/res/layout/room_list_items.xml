@@ -32,7 +32,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="朋友列表"
+                    android:text=""
                     android:textSize="18sp"
                     android:textColor="#000000"/>
                 <TextView
@@ -40,7 +40,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="晚上10：38"
+                    android:text=""
                     android:textSize="14sp"
                     android:textColor="#77000000"/>
 
@@ -57,7 +57,7 @@
                     android:layout_centerVertical="true"
                     android:textSize="14sp"
                     android:textColor="#88000000"
-                    android:text="[4条]"
+                    android:text=""
                     />
                 <TextView
                     android:id="@+id/id_tv_content"
@@ -67,7 +67,7 @@
                     android:layout_toRightOf="@id/id_tv_num"
                     android:textSize="14sp"
                     android:textColor="#88000000"
-                    android:text="他说草拟吗了，怎么办大哥"/>
+                    android:text=""/>
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

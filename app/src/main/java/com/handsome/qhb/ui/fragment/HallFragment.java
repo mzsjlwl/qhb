@@ -65,7 +65,7 @@ public class HallFragment extends Fragment  {
             if(msg.what== Config.INITROOM_MESSAGE){
                 LogUtils.e("0x128","-------->");
                 roomList = (List<Room>)msg.obj;
-                refreshMessage();
+                roomAdapter.notifyDataSetChanged();
             }else if(msg.what == Config.ADD_MESSAGE){
                 ChatMessage chatMessage = new ChatMessage();
                 chatMessage = (ChatMessage) msg.obj;
@@ -92,6 +92,8 @@ public class HallFragment extends Fragment  {
         View view = inflater.inflate(R.layout.fragment_hall,container,false);
         lv_room = (ListView) view.findViewById(R.id.lv_room);
         MyApplication.setRoomHandler(handler);
+        roomAdapter = new RoomAdapter(getActivity(),roomList,R.layout.room_list_items,MyApplication.getmQueue());
+        lv_room.setAdapter(roomAdapter);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/sendRoomPHP",
                 new Response.Listener<String>() {
                     @Override
@@ -135,7 +137,7 @@ public class HallFragment extends Fragment  {
                 Log.e("TAG", error.getMessage(), error);
             }
         });
-        MyApplication.getmQueue().add(stringRequest);
+//        MyApplication.getmQueue().add(stringRequest);
         return view;
     }
 
@@ -198,8 +200,7 @@ public class HallFragment extends Fragment  {
 
 
     public void refreshMessage(){
-        roomAdapter = new RoomAdapter(getActivity(),roomList,R.layout.room_list_items,MyApplication.getmQueue());
-        lv_room.setAdapter(roomAdapter);
+
     }
 
     public void addChatMessage(ChatMessage msg){
@@ -213,7 +214,9 @@ public class HallFragment extends Fragment  {
         Collections.sort(roomList, new Comparator<Room>() {
             @Override
             public int compare(Room room, Room t1) {
-
+                        if(room.getLastMessage()==null||t1.getLastMessage()==null){
+                            return t1.getLastMessage()==null?-1:1;
+                        }
                         String s1 = room.getLastMessage().getDate();
                         String s2 = t1.getLastMessage().getDate();
                         LogUtils.e("s1====>",s1);
