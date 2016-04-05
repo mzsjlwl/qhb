@@ -7,6 +7,7 @@ import android.os.Message;
 import com.handsome.qhb.bean.ChatMessage;
 import com.handsome.qhb.bean.Room;
 
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,6 +47,18 @@ public class MessageDAO  {
     public static void updateStatus(SQLiteDatabase db,int status,int id){
         db.execSQL("update message set status = ? where id = ?", new String[]{
                 String.valueOf(status), String.valueOf(id)});
+    }
+
+    public static String getStatus(SQLiteDatabase db,int id,int type){
+
+
+        Cursor cursor = db.rawQuery("select * from message where id = ? and type = ?",new String[]{
+                String.valueOf(id),String.valueOf(type)});
+        if(cursor.moveToFirst()){
+            String status  = cursor.getString(cursor.getColumnIndex("status"));
+            return status;
+        }
+        return null;
     }
 //    public static void delete(SQLiteDatabase db,Integer rid,Integer uid ){
 //        db.execSQL("delete from room  where uid = ? and rid = ?",new String[]{

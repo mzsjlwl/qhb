@@ -234,6 +234,14 @@ public class ChatActivity extends BaseActivity {
         if(MyApplication.getChatHandler()==null){
             MyApplication.setChatHandler(handler,room.getRid());
         }
+        LogUtils.e("chatActivity","onstart");
+        //messageList = MessageDAO.query(MyApplication.getSQLiteDatabase(),room.getRid());
+        //msgAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
     }
 
     public void ReceiverMessage(ChatMessage message) {

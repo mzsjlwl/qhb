@@ -108,7 +108,7 @@ public class MsgAdapter extends BaseAdapter{
                         .findViewById(R.id.chat_from_createDate);
                 viewHolder.content = (TextView) convertView
                         .findViewById(R.id.chat_from_content);
-                viewHolder.nickname = (TextView) convertView
+                viewHolder.nackname = (TextView) convertView
                         .findViewById(R.id.chat_from_name);
                 viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_progressBar);
                 convertView.setTag(viewHolder);
@@ -120,7 +120,7 @@ public class MsgAdapter extends BaseAdapter{
                         .findViewById(R.id.chat_send_createDate);
                 viewHolder.content = (TextView) convertView
                         .findViewById(R.id.chat_send_content);
-                viewHolder.nickname = (TextView) convertView
+                viewHolder.nackname = (TextView) convertView
                         .findViewById(R.id.chat_send_name);
                 viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_progressBar);
                 convertView.setTag(viewHolder);
@@ -132,16 +132,21 @@ public class MsgAdapter extends BaseAdapter{
 
         viewHolder.createDate.setText(chatMessage.getDate());
         if(chatMessage.getType()== Config.TYPE_RANDOMBONUS){
-            viewHolder.content.setBackgroundResource(R.mipmap.sjhb1);
+            if(chatMessage.getUid()==UserInfo.getInstance().getUid()){
+                viewHolder.content.setBackgroundResource(R.mipmap.sjhb);
+            }else {
+                viewHolder.content.setBackgroundResource(R.mipmap.sjhb1);
+            }
             viewHolder.content.setPadding(0,0,0,0);
             viewHolder.content.setText("");
             viewHolder.content.setOnClickListener(new RandomBonusOnclickListener(position));
-            viewHolder.nickname.setText(chatMessage.getNackname());
+            viewHolder.nackname.setText(chatMessage.getNackname());
         }else if(chatMessage.getType()==Config.TYPE_CDSBONUS){
             viewHolder.content.setBackgroundResource(R.mipmap.cds1);
             viewHolder.content.setPadding(0, 0, 0, 0);
             viewHolder.content.setText("");
             viewHolder.content.setOnClickListener(new CDSBonusOnclickListener(position));
+            viewHolder.nackname.setText(chatMessage.getNackname());
         }else {
             if(chatMessage.getUid()==UserInfo.getInstance().getUid()){
                 //将之前的红包背景设置回来
@@ -153,7 +158,7 @@ public class MsgAdapter extends BaseAdapter{
                 viewHolder.content.setPadding(20, 5, 15, 5);
             }
             viewHolder.content.setText(chatMessage.getContent());
-            viewHolder.nickname.setText(chatMessage.getNackname());
+            viewHolder.nackname.setText(chatMessage.getNackname());
         }
         if(chatMessage.getStatus()==1) {
             if(viewHolder.progressBar!=null){
@@ -167,7 +172,7 @@ public class MsgAdapter extends BaseAdapter{
     private class ViewHolder
     {
         public TextView createDate;
-        public TextView nickname;
+        public TextView nackname;
         public TextView content;
         public ProgressBar progressBar;
     }
@@ -182,59 +187,7 @@ public class MsgAdapter extends BaseAdapter{
         }
         @Override
         public void onClick(View view) {
-//            //如果已经拆过该红包
-//            if(mDatas.get(position).getStatus()==Config.TYPE_RANDOMBONUS_OPENED){
-//                final ProgressDialog progressDialog = new ProgressDialog(context);
-//                progressDialog.setMessage("红包详情获取中");
-//                progressDialog.setCancelable(true);
-//                progressDialog.show();
-//                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"HB/openedBonus",
-//                        new Response.Listener<String>() {
-//                            @Override
-//                            public void onResponse(String response) {
-//                                try {
-//                                    progressDialog.dismiss();
-//                                    JSONObject jsonObject = new JSONObject(response);
-//                                    String status = jsonObject.getString("status");
-//                                    if(status == "0"){
-//                                        Toast.makeText(context, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
-//                                        return;
-//                                    }
-//                                    String data = jsonObject.getString("data");
-//                                    JSONObject jsonObject1 = new JSONObject(data);
-//                                    bonusList = gson.fromJson(jsonObject1.getString("randombonus"),new TypeToken<List<RandomBonus>>(){}.getType());
-//                                    Intent i = new Intent(context, BonusActivity.class);
-//                                    Bundle b = new Bundle();
-//                                    b.putSerializable("ChatMessage", mDatas.get(position));
-//                                    b.putSerializable("bonusList", (Serializable) bonusList);
-//                                    i.putExtras(b);
-//                                    context.startActivity(i);
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Log.e("TAG", error.getMessage(), error);
-//                        Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
-//                    }
-//                }){
-//                    @Override
-//                    protected Map<String, String> getParams() throws AuthFailureError {
-//                        Map<String, String> map = new HashMap<String, String>();
-//                        map.put("id",String.valueOf(mDatas.get(position).getId()));
-//                        return map;
-//                    }
-//                };
-//                MyApplication.getmQueue().add(stringRequest);
-//            }
-//            //未拆过该红包
-//            else{
-//                mDatas.get(position).setStatus(Config.TYPE_RANDOMBONUS_OPENED);
-                //存入数据库
-//                MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(),Config.TYPE_RANDOMBONUS_OPENED,
-//                        mDatas.get(position).getId());
+
                 final ProgressDialog progressDialog = new ProgressDialog(context);
                 progressDialog.setMessage("获取中");
                 progressDialog.setCancelable(true);
@@ -293,14 +246,22 @@ public class MsgAdapter extends BaseAdapter{
             progressDialog.setMessage("加载中");
             progressDialog.setCancelable(true);
             progressDialog.show();
-
-            if(mDatas.get(position).getStatus()==Config.STATE_CDSBONUS_START){
-                getPersonNum(mDatas.get(position).getId(),mDatas.get(position).getRid(),
+            int statuts = Integer.valueOf(MessageDAO.getStatus(MyApplication.getSQLiteDatabase(), mDatas.get(position).getId(), mDatas.get(
+                    position).getType()));
+            if(statuts==Config.STATE_CDSBONUS_START){
+                progressDialog.dismiss();
+                LogUtils.e("DSONCLICK=====>","1");
+                getPersonNum(mDatas.get(position).getId(), mDatas.get(position).getRid(),
                         mDatas.get(position));
-            }else if(mDatas.get(position).getStatus()==Config.STATE_CDSBONUS_GUESSED){
+
+            }else if(statuts==Config.STATE_CDSBONUS_GUESSED){
+                progressDialog.dismiss();
+                LogUtils.e("DSONCLICK=====>", "2");
                 getMyguess(mDatas.get(position).getId(),mDatas.get(position).getRid(),
                         UserInfo.getInstance().getUid(),mDatas.get(position));
-            }else if(mDatas.get(position).getStatus()==Config.STATE_CDSBONUS_END){
+            }else if(statuts==Config.STATE_CDSBONUS_END){
+                progressDialog.dismiss();
+                LogUtils.e("DSONCLICK=====>", "3");
                 getResult(mDatas.get(position).getId(),mDatas.get(position).getRid(),
                         UserInfo.getInstance().getUid(),mDatas.get(position));
             }
@@ -324,9 +285,11 @@ public class MsgAdapter extends BaseAdapter{
                             if (jsonObject.getString("status").equals("0")) {
                                 return;
                             }
+                            LogUtils.e("getPersonNum",s);
                             String data = jsonObject.getString("data");
                             DS ds = new DS();
                             ds =  gson.fromJson(data,DS.class);
+                            LogUtils.e("getPersonNum-ds",ds.toString());
                             Intent i = new Intent(context, CDSActivity.class);
                             Bundle b = new Bundle();
                             b.putSerializable("ds", ds);
@@ -365,9 +328,11 @@ public class MsgAdapter extends BaseAdapter{
                             if (jsonObject.getString("status").equals("0")) {
                                 return;
                             }
+                            LogUtils.e("getMyGuess",s);
                             String data = jsonObject.getString("data");
                             DS ds = new DS();
                             ds =  gson.fromJson(data,DS.class);
+                            LogUtils.e("getMyguess-ds",ds.toString());
                             Intent i = new Intent(context, CDSActivity.class);
                             Bundle b = new Bundle();
                             b.putSerializable("ds", ds);
@@ -407,9 +372,11 @@ public class MsgAdapter extends BaseAdapter{
                             if (jsonObject.getString("status").equals("0")) {
                                 return;
                             }
+                            LogUtils.e("getMyResult",s);
                             String data = jsonObject.getString("data");
                             DS ds = new DS();
                             ds =  gson.fromJson(data,DS.class);
+                            LogUtils.e("getResult-ds",ds.toString());
                             Intent i = new Intent(context, CDSActivity.class);
                             Bundle b = new Bundle();
                             b.putSerializable("ds", ds);

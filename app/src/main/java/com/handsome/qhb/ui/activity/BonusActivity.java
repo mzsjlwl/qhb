@@ -30,6 +30,7 @@ public class BonusActivity extends BaseActivity {
     private TextView tv_user_nackname;
     private ImageView iv_user_photo;
     private ImageButton ib_back;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

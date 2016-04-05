@@ -54,7 +54,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             Long totalMinute = (now - lastTime)/(1000*60);
             if((totalMinute/60)<12){
                 User user = (User)gson.fromJson(sharedPreferences.getString("user",""),new TypeToken<User>(){}.getType());
-                UserInfo.setUser(user);
+
             }
         }
         if(savedInstanceState==null){

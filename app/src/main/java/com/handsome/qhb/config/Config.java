@@ -30,6 +30,9 @@ public class Config {
     public static final int ADD_MESSAGE=11;
     public static final int ROOM_REFRESH_LASTMESSAGE = 12;
 
+    public static final int DS_RESULT = 13;
+    public static final int BONUSLIST = 14;
+
 
     public static final String XG_PUSH_URL = "http://openapi.xg.qq.com/v2/push/";
 
@@ -47,5 +50,5 @@ public class Config {
 
     public static final int STATE_CDSBONUS_START = 1;
     public static final int STATE_CDSBONUS_GUESSED = 2;
-    public static final int STATE_CDSBONUS_END = 0;
+    public static final int STATE_CDSBONUS_END = 3;
 }

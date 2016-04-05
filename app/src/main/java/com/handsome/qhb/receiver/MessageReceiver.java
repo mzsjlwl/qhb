@@ -1,9 +1,7 @@
 package com.handsome.qhb.receiver;
 
 import android.app.Notification;
-import android.app.NotificationManager;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Message;
@@ -12,7 +10,6 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.ChatMessage;
-import com.handsome.qhb.bean.DS;
 import com.handsome.qhb.bean.RandomBonus;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.config.Config;
@@ -26,7 +23,6 @@ import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
 
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -90,7 +86,6 @@ public class MessageReceiver extends XGPushBaseReceiver {
             rooms = RoomDAO.query(MyApplication.getSQLiteDatabase(), UserInfo.getInstance().getUid());
             chatMessage = gson.fromJson(xgPushTextMessage.getContent(), ChatMessage.class);
             String time = format.format(new Date());
-            LogUtils.e("time===>",time);
             chatMessage.setDate(time);
             chatMessage.setStatus(1);
             int i = 0;
@@ -153,6 +148,24 @@ public class MessageReceiver extends XGPushBaseReceiver {
                 }
 
             }else if(xgPushTextMessage.getTitle().equals("DSResult")){
+
+                MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(),Config.STATE_CDSBONUS_END,chatMessage.getId());
+
+                if(MyApplication.getCdsHandler()!=null&&MyApplication.getCid()==chatMessage.getId()){
+                    Message message = new Message();
+                    message.what = Config.DS_RESULT;
+                    message.obj = chatMessage;
+                    LogUtils.e("result_before",chatMessage.toString());
+                    MyApplication.getCdsHandler().handleMessage(message);
+                }
+
+                if(chatMessage.getContent().equals("1")){
+                    chatMessage.setContent("本期单双开奖结果 : 单");
+
+                }else if(chatMessage.getContent().equals("2")){
+                    chatMessage.setContent("本期单双开奖结果 : 双");
+                }
+
                 //判断该房间是否正打开
                 if(MyApplication.getChatHandler()!=null&&MyApplication.getRoomId()==chatMessage.getRid()){
                     Message message = new Message();
@@ -224,7 +237,6 @@ public class MessageReceiver extends XGPushBaseReceiver {
             MyApplication.getNotificationManager().notify(NOTIFYID_1, mBuilder.build());
             MessageDAO.insert(MyApplication.getSQLiteDatabase(), chatMessage.getId(), chatMessage.getRid(), chatMessage.getUid(), chatMessage.getContent(),
                     chatMessage.getNackname(), chatMessage.getDate(), chatMessage.getStatus(), chatMessage.getType(), chatMessage.getBonus_total());
-
         }
     }
 

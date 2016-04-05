@@ -36,7 +36,9 @@ public class MyApplication extends Application {
     private static Handler roomHandler;
     private static Handler chatHandler;
     private static Handler cdsHandler;
+    private static Handler hbHandler;
     private static int rid ;
+    private static int cid;
     private static TelephonyManager tm;
     private static NotificationManager nm;
     private static SQLiteDatabase db;
@@ -91,11 +93,24 @@ public class MyApplication extends Application {
     }
     public synchronized  static void setCdsHandler(Handler handler,int id){
         cdsHandler = handler;
-        rid = id;
+        cid = id;
     }
+
+    public synchronized  static Handler getHbHandler(){
+        return hbHandler;
+    }
+
+    public synchronized  static void setHbHandler(Handler handler){
+        hbHandler = handler;
+    }
+
 
     public synchronized static int getRoomId(){
         return rid;
+    }
+
+    public synchronized  static int getCid(){
+        return cid;
     }
     public synchronized static String getTag(){
         return tm.getDeviceId();

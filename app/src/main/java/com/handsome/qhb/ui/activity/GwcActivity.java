@@ -128,11 +128,6 @@ public class GwcActivity extends BaseActivity {
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
                     return ;
-                }else if(UserInfo.getInstance()!=null&&UserInfo.getInstance().getIntegral()<totalPrice){
-                    Toast toast =Toast.makeText(GwcActivity.this, "金额不足,请充值", Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER,0,0);
-                    toast.show();
-                    return;
                 }else if(tv_receAddr.getText().toString().equals("收货地址")
                         ||tv_recePhone.getText().toString().equals("手机号码")
                         ||tv_receName.getText().toString().equals("收货地址")){
@@ -140,7 +135,6 @@ public class GwcActivity extends BaseActivity {
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
                     return ;
-
                 }
                 final ProgressDialog progressDialog = new ProgressDialog(GwcActivity.this);
                 progressDialog.setMessage("提交中");
