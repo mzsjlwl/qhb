@@ -80,11 +80,14 @@ public class HallFragment extends Fragment  {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        LogUtils.e("HallFragment","oncreate");
+        LogUtils.e("HallFragment", "oncreate");
         super.onCreate(savedInstanceState);
         db = MyApplication.getSQLiteDatabase();
         if(UserInfo.getInstance()!=null){
             roomList = RoomDAO.query(MyApplication.getSQLiteDatabase(),UserInfo.getInstance().getUid());
+        }
+        for(Room r : roomList){
+            LogUtils.e("room=====>",r.toString());
         }
     }
 
@@ -137,7 +140,7 @@ public class HallFragment extends Fragment  {
                 Log.e("TAG", error.getMessage(), error);
             }
         });
-//        MyApplication.getmQueue().add(stringRequest);
+        MyApplication.getmQueue().add(stringRequest);
         return view;
     }
 
@@ -145,7 +148,7 @@ public class HallFragment extends Fragment  {
     @Override
     public void onStart() {
         super.onStart();
-        LogUtils.e("hallFragment====>","onstart");
+        LogUtils.e("hallFragment====>", "onstart");
 //        if(roomList==null){
 //            roomList = new ArrayList<Room>();
 //            if(UserInfo.getInstance()!=null){
@@ -170,7 +173,7 @@ public class HallFragment extends Fragment  {
                     if(rooms.get(j).getRid()==roomList.get(i).getRid()){
                         //更新未读消息
                         if(roomList.get(i).getChatMessageList()!=null&&roomList.get(i).getChatMessageList().size()!=0){
-                            RoomDAO.update(MyApplication.getSQLiteDatabase(),
+                            RoomDAO.updateMessage(MyApplication.getSQLiteDatabase(),
                                     MyApplication.getGson().toJson(roomList.get(i).getChatMessageList()),
                                     roomList.get(i).getRid());
                         }
@@ -179,8 +182,9 @@ public class HallFragment extends Fragment  {
                 }
                 if(j==rooms.size()){
                     RoomDAO.insert(db,roomList.get(i).getRid(),UserInfo.getInstance().getUid(),
-                           roomList.get(i).getRoomName(),roomList.get(i).getRoomCreater(),format.format(new Date())
-                            ,MyApplication.getGson().toJson(roomList.get(i).getChatMessageList()));
+                           roomList.get(i).getRoomName(),roomList.get(i).getRoomCreater(),
+                            MyApplication.getGson().toJson(roomList.get(i).getLastMessage()),
+                            MyApplication.getGson().toJson(roomList.get(i).getChatMessageList()));
                 }
             }
         }
@@ -206,6 +210,9 @@ public class HallFragment extends Fragment  {
     public void addChatMessage(ChatMessage msg){
         for(int i = 0;i<roomList.size();i++){
             if(roomList.get(i).getRid()==msg.getRid()){
+                if(roomList.get(i).getChatMessageList()==null){
+                    roomList.get(i).setChatMessageList(new ArrayList<ChatMessage>());
+                }
                 roomList.get(i).getChatMessageList().add(msg);
                 roomList.get(i).setLastMessage(msg);
 
@@ -237,6 +244,9 @@ public class HallFragment extends Fragment  {
         //设置数据
         for(int i = 0;i<roomList.size();i++){
             if(roomList.get(i).getRid()==msg.getRid()){
+                if(roomList.get(i).getChatMessageList()==null){
+                    roomList.get(i).setChatMessageList(new ArrayList<ChatMessage>());
+                }
                 roomList.get(i).setLastMessage(msg);
             }
         }

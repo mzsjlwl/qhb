@@ -22,9 +22,12 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.ChatMessage;
+import com.handsome.qhb.bean.DS;
 import com.handsome.qhb.bean.RandomBonus;
 import com.handsome.qhb.config.Config;
+import com.handsome.qhb.db.MessageDAO;
 import com.handsome.qhb.ui.activity.BonusActivity;
+import com.handsome.qhb.ui.activity.CDSActivity;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 
@@ -129,13 +132,16 @@ public class MsgAdapter extends BaseAdapter{
 
         viewHolder.createDate.setText(chatMessage.getDate());
         if(chatMessage.getType()== Config.TYPE_RANDOMBONUS){
-            viewHolder.content.setBackgroundResource(R.mipmap.cds1);
+            viewHolder.content.setBackgroundResource(R.mipmap.sjhb1);
             viewHolder.content.setPadding(0,0,0,0);
             viewHolder.content.setText("");
             viewHolder.content.setOnClickListener(new RandomBonusOnclickListener(position));
             viewHolder.nickname.setText(chatMessage.getNackname());
         }else if(chatMessage.getType()==Config.TYPE_CDSBONUS){
-
+            viewHolder.content.setBackgroundResource(R.mipmap.cds1);
+            viewHolder.content.setPadding(0, 0, 0, 0);
+            viewHolder.content.setText("");
+            viewHolder.content.setOnClickListener(new CDSBonusOnclickListener(position));
         }else {
             if(chatMessage.getUid()==UserInfo.getInstance().getUid()){
                 //将之前的红包背景设置回来
@@ -176,62 +182,64 @@ public class MsgAdapter extends BaseAdapter{
         }
         @Override
         public void onClick(View view) {
-            //如果已经拆过该红包
-            if(mDatas.get(position).getStatus()==Config.TYPE_RANDOMBONUS_OPENED){
+//            //如果已经拆过该红包
+//            if(mDatas.get(position).getStatus()==Config.TYPE_RANDOMBONUS_OPENED){
+//                final ProgressDialog progressDialog = new ProgressDialog(context);
+//                progressDialog.setMessage("红包详情获取中");
+//                progressDialog.setCancelable(true);
+//                progressDialog.show();
+//                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"HB/openedBonus",
+//                        new Response.Listener<String>() {
+//                            @Override
+//                            public void onResponse(String response) {
+//                                try {
+//                                    progressDialog.dismiss();
+//                                    JSONObject jsonObject = new JSONObject(response);
+//                                    String status = jsonObject.getString("status");
+//                                    if(status == "0"){
+//                                        Toast.makeText(context, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
+//                                        return;
+//                                    }
+//                                    String data = jsonObject.getString("data");
+//                                    JSONObject jsonObject1 = new JSONObject(data);
+//                                    bonusList = gson.fromJson(jsonObject1.getString("randombonus"),new TypeToken<List<RandomBonus>>(){}.getType());
+//                                    Intent i = new Intent(context, BonusActivity.class);
+//                                    Bundle b = new Bundle();
+//                                    b.putSerializable("ChatMessage", mDatas.get(position));
+//                                    b.putSerializable("bonusList", (Serializable) bonusList);
+//                                    i.putExtras(b);
+//                                    context.startActivity(i);
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        Log.e("TAG", error.getMessage(), error);
+//                        Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+//                    }
+//                }){
+//                    @Override
+//                    protected Map<String, String> getParams() throws AuthFailureError {
+//                        Map<String, String> map = new HashMap<String, String>();
+//                        map.put("id",String.valueOf(mDatas.get(position).getId()));
+//                        return map;
+//                    }
+//                };
+//                MyApplication.getmQueue().add(stringRequest);
+//            }
+//            //未拆过该红包
+//            else{
+//                mDatas.get(position).setStatus(Config.TYPE_RANDOMBONUS_OPENED);
+                //存入数据库
+//                MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(),Config.TYPE_RANDOMBONUS_OPENED,
+//                        mDatas.get(position).getId());
                 final ProgressDialog progressDialog = new ProgressDialog(context);
-                progressDialog.setMessage("红包详情获取中");
+                progressDialog.setMessage("获取中");
                 progressDialog.setCancelable(true);
                 progressDialog.show();
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/openedBonus",
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    progressDialog.dismiss();
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    String status = jsonObject.getString("status");
-                                    if(status == "0"){
-                                        Toast.makeText(context, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
-                                        return;
-                                    }
-                                    String data = jsonObject.getString("data");
-                                    JSONObject jsonObject1 = new JSONObject(data);
-                                    bonusList = gson.fromJson(jsonObject1.getString("randombonus"),new TypeToken<List<RandomBonus>>(){}.getType());
-                                    Intent i = new Intent(context, BonusActivity.class);
-                                    Bundle b = new Bundle();
-                                    b.putSerializable("ChatMessage", mDatas.get(position));
-                                    b.putSerializable("bonusList", (Serializable) bonusList);
-                                    i.putExtras(b);
-                                    context.startActivity(i);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("TAG", error.getMessage(), error);
-                        Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> map = new HashMap<String, String>();
-                        map.put("id",String.valueOf(mDatas.get(position).getId()));
-                        map.put("count",String.valueOf(mDatas.get(position).getBonus_total()));
-                        return map;
-                    }
-                };
-                MyApplication.getmQueue().add(stringRequest);
-            }
-            //未拆过该红包
-            else{
-                mDatas.get(position).setStatus(Config.TYPE_RANDOMBONUS_OPENED);
-                final ProgressDialog progressDialog = new ProgressDialog(context);
-                progressDialog.setMessage("抢包中");
-                progressDialog.setCancelable(true);
-                progressDialog.show();
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/getRandomBonus",
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"HB/getRandomBonus",
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
@@ -274,8 +282,161 @@ public class MsgAdapter extends BaseAdapter{
                 MyApplication.getmQueue().add(stringRequest);
             }
         }
-    }
+
+
+    class CDSBonusOnclickListener implements  View.OnClickListener{
+
+        private int position;
+        @Override
+        public void onClick(View view) {
+            final ProgressDialog progressDialog = new ProgressDialog(context);
+            progressDialog.setMessage("加载中");
+            progressDialog.setCancelable(true);
+            progressDialog.show();
+
+            if(mDatas.get(position).getStatus()==Config.STATE_CDSBONUS_START){
+                getPersonNum(mDatas.get(position).getId(),mDatas.get(position).getRid(),
+                        mDatas.get(position));
+            }else if(mDatas.get(position).getStatus()==Config.STATE_CDSBONUS_GUESSED){
+                getMyguess(mDatas.get(position).getId(),mDatas.get(position).getRid(),
+                        UserInfo.getInstance().getUid(),mDatas.get(position));
+            }else if(mDatas.get(position).getStatus()==Config.STATE_CDSBONUS_END){
+                getResult(mDatas.get(position).getId(),mDatas.get(position).getRid(),
+                        UserInfo.getInstance().getUid(),mDatas.get(position));
+            }
+
+        }
+
+        public CDSBonusOnclickListener(int position){
+            this.position = position;
+        }
 
 
     }
+
+    public void getPersonNum(final int id, final int rid, final ChatMessage msg) {
+        final StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL + "DS/getpersonNum",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(s);
+                            if (jsonObject.getString("status").equals("0")) {
+                                return;
+                            }
+                            String data = jsonObject.getString("data");
+                            DS ds = new DS();
+                            ds =  gson.fromJson(data,DS.class);
+                            Intent i = new Intent(context, CDSActivity.class);
+                            Bundle b = new Bundle();
+                            b.putSerializable("ds", ds);
+                            b.putSerializable("cdsMessage", msg);
+                            i.putExtras(b);
+                            context.startActivity(i);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", error.getMessage(), error);
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("dsId", String.valueOf(id));
+                map.put("rid", String.valueOf(rid));
+                return map;
+            }
+        };
+        MyApplication.getmQueue().add(stringRequest);
+    }
+
+    public void getMyguess(final int id,final int rid,final int uid,final ChatMessage msg){
+        final StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL + "DS/getMyguess",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(s);
+                            if (jsonObject.getString("status").equals("0")) {
+                                return;
+                            }
+                            String data = jsonObject.getString("data");
+                            DS ds = new DS();
+                            ds =  gson.fromJson(data,DS.class);
+                            Intent i = new Intent(context, CDSActivity.class);
+                            Bundle b = new Bundle();
+                            b.putSerializable("ds", ds);
+                            b.putSerializable("cdsMessage", msg);
+                            i.putExtras(b);
+                            context.startActivity(i);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", error.getMessage(), error);
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("dsId", String.valueOf(id));
+                map.put("rid", String.valueOf(rid));
+                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                return map;
+            }
+        };
+        MyApplication.getmQueue().add(stringRequest);
+    }
+
+    public void getResult(final int id,final int rid,final int uid,final ChatMessage msg){
+        final StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL + "DS/getResult",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String s) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(s);
+                            if (jsonObject.getString("status").equals("0")) {
+                                return;
+                            }
+                            String data = jsonObject.getString("data");
+                            DS ds = new DS();
+                            ds =  gson.fromJson(data,DS.class);
+                            Intent i = new Intent(context, CDSActivity.class);
+                            Bundle b = new Bundle();
+                            b.putSerializable("ds", ds);
+                            b.putSerializable("cdsMessage", msg);
+                            i.putExtras(b);
+                            context.startActivity(i);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", error.getMessage(), error);
+                Toast.makeText(context, error.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("dsId", String.valueOf(id));
+                map.put("rid", String.valueOf(rid));
+                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                return map;
+            }
+        };
+        MyApplication.getmQueue().add(stringRequest);
+    }
+}
 

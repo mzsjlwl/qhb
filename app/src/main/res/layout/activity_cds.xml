@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#000000">
+        <ImageButton
+            android:id="@+id/ib_back"
+            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:scaleType="fitXY"
+            android:layout_alignParentLeft="true"
+            android:layout_margin="12dp"
+            android:background="@mipmap/zf_back_btn"
+            ></ImageButton>
+
+
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_toRightOf="@+id/ib_back"
+            android:layout_marginLeft="5dp"
+            android:gravity="center_vertical|left"
+            android:text="@string/tx_cds_bonus"
+            android:textSize="20dp"
+            android:textColor="#ffffff"
+            />
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/tv_Btime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="13:37"
+        android:textSize="40dp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
+        >
+
+    </TextView>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="40dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="竞猜金额 : ">
+        </TextView>
+        <TextView
+            android:id="@+id/tv_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="￥99"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="40dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="当前竞猜人数 : ">
+        </TextView>
+        <TextView
+            android:id="@+id/tv_person"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="100"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="40dp">
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="时间 : ">
+        </TextView>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18dp"
+            android:text="21:22:04"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_myguess"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="40dp"
+        android:visibility="gone">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="我的竞猜 : ">
+    </TextView>
+    <TextView
+        android:id="@+id/tv_guess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:text="双"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_guess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="50dp"
+        android:layout_gravity="center">
+        <TextView
+            android:id="@+id/tv_single"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="50dp"
+            android:clickable="true"
+            android:textSize="50dp"
+            android:textColor="#4b67e6"
+            android:textStyle="bold"
+            android:text="单">
+        </TextView>
+        <TextView
+            android:id="@+id/tv_double"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:textSize="50dp"
+            android:textColor="#4b67e6"
+            android:textStyle="bold"
+            android:text="双"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/ll_result"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:textSize="18dp"
+            android:text="竞猜结果 : ">
+        </TextView>
+        <TextView
+
+            android:id="@+id/tv_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center"
+            android:textSize="50dp"
+            android:textStyle="bold"
+            android:text="单"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>

@@ -443,8 +443,10 @@ public class ShopFragment extends Fragment {
 
             }
         }
-        // 当Activity不可见的时候停止切换
-        scheduledExecutorService.shutdown();
+        if(scheduledExecutorService!=null){
+            // 当Activity不可见的时候停止切换
+            scheduledExecutorService.shutdown();
+        }
         LogUtils.e("fragment","onPause");
     }
 

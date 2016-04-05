@@ -47,7 +47,7 @@ public class UserDAO {
     }
 
     public static void updateAddress(SQLiteDatabase db,Integer uid,String address){
-        db.execSQL("update user set address = ? where uid = ?", new String[]{
+        db.execSQL("update shopcar set address = ? where uid = ?", new String[]{
                 address, String.valueOf(uid)});
     }
 }

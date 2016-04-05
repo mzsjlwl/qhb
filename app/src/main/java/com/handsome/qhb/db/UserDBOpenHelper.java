@@ -35,7 +35,7 @@ public class UserDBOpenHelper extends SQLiteOpenHelper {
 
     public static synchronized  UserDBOpenHelper getInstance(Context context){
         if(userDBOpenHelper==null){
-            userDBOpenHelper = new UserDBOpenHelper(context,DATABASE_NAME,null,8);
+            userDBOpenHelper = new UserDBOpenHelper(context,DATABASE_NAME,null,9);
 
         }
         return userDBOpenHelper;

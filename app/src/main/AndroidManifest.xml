@@ -47,18 +47,14 @@
         </activity>
         <activity android:name="com.handsome.qhb.ui.activity.RegisterActivity"></activity>
         <activity android:name="com.handsome.qhb.ui.activity.GwcActivity"></activity>
-        <activity android:name="com.handsome.qhb.ui.activity.OrderActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name="com.handsome.qhb.ui.activity.OrderActivity"></activity>
         <activity android:name="com.handsome.qhb.ui.activity.AddressActivity"></activity>
         <activity android:name="com.handsome.qhb.ui.activity.AddressManagerActivity"></activity>
         <activity android:name="com.handsome.qhb.ui.activity.UpdateDataActivity"></activity>
         <activity android:name="com.handsome.qhb.ui.activity.OrderDetailActivity"></activity>
         <activity android:name="com.handsome.qhb.ui.activity.UpdatePasswordActivity"></activity>
         <activity android:name="com.handsome.qhb.ui.activity.UpdatePhotoActivity"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.CDSActivity"/>
         <activity android:name="com.handsome.qhb.ui.activity.ChatActivity"/>
         <activity android:name="com.handsome.qhb.ui.activity.BonusActivity"/>
         <!-- 【必须】 信鸽receiver广播接收 -->

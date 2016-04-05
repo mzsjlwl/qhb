@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.ChatMessage;
+import com.handsome.qhb.bean.DS;
 import com.handsome.qhb.bean.RandomBonus;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.config.Config;
@@ -47,6 +48,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
     private RandomBonus randomBonus;
     private Bitmap LargeBitmap = BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.mipmap.test_icon);
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private List<RandomBonus> bonusList = new ArrayList<RandomBonus>();
 
 
     @Override
@@ -150,12 +152,69 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     MyApplication.getRoomHandler().handleMessage(message);
                 }
 
-            }else if(xgPushTextMessage.getTitle().equals("CDSBonus")){
+            }else if(xgPushTextMessage.getTitle().equals("DSResult")){
+                //判断该房间是否正打开
+                if(MyApplication.getChatHandler()!=null&&MyApplication.getRoomId()==chatMessage.getRid()){
+                    Message message = new Message();
+                    message.what = Config.CHAT_MESSAGE;
+                    message.obj = chatMessage;
+                    Message message1 = new Message();
+                    message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
+                    message1.obj = chatMessage;
+                    MyApplication.getChatHandler().handleMessage(message);
+                    MyApplication.getRoomHandler().handleMessage(message1);
+                }else{
+                    //更新房间信息
+                    Message message = new Message();
+                    message.what = Config.ADD_MESSAGE;
+                    message.obj = chatMessage;
+                    MyApplication.getRoomHandler().handleMessage(message);
+                }
+            }
+            else if(xgPushTextMessage.getTitle().equals("CDSBonus")){
                 //判断是否有这个房间,若没有则不响应
-                Message message = new Message();
-                message.what = Config.CDSBONUS_MESSAGE;
-                message.obj = chatMessage;
-                MyApplication.getChatHandler().handleMessage(message);
+                //红包消息
+                mBuilder.setContentText(chatMessage.getNackname()+chatMessage.getContent())
+                        .setTicker("收到" + chatMessage.getNackname() + "发送过来的信息");
+                chatMessage.setType(Config.TYPE_CDSBONUS);
+
+                if(MyApplication.getChatHandler()!=null&&MyApplication.getRoomId()==chatMessage.getRid()){
+                    Message message = new Message();
+                    message.what = Config.CDSBONUS_MESSAGE;
+                    message.obj = chatMessage;
+
+                    Message message1 = new Message();
+                    message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
+                    message1.obj = chatMessage;
+
+                    MyApplication.getChatHandler().handleMessage(message);
+                    MyApplication.getRoomHandler().handleMessage(message1);
+                }else{
+                    //更新房间信息
+                    Message message = new Message();
+                    message.what = Config.ADD_MESSAGE;
+                    message.obj = chatMessage;
+                    MyApplication.getRoomHandler().handleMessage(message);
+                }
+            }else if(xgPushTextMessage.getTitle().equals("CancelBonus")){
+                MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(),0,chatMessage.getId());
+                //判断该房间是否正打开
+                if(MyApplication.getChatHandler()!=null&&MyApplication.getRoomId()==chatMessage.getRid()){
+                    Message message = new Message();
+                    message.what = Config.CHAT_MESSAGE;
+                    message.obj = chatMessage;
+                    Message message1 = new Message();
+                    message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
+                    message1.obj = chatMessage;
+                    MyApplication.getChatHandler().handleMessage(message);
+                    MyApplication.getRoomHandler().handleMessage(message1);
+                }else{
+                    //更新房间信息
+                    Message message = new Message();
+                    message.what = Config.ADD_MESSAGE;
+                    message.obj = chatMessage;
+                    MyApplication.getRoomHandler().handleMessage(message);
+                }
             }
             mBuilder.setWhen(System.currentTimeMillis())
                     .setSmallIcon(R.mipmap.test_icon)

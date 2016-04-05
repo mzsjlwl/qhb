@@ -8,7 +8,7 @@ public class Config {
 //    public static final String BASE_URL = "http://10.0.3.2/QHB/";
 
 
-    public static final String FINDROOM_URL = "http://192.168.0.110:8033/QHB/Room/findRoom";
+//    public static final String FINDROOM_URL = "http://192.168.0.110:8033/QHB/Room/findRoom";
     //
     public static final String USER_TAG = "user";
     public static final String ORDER_TAG = "order";
@@ -44,4 +44,8 @@ public class Config {
     public static final int TYPE_CDSBONUS=2;
     public static final int TYPE_RANDOMBONUS_OPENED = 3;
     public static final int TYPE_CDSBONUS_OPENED = 4;
+
+    public static final int STATE_CDSBONUS_START = 1;
+    public static final int STATE_CDSBONUS_GUESSED = 2;
+    public static final int STATE_CDSBONUS_END = 0;
 }

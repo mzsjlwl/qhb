@@ -35,6 +35,7 @@ public class MyApplication extends Application {
     private static RequestQueue mQueue;
     private static Handler roomHandler;
     private static Handler chatHandler;
+    private static Handler cdsHandler;
     private static int rid ;
     private static TelephonyManager tm;
     private static NotificationManager nm;
@@ -81,6 +82,15 @@ public class MyApplication extends Application {
 
     public synchronized  static void setChatHandler(Handler handler,int id){
         chatHandler= handler;
+        rid = id;
+    }
+
+
+    public synchronized  static Handler getCdsHandler(){
+        return cdsHandler;
+    }
+    public synchronized  static void setCdsHandler(Handler handler,int id){
+        cdsHandler = handler;
         rid = id;
     }
 

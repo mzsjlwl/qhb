@@ -251,6 +251,7 @@ public class ChatActivity extends BaseActivity {
     }
 
     public void ReceiverRandomBonus(ChatMessage msg){
+            msg.setStatus(1);
             messageList.add(msg);
             msgAdapter.notifyDataSetChanged();
             lv_chat.setSelection(messageList.size() - 1);
@@ -258,12 +259,7 @@ public class ChatActivity extends BaseActivity {
 
     public void ReceiverCDSBonus(ChatMessage msg){
         if(msg.getRid()==room.getRid()){
-            ChatMessage chatMessage =  new ChatMessage();
-            //chatMessage.setStatus(1);
-            chatMessage.setType(Config.TYPE_CDSBONUS);
-            chatMessage.setUid(msg.getUid());
-            chatMessage.setNackname("系统");
-            messageList.add(chatMessage);
+            messageList.add(msg);
             msgAdapter.notifyDataSetChanged();
             lv_chat.setSelection(messageList.size() - 1);
         }
@@ -272,6 +268,11 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        MyApplication.setChatHandler(null,0);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MyApplication.setChatHandler(null, 0);
     }
 }

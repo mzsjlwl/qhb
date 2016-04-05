@@ -43,10 +43,10 @@ public class MessageDAO  {
         });
     }
 
-    //    public static void update(SQLiteDatabase db,Integer uid,String product){
-//        db.execSQL("update room set product = ? where uid = ?", new String[]{
-//                product, String.valueOf(uid)});
-//    }
+    public static void updateStatus(SQLiteDatabase db,int status,int id){
+        db.execSQL("update message set status = ? where id = ?", new String[]{
+                String.valueOf(status), String.valueOf(id)});
+    }
 //    public static void delete(SQLiteDatabase db,Integer rid,Integer uid ){
 //        db.execSQL("delete from room  where uid = ? and rid = ?",new String[]{
 //                "",String.valueOf(uid)

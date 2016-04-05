@@ -61,7 +61,7 @@ public class RoomAdapter extends CommonAdapter<Room> {
         holder.getView(R.id.room_list_items).setOnClickListener(new RoomItemOnclick(position));
         if(room.getLastMessage()!=null){
             holder.setText(R.id.id_tv_time, room.getLastMessage().getDate());
-            if(room.getChatMessageList().size()==0){
+            if(room.getChatMessageList()==null||room.getChatMessageList().size()==0){
                 holder.setText(R.id.id_tv_num,"");
                 holder.setText(R.id.id_tv_content,
                         room.getLastMessage().getNackname()+" : "+
@@ -82,18 +82,20 @@ public class RoomAdapter extends CommonAdapter<Room> {
         }
         @Override
         public void onClick(View view) {
-            mDatas.get(position).getChatMessageList().clear();
+            if(mDatas.get(position).getChatMessageList()!=null){
+                mDatas.get(position).getChatMessageList().clear();
+            }
             final ProgressDialog progressDialog = new ProgressDialog(mContext);
             progressDialog.setMessage("请求中");
             progressDialog.setCancelable(true);
             progressDialog.show();
+            //数据库更新
+            RoomDAO.updateMessage(MyApplication.getSQLiteDatabase(),"",mDatas.get(position).getRid());
             Intent i = new Intent(mContext, ChatActivity.class);
             Bundle b = new Bundle();
             b.putSerializable("room", mDatas.get(position));
             i.putExtras(b);
             mContext.startActivity(i);
-            //数据库更新
-            RoomDAO.update(MyApplication.getSQLiteDatabase(),"",mDatas.get(position).getRid());
             StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/enterRoom",
                     new Response.Listener<String>() {
                         @Override

@@ -28,7 +28,7 @@ public class RoomDAO {
                 room.setRid(cursor.getInt(cursor.getColumnIndex("rid")));
                 room.setRoomCreater(cursor.getString(cursor.getColumnIndex("roomCreater")));
                 room.setRoomName(cursor.getString(cursor.getColumnIndex("roomName")));
-                if(TextUtils.isEmpty(cursor.getString(cursor.getColumnIndex("lastMessage")))){
+                if(!TextUtils.isEmpty(cursor.getString(cursor.getColumnIndex("lastMessage")))){
                     ChatMessage chatMessage  = new ChatMessage();
                     chatMessage = MyApplication.getGson().fromJson(cursor.getString(cursor.getColumnIndex("lastMessage")),
                             ChatMessage.class);
