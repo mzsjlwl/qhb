@@ -3,43 +3,10 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="fill_parent">
-    <!--<FrameLayout-->
-    <!--android:layout_height="120dp"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:id="@+id/slider">-->
-    <!--<android.support.v4.view.ViewPager-->
-    <!--android:id="@+id/viewPager"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_gravity="center"-->
-    <!--/>-->
-    <!--</FrameLayout>-->
     <include layout="@layout/shop_top_bar"/>
     <include layout="@layout/banner"/>
     <include layout="@layout/include_splitline"/>
-    <!--<com.handmark.pulltorefresh.library.PullToRefreshListView-->
-        <!--xmlns:ptr="http://schemas.android.com/apk/res-auto"-->
-        <!--android:id="@+id/pull_refresh_list"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="fill_parent"-->
-        <!--android:cacheColorHint="#00000000"-->
-        <!--android:divider="#19000000"-->
-        <!--android:dividerHeight="4dp"-->
-        <!--android:fadingEdge="none"-->
-        <!--android:fastScrollEnabled="false"-->
-        <!--android:footerDividersEnabled="false"-->
-        <!--android:headerDividersEnabled="false"-->
-        <!--android:smoothScrollbar="true"-->
-        <!--ptr:ptrMode="both" >-->
-    <!--</com.handmark.pulltorefresh.library.PullToRefreshListView>-->
-    <!--<GridView-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:id="@+id/lv_products"-->
-        <!--android:numColumns="2"-->
-        <!-->-->
 
-    <!--</GridView>-->
     <com.handsome.qhb.widget.RefreshListView
 
         android:id="@+id/refreshlistview"

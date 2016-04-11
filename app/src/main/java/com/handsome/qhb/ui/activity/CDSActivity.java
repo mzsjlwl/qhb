@@ -28,8 +28,13 @@ import com.handsome.qhb.utils.UserInfo;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 import tab.com.handsome.handsome.R;
@@ -44,15 +49,30 @@ public class CDSActivity extends BaseActivity {
 
     private LinearLayout ll_myguess,ll_guess,ll_result;
 
-    private ImageButton ib_back;
+    private LinearLayout ll_back;
     private ChatMessage chatMessage;
     private DS ds;
+    private TimerTask timerTask;
+    private Timer timer;
+    private SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private Date date;
+    private long hbtime,nowtime,subtime;
+    private String intime;
+
 
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             if(msg.what==Config.DS_RESULT){
-                refreshResult((ChatMessage)msg.obj);
+                refreshResult((ChatMessage) msg.obj);
+            }else if(msg.what==10){
+                if((Long)msg.obj<10){
+                    intime = "0"+msg.obj.toString();
+                    tv_Btime.setText("00:"+intime);
+                }else{
+                    tv_Btime.setText("00:"+msg.obj.toString());
+                }
+                LogUtils.e("time----->","");
             }
         }
     };
@@ -73,7 +93,7 @@ public class CDSActivity extends BaseActivity {
         ll_myguess = (LinearLayout)findViewById(R.id.ll_myguess);
         ll_guess = (LinearLayout)findViewById(R.id.ll_guess);
         ll_result = (LinearLayout)findViewById(R.id.ll_result);
-        ib_back = (ImageButton)findViewById(R.id.ib_back);
+        ll_back = (LinearLayout)findViewById(R.id.ll_back);
 
        chatMessage = (ChatMessage) getIntent().getSerializableExtra("cdsMessage");
          ds = (DS) getIntent().getSerializableExtra("ds");
@@ -101,6 +121,7 @@ public class CDSActivity extends BaseActivity {
             }else if(ds.getResult()==2){
                 tv_result.setText("双");
             }
+            ll_guess.setVisibility(View.INVISIBLE);
             ll_result.setVisibility(View.VISIBLE);
 
             MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(),Config.STATE_CDSBONUS_END,chatMessage.getId());
@@ -213,12 +234,39 @@ public class CDSActivity extends BaseActivity {
             }
         });
 
-        ib_back.setOnClickListener(new View.OnClickListener() {
+        ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
+
+        try {
+            date = simpleDateFormat.parse(chatMessage.getDate());
+            hbtime= date.getTime();
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        timerTask = new TimerTask() {
+
+            @Override
+            public void run() {
+                Message msg = new Message();
+                msg.what = 10;
+                nowtime = System.currentTimeMillis();
+                subtime = 60-(nowtime-hbtime)/1000;
+                if(subtime<0){
+                    return;
+                }
+                msg.obj = subtime;
+                handler.sendMessage(msg);
+            }
+        };
+
+        timer = new Timer();
+        timer.schedule(timerTask,0,1000);
     }
 
     @Override

@@ -21,6 +21,7 @@ import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.UserDBOpenHelper;
 import com.handsome.qhb.utils.LogUtils;
+import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushManager;
 
 import org.json.JSONException;
@@ -52,7 +53,17 @@ public class MyApplication extends Application {
         tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
         //获取消息通知
         nm = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
-        XGPushManager.registerPush(context);
+        XGPushManager.registerPush(context, new XGIOperateCallback() {
+            @Override
+            public void onSuccess(Object o, int i) {
+                LogUtils.e("TPush","注册成功,设备token为:"+o);
+            }
+
+            @Override
+            public void onFail(Object o, int i, String s) {
+                LogUtils.e("TPush","注册失败,错误码"+i+",错误信息："+s);
+            }
+        });
 
     }
 

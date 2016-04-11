@@ -1,15 +1,8 @@
 package com.handsome.qhb.config;
 
 public class Config {
-    public static final String BASE_URL = "http://192.168.111.107/QHB/";
 
-
-//    public static final String BASE_IMAGE_URL = "http://10.0.3.2/QHB1/public/upload/";
-//    public static final String BASE_URL = "http://10.0.3.2/QHB/";
-
-
-//    public static final String FINDROOM_URL = "http://192.168.0.110:8033/QHB/Room/findRoom";
-    //
+    public static final String BASE_URL = "http://192.168.111.106/QHB/";
     public static final String USER_TAG = "user";
     public static final String ORDER_TAG = "order";
     public static final long ACCESSID = 2100189658;
@@ -29,6 +22,7 @@ public class Config {
     public static final int CDSBONUS_MESSAGE = 10;
     public static final int ADD_MESSAGE=11;
     public static final int ROOM_REFRESH_LASTMESSAGE = 12;
+    public static final int CDS_TIME = 13;
 
     public static final int DS_RESULT = 13;
     public static final int BONUSLIST = 14;
@@ -51,4 +45,5 @@ public class Config {
     public static final int STATE_CDSBONUS_START = 1;
     public static final int STATE_CDSBONUS_GUESSED = 2;
     public static final int STATE_CDSBONUS_END = 3;
+
 }

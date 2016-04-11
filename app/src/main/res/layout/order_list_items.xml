@@ -5,9 +5,9 @@
     android:layout_height="wrap_content">
     <LinearLayout
         android:id="@+id/llfirst"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_margin="5dp"
+        android:layout_width="@dimen/x60"
+        android:layout_height="@dimen/y50"
+        android:layout_margin="@dimen/x5"
         android:layout_alignParentLeft="true">
         <ImageView
             android:layout_width="match_parent"
@@ -21,39 +21,40 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/llfirst"
         android:orientation="vertical"
-        android:layout_margin="5dp">
+        android:layout_margin="@dimen/x5">
 
         <TextView
             android:id="@+id/tv_totalMoney"
             android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y5"
             android:text="￥15.55"
-            android:textSize="18dp"
+            android:textSize="@dimen/x15"
             android:textStyle="bold"
             android:textColor="#000000"/>
         <TextView
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginLeft="@dimen/x5"
+            android:layout_marginRight="@dimen/x5"
+            android:layout_marginTop="@dimen/y15"
             android:id="@+id/tv_orderTime"
             android:text="2016-12-19 22:22"
-            android:textSize="13dp"
+            android:textSize="@dimen/x11"
             />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/llthird"
-        android:layout_width="70dp"
+        android:layout_width="@dimen/x70"
         android:layout_height="match_parent"
-        android:layout_margin="5dp"
+        android:layout_margin="@dimen/x5"
         android:layout_alignParentRight="true">
         <TextView
             android:id="@+id/tv_orderStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="@dimen/y20"
             android:text="已完成"/>
     </LinearLayout>
 </RelativeLayout>

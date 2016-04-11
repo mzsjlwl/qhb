@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +38,7 @@ import tab.com.handsome.handsome.R;
 
 public class UpdateDataActivity extends BaseActivity {
    //返回键
-    private ImageButton ib_back;
+    private LinearLayout ll_back;
     //修改用户名
     private EditText et_nackname;
     //makesure
@@ -53,14 +54,14 @@ public class UpdateDataActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_data);
-        ib_back = (ImageButton) findViewById(R.id.ib_back);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         et_nackname = (EditText)findViewById(R.id.et_nackname);
         tv_makesure = (TextView)findViewById(R.id.tv_makesure);
         iv_user_photo = (ImageView)findViewById(R.id.iv_user_photo);
         ImageUtils.imageLoader(MyApplication.getmQueue(),UserInfo.getInstance().getPhoto(),iv_user_photo);
         et_nackname.setText(UserInfo.getInstance().getNackname());
 
-        ib_back.setOnClickListener(new View.OnClickListener() {
+        ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

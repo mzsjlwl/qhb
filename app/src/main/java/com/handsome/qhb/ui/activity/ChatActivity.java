@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,7 +56,7 @@ public class ChatActivity extends BaseActivity {
     private TextView tv_room_title;
     private EditText et_chat_msg;
     private ImageButton ib_chat_send;
-    private ImageButton ib_back;
+    private LinearLayout ll_back;
     private ListView lv_chat;
     private Room room;
     private List<ChatMessage> messageList = new ArrayList<ChatMessage>();
@@ -68,17 +69,11 @@ public class ChatActivity extends BaseActivity {
         @Override
         public void handleMessage(Message msg) {
             if(msg.what==Config.CHAT_MESSAGE){
-                ChatMessage chatMessage = new ChatMessage();
-                chatMessage = (ChatMessage) msg.obj;
-                ReceiverMessage(chatMessage);
+                ReceiverMessage((ChatMessage) msg.obj);
             }else if(msg.what==Config.RANDOMBONUS_MESSAGE){
-                ChatMessage chatMessage = new ChatMessage();
-                chatMessage = (ChatMessage)msg.obj;
-                ReceiverRandomBonus(chatMessage);
+                ReceiverRandomBonus((ChatMessage) msg.obj);
             }else if(msg.what==Config.CDSBONUS_MESSAGE){
-                ChatMessage chatMessage = new ChatMessage();
-                chatMessage = (ChatMessage)msg.obj;
-                ReceiverCDSBonus(chatMessage);
+                ReceiverCDSBonus((ChatMessage)msg.obj);
             }
         }
     };
@@ -94,7 +89,7 @@ public class ChatActivity extends BaseActivity {
         tv_room_title = (TextView) findViewById(R.id.tv_room_title);
         et_chat_msg = (EditText)findViewById(R.id.et_chat_msg);
         ib_chat_send = (ImageButton)findViewById(R.id.ib_chat_send);
-        ib_back = (ImageButton)findViewById(R.id.ib_back);
+        ll_back = (LinearLayout)findViewById(R.id.ll_back);
         lv_chat = (ListView)findViewById(R.id.lv_chat);
         room = (Room) getIntent().getSerializableExtra("room");
         MyApplication.setChatHandler(handler,room.getRid());
@@ -112,45 +107,9 @@ public class ChatActivity extends BaseActivity {
         tv_room_title.setText(room.getRoomName());
 
 
-        ib_back.setOnClickListener(new View.OnClickListener() {
+        ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                是否退群
-//                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/exitRoom",
-//                        new Response.Listener<String>() {
-//                            @Override
-//                            public void onResponse(String response) {
-//                                try {
-//                                    LogUtils.e("room",response);
-//                                    JSONObject jsonObject = new JSONObject(response);
-//                                    String status = jsonObject.getString("status");
-//                                    if(status.equals(0)){
-//                                        LogUtils.e("room", jsonObject.getString("info"));
-//                                        Toast toast = Toast.makeText(ChatActivity.this,jsonObject.getString("info"),Toast.LENGTH_LONG);
-//                                        toast.setGravity(Gravity.CENTER,0,0);
-//                                        toast.show();
-//                                    }else{
-//                                        finish();
-//                                    }
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                }
-//                            }
-//                        }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        Log.e("TAG", error.getMessage(), error);
-//                    }
-//                }){
-//                    @Override
-//                    protected Map<String, String> getParams() throws AuthFailureError {
-//                        Map<String, String> map = new HashMap<String, String>();
-//                        map.put("rid", String.valueOf(room.getRid()));
-//                        map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
-//                        return map;
-//                    }
-//                };
-//                MyApplication.getmQueue().add(stringRequest);
                 finish();
             }
         });

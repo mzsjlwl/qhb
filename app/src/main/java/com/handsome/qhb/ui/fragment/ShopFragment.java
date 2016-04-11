@@ -62,6 +62,8 @@ public class ShopFragment extends Fragment {
     private RefreshListView rListView;
     //商品列表
     private List<Product> productLists;
+    //商品Adapter
+    private ProductAdapter productAdapter;
     //购物车
     private ImageButton shopCar;
     // 当前图片的索引号
@@ -118,10 +120,6 @@ public class ShopFragment extends Fragment {
                 LogUtils.d("0x126","------>");
                 initProductList();
                 rListView.hideHeaderView();
-            }else if (msg.what == Config.LoadMORE_PRODUCT){
-                LogUtils.d("0x127","------->");
-                initProductList();
-                rListView.hideFooterView();
             }
         }
     };
@@ -186,9 +184,7 @@ public class ShopFragment extends Fragment {
             }
 
         });
-
         mQueue.add(jsonObjectRequest2);
-
     }
 
 
@@ -235,13 +231,11 @@ public class ShopFragment extends Fragment {
                     i.putExtras(b);
                     getActivity().setIntent(i);
                     startActivity(i);
-//                    shopCarList.clear();
                 }
             }
         });
         //ListView
         rListView = (RefreshListView)view.findViewById(R.id.refreshlistview);
-
         //当前Fragment不可见后,重新加载轮播图片和商品项
         if (msg1.obj!=null) {
             if (msg1.obj.toString() == "0") {
@@ -252,7 +246,6 @@ public class ShopFragment extends Fragment {
             }
         }
         return view;
-
     }
 
     @Override
@@ -263,16 +256,15 @@ public class ShopFragment extends Fragment {
             LogUtils.e("restartSlider","---->");
         }
         if(productLists!=null&&productLists.size()!=0){
+            LogUtils.e("productList===>","nonull");
             String TAG = getActivity().getIntent().getStringExtra("TAG");
             if(TAG!=null&&TAG.equals("ClearGWC")){
-
                 LogUtils.e("ClearGWC","------>");
                 clearShopCar();
                 Message msg = new Message();
                 msg.what = Config.INIT_PRODUCT;
                 handler.handleMessage(msg);
             }
-//            LogUtils.e("TAG",TAG);
         }
         LogUtils.e("shopfragment","onstart");
     }
@@ -301,7 +293,7 @@ public class ShopFragment extends Fragment {
     }
 
     public void initProductList() {
-        ProductAdapter productAdapter = new ProductAdapter(getActivity(), productLists, R.layout.product_list_items,MyApplication.getmQueue());
+        productAdapter = new ProductAdapter(getActivity(), productLists, R.layout.product_list_items,MyApplication.getmQueue());
         rListView.setAdapter(productAdapter);
         rListView.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -353,12 +345,15 @@ public class ShopFragment extends Fragment {
                                     for(Product product:nextProducts){
                                         productLists.add(product);
                                     }
+                                    productAdapter.notifyDataSetChanged();
+                                    rListView.setSelection(productLists.size()-nextProducts.size());
+
                                     pageJson =new JSONObject(response.getString("page"));
                                     nextpage = pageJson.getString("next");
+                                    rListView.hideFooterView();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                handler.handleMessage(msg);
                             }
                         },new Response.ErrorListener(){
 

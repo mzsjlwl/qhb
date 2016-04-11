@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handsome.qhb.application.MyApplication;
+import com.handsome.qhb.ui.activity.AddMoneyActivity;
 import com.handsome.qhb.ui.activity.AddressActivity;
 import com.handsome.qhb.ui.activity.LoginActivity;
 import com.handsome.qhb.ui.activity.OrderActivity;
@@ -97,7 +98,7 @@ public class UserFragment extends Fragment {
         ll_addMoney.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(Intent.ACTION_CALL, Uri.parse("tel:18813973836"));
+                Intent i = new Intent(getActivity(), AddMoneyActivity.class);
                 startActivity(i);
             }
         });

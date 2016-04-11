@@ -20,6 +20,9 @@ public class ChatMessage implements Serializable{
     //红包总钱数
     private float bonus_total;
 
+    //单双红包的时间
+    private int dsTime;
+
     public int getId() {
         return id;
     }
@@ -94,12 +97,19 @@ public class ChatMessage implements Serializable{
         this.date = date;
     }
 
+    public int getDsTime() {
+        return dsTime;
+    }
+
+    public void setDsTime(int dsTime) {
+        this.dsTime = dsTime;
+    }
+
     public ChatMessage(){
 
     }
 
-
-    public ChatMessage(int id, int rid, int uid, String content, String nackname, String date, int status, int type, float bonus_total) {
+    public ChatMessage(int id, int rid, int uid, String content, String nackname, String date, int status, int type, float bonus_total, int dsTime) {
         this.id = id;
         this.rid = rid;
         this.uid = uid;
@@ -109,6 +119,7 @@ public class ChatMessage implements Serializable{
         this.status = status;
         this.type = type;
         this.bonus_total = bonus_total;
+        this.dsTime = dsTime;
     }
 
     @Override
@@ -123,6 +134,7 @@ public class ChatMessage implements Serializable{
                 ", status=" + status +
                 ", type=" + type +
                 ", bonus_total=" + bonus_total +
+                ", dsTime=" + dsTime +
                 '}';
     }
 }

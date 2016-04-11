@@ -5,6 +5,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -28,7 +29,7 @@ import tab.com.handsome.handsome.R;
  */
 public class AddressActivity extends BaseActivity{
     //返回
-    private ImageButton ib_back;
+    private LinearLayout ll_back;
     //添加收货地址
     private TextView tv_add;
     //ListView
@@ -43,11 +44,11 @@ public class AddressActivity extends BaseActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_address);
-        ib_back = (ImageButton) findViewById(R.id.ib_back);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         tv_add = (TextView)findViewById(R.id.tv_add);
         lv_address = (ListView) findViewById(R.id.lv_address);
         db = UserDBOpenHelper.getInstance(this).getWritableDatabase();
-        ib_back.setOnClickListener(new View.OnClickListener() {
+        ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
@@ -92,10 +93,7 @@ public class AddressActivity extends BaseActivity{
         }
         //增加与修改
         if(getIntent().getSerializableExtra("address")!=null){
-            LogUtils.e("AddressManager","fdsfsad");
             Address address = (Address) getIntent().getSerializableExtra("address");
-            LogUtils.e("address.aid",String.valueOf(address.getAid()));
-            LogUtils.e("address.receName",address.getReceName());
             if(addressList!=null){
                 int i;
                 for( i=0;i<addressList.size();i++){
@@ -121,12 +119,10 @@ public class AddressActivity extends BaseActivity{
         if(addressList!=null){
             //获取list中最后一条的aid再加一
             size = addressList.get(addressList.size()-1).getAid()+1;
-            LogUtils.e("size",String.valueOf(size));
             AddressAdapter addressAdapter = new AddressAdapter(this,addressList,R.layout.address_list_items, MyApplication.getmQueue());
             lv_address.setAdapter(addressAdapter);
         }else{
             size = 0;
-            LogUtils.e("size", String.valueOf(size));
         }
     }
 

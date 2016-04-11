@@ -11,23 +11,29 @@
         android:layout_height="40dp"
         android:layout_weight="1"
         android:background="#000000">
-        <ImageButton
-            android:id="@+id/ib_back"
-            android:layout_height="40dp"
-            android:layout_width="25dp"
-            android:scaleType="fitXY"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="12dp"
-            android:background="@mipmap/zf_back_btn"
-            />
+        <LinearLayout
+            android:id="@+id/ll_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true">
+            <ImageButton
+                android:layout_height="wrap_content"
+                android:layout_width="@dimen/x20"
+                android:scaleType="fitXY"
+                android:layout_margin="@dimen/x10"
+                android:background="@mipmap/zf_back_btn"
+
+                ></ImageButton>
+        </LinearLayout>
+
         <TextView
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/ib_back"
-            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/ll_back"
+            android:layout_marginLeft="@dimen/x4"
             android:gravity="center_vertical|left"
             android:text="@string/tx_gwcjs"
-            android:textSize="20dp"
+            android:textSize="@dimen/x16"
             android:textColor="#ffffff"
             />
     </RelativeLayout>
@@ -41,8 +47,8 @@
         android:id="@+id/ll_address"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
-        android:padding="20dp"
+        android:layout_marginTop="@dimen/y10"
+        android:padding="@dimen/x20"
         android:background="#ffffff"
         android:orientation="vertical">
         <LinearLayout
@@ -54,8 +60,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tx_receName"
-                android:textSize="18dp"
-                android:layout_marginLeft="20dp"
+                android:textSize="@dimen/x16"
+                android:layout_marginLeft="@dimen/x20"
 
                 />
             <TextView
@@ -63,26 +69,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tx_recePhone"
-                android:textSize="18dp"
-                android:layout_marginLeft="20dp"
+                android:textSize="@dimen/x16"
+                android:layout_marginLeft="@dimen/x20"
 
                 />
         </LinearLayout>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="20dp"
+            android:layout_marginRight="@dimen/x1"
             android:gravity="right"
             android:text=">"
             android:textStyle="bold"
-            android:textSize="20dp"/>
+            android:textSize="@dimen/x20"/>
         <TextView
             android:id="@+id/tv_receAddr"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tx_address"
-            android:textSize="18dp"
-            android:layout_marginLeft="20dp"
+            android:textSize="@dimen/x16"
+            android:layout_marginLeft="@dimen/x20"
             />
     </LinearLayout>
 <ScrollView
@@ -91,7 +97,7 @@
     <LinearLayout
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="@dimen/y10"
         android:orientation="vertical"
         android:background="#ffffff">
 
@@ -100,72 +106,72 @@
             android:id="@+id/ll_gwc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="@dimen/y10">
 
         </com.handsome.qhb.widget.ListViewForScrollView>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp">
+        android:paddingTop="@dimen/y10">
         
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="30dp"
-            android:textSize="18dp"
+            android:layout_marginLeft="@dimen/x25"
+            android:textSize="@dimen/x16"
             android:textStyle="bold"
             android:text="@string/tx_totalPrice"/>
         <TextView
             android:id="@+id/tv_totalPrice"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_marginLeft="80dp"
+            android:layout_marginLeft="@dimen/x80"
             android:text="￥99.9"
-            android:textSize="18dp"/>
+            android:textSize="@dimen/x16"/>
     </LinearLayout>
     <TextView
         android:id="@+id/tv_liuyan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="15dp"
-        android:paddingLeft="30dp"
+        android:paddingTop="@dimen/y15"
+        android:paddingLeft="@dimen/x25"
         android:text="@string/tx_liuyan"
-        android:textSize="18dp"
+        android:textSize="@dimen/x16"
         android:textStyle="bold"
         android:background="#ffffff"/>
     <EditText
         android:id="@+id/et_liuyan"
         android:layout_width="match_parent"
         android:gravity="top"
-        android:layout_height="150dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="15dp"
-        android:padding="5dp"
+        android:layout_height="@dimen/y120"
+        android:layout_marginTop="@dimen/y15"
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_marginRight="@dimen/x30"
+        android:layout_marginBottom="@dimen/y15"
+        android:padding="@dimen/x5"
         android:background="@drawable/et_bg_border"/>
     </LinearLayout>
 </ScrollView>
 </LinearLayout>
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/y40"
         android:layout_alignParentBottom="true"
         android:layout_weight="1"
         android:background="#ffffff"
         >
         <Button
-            android:layout_height="35dp"
-            android:layout_width="50dp"
+            android:layout_height="@dimen/y25"
+            android:layout_width="@dimen/x40"
             android:background="@drawable/btn_js_border"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="20dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginRight="@dimen/x20"
+            android:layout_marginTop="@dimen/y8"
             android:text="@string/tx_js"
             android:textColor="#ffffff"
-            android:paddingTop="2dp"
+            android:paddingTop="@dimen/y2"
             android:textStyle="bold"
-            android:textSize="16dp"
+            android:textSize="@dimen/x14"
             android:id="@+id/btn_sub"
 
             />

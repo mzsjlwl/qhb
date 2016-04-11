@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +25,7 @@ public class AddressManagerActivity extends BaseActivity {
     //地址
     private EditText receAddr;
     //返回键
-    private ImageButton ib_back;
+    private LinearLayout ll_back;
     //地址Id
     private int aid;
     //确定
@@ -41,7 +42,7 @@ public class AddressManagerActivity extends BaseActivity {
         receName = (EditText) findViewById(R.id.et_receName);
         recePhone = (EditText) findViewById(R.id.et_recePhone);
         receAddr = (EditText) findViewById(R.id.et_receAddr);
-        ib_back = (ImageButton)findViewById(R.id.ib_back);
+        ll_back = (LinearLayout)findViewById(R.id.ll_back);
         tv_makesure = (TextView)findViewById(R.id.tv_makesure);
         tv_back =(TextView)findViewById(R.id.tv_back);
         ib_delete = (ImageButton)findViewById(R.id.ib_delete);
@@ -78,7 +79,7 @@ public class AddressManagerActivity extends BaseActivity {
                 finish();
             }
         });
-        ib_back.setOnClickListener(new View.OnClickListener() {
+        ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

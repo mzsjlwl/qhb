@@ -22,41 +22,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/tx_telphone"
-            android:textSize="20dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:textSize="@dimen/x16"
+            android:layout_marginLeft="@dimen/x28"
+            android:layout_marginRight="@dimen/x28"
             />
         <EditText
             android:id="@+id/et_telphone"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginTop="@dimen/y8"
+            android:layout_marginLeft="@dimen/x28"
+            android:layout_marginRight="@dimen/x28"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
+            android:layout_height="@dimen/y25"
             android:background="@drawable/et_bg_border"
-            android:paddingLeft="10dp"
+            android:paddingLeft="@dimen/x10"
             />
         <TextView
             android:id="@+id/tv_password"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="@string/tx_password"
-            android:textSize="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:textSize="@dimen/x16"
+            android:layout_marginTop="@dimen/y8"
+            android:layout_marginLeft="@dimen/x28"
+            android:layout_marginRight="@dimen/x28"
             />
 
         <EditText
             android:id="@+id/et_password"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:textSize="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_height="@dimen/y25"
+            android:textSize="@dimen/x16"
+            android:layout_marginTop="@dimen/y8"
+            android:layout_marginLeft="@dimen/x28"
+            android:layout_marginRight="@dimen/x28"
             android:background="@drawable/et_bg_border"
-            android:paddingLeft="10dp"
+            android:paddingLeft="@dimen/x10"
             android:inputType="textPassword"/>
         <ProgressBar
 
@@ -77,9 +77,9 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="@dimen/y28"
             android:text="@string/tx_login"
-            android:textSize="20dp"
+            android:textSize="@dimen/x16"
             android:textColor="#084ff5"
             android:clickable="true"
             />
@@ -88,10 +88,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="@dimen/y28"
             android:text="@string/tx_register"
             android:textColor="#084ff5"
-            android:textSize="20dp"
+            android:textSize="@dimen/x16"
             android:clickable="true"/>
 
 

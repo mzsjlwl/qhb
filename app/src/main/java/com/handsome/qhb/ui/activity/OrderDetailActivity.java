@@ -3,6 +3,7 @@ package com.handsome.qhb.ui.activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -12,6 +13,7 @@ import com.handsome.qhb.adapter.OrderItemAdapter;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.Order;
 import com.handsome.qhb.bean.Products;
+import com.handsome.qhb.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +45,7 @@ public class OrderDetailActivity extends BaseActivity{
     //地址
     private TextView tv_receAddr;
     //返回
-    private ImageButton ib_back;
+    private LinearLayout ll_back;
     //Gson
     private Gson gson = new Gson();
     //productsList
@@ -64,7 +66,7 @@ public class OrderDetailActivity extends BaseActivity{
         tv_receName = (TextView)findViewById(R.id.tv_receName);
         tv_recePhone = (TextView)findViewById(R.id.tv_recePhone);
         tv_receAddr = (TextView)findViewById(R.id.tv_receAddr);
-        ib_back = (ImageButton)findViewById(R.id.ib_back);
+        ll_back = (LinearLayout)findViewById(R.id.ll_back);
         tv_title.setText("订单详情");
         if(getIntent().getSerializableExtra("order")!=null){
             order = (Order) getIntent().getSerializableExtra("order");
@@ -85,7 +87,7 @@ public class OrderDetailActivity extends BaseActivity{
             tv_recePhone.setText(order.getRecePhone());
             tv_receAddr.setText(order.getReceAddr());
         }
-        ib_back.setOnClickListener(new View.OnClickListener() {
+        ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

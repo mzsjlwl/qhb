@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -48,7 +49,7 @@ import tab.com.handsome.handsome.R;
  * Created by zhang on 2016/3/19.
  */
 public class UpdatePhotoActivity extends BaseActivity {
-    private ImageButton ib_back;
+    private LinearLayout ll_back;
     private ImageButton ib_photo_menu;
     // 拍照
     private static final int PHOTO_REQUEST_CAMERA = 1;
@@ -65,11 +66,11 @@ public class UpdatePhotoActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_photo);
-        ib_back = (ImageButton) findViewById(R.id.ib_back);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ib_photo_menu = (ImageButton)findViewById(R.id.ib_photo_menu);
         iv_user_photo = (ImageView)findViewById(R.id.iv_user_photo);
         ImageUtils.imageLoader(MyApplication.getmQueue(),UserInfo.getInstance().getPhoto(),iv_user_photo);
-        ib_back.setOnClickListener(new View.OnClickListener() {
+        ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
@@ -114,7 +115,7 @@ public class UpdatePhotoActivity extends BaseActivity {
             if(data==null){
                 return;
             }
-            Uri uri ;
+            Uri uri;
             uri = data.getData();
             Uri fileUri = convertUri(uri);
             crop(fileUri,PHOTO_REQUEST_GALLERY);
@@ -123,6 +124,9 @@ public class UpdatePhotoActivity extends BaseActivity {
                 return;
             }
             Bundle extras = data.getExtras();
+            if(extras==null){
+                return ;
+            }
             Bitmap bm = extras.getParcelable("data");
             iv_user_photo.setImageBitmap(bm);
             sendImage(bm);
@@ -138,7 +142,6 @@ public class UpdatePhotoActivity extends BaseActivity {
         File tmpDir = new File(Environment.getExternalStorageDirectory()+"/photo");
         if(!tmpDir.exists()) {
             tmpDir.mkdir();
-            LogUtils.e("mkdir", "=======>");
         }
         img = new File(tmpDir,System.currentTimeMillis()+".png");
         try{
@@ -182,16 +185,9 @@ public class UpdatePhotoActivity extends BaseActivity {
                             img.delete();
                             User user =  gson.fromJson(jsonObject.getString("data"),User.class);
                             UserInfo.setUser(user);
-                            LogUtils.e("user-refresh",user.toString());
                             Toast toast = Toast.makeText(UpdatePhotoActivity.this,jsonObject.getString("info"),Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER,0,0);
                             toast.show();
-//                            SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
-//                            editor.putString("user",jsonData.getString("user"));
-//                            editor.putLong("date", new Date().getTime());
-//                            editor.commit();
-
-//                            finish();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -267,7 +263,7 @@ public class UpdatePhotoActivity extends BaseActivity {
     private void crop(Uri uri,int i) {
         // 裁剪图片意图
         Intent intent = new Intent("com.android.camera.action.CROP");
-        intent.setDataAndType(uri, "image/*");
+        intent.setDataAndType(uri,"image/*");
         intent.putExtra("crop", "true");
         // 裁剪框的比例，1：1
         intent.putExtra("aspectX", 1);
@@ -279,8 +275,9 @@ public class UpdatePhotoActivity extends BaseActivity {
 //        intent.putExtra("outputFormat", "PNG");
 //        // 取消人脸识别
 //        intent.putExtra("noFaceDetection", true);
-        // true:不返回uri，false：返回uri
+//         true:不返回uri，false：返回uri
         intent.putExtra("return-data", true);
+
         startActivityForResult(intent, PHOTO_REQUEST_CUT);
     }
     /**

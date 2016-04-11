@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="40dp"
+    android:layout_height="@dimen/y30"
     android:background="#000000">
 
     <ImageButton
         android:id="@+id/ib_shopcar"
         android:layout_height = "match_parent"
-        android:layout_width="25dp"
-        android:layout_margin="8dp"
+        android:layout_width="@dimen/x25"
+        android:layout_margin="@dimen/x5"
         android:scaleType="fitXY"
         android:layout_alignParentRight="true"
         android:background="@mipmap/gwc"
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:gravity="center"
         android:text="@string/tab_menu_shop"
-        android:textSize="20dp"
+        android:textSize="@dimen/x18"
         android:textColor="#ffffff"
         />
 </RelativeLayout>

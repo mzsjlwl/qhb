@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -58,7 +59,7 @@ public class HallFragment extends Fragment  {
     private RequestQueue requestQueue = MyApplication.getmQueue();
     private SQLiteDatabase db ;
     private Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
+    private TextView tv_add ;
     public Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -94,6 +95,8 @@ public class HallFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_hall,container,false);
         lv_room = (ListView) view.findViewById(R.id.lv_room);
+        tv_add = (TextView)view.findViewById(R.id.tv_add);
+
         MyApplication.setRoomHandler(handler);
         roomAdapter = new RoomAdapter(getActivity(),roomList,R.layout.room_list_items,MyApplication.getmQueue());
         lv_room.setAdapter(roomAdapter);
@@ -141,6 +144,13 @@ public class HallFragment extends Fragment  {
             }
         });
         MyApplication.getmQueue().add(stringRequest);
+
+        tv_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                
+            }
+        });
         return view;
     }
 
@@ -149,12 +159,6 @@ public class HallFragment extends Fragment  {
     public void onStart() {
         super.onStart();
         LogUtils.e("hallFragment====>", "onstart");
-//        if(roomList==null){
-//            roomList = new ArrayList<Room>();
-//            if(UserInfo.getInstance()!=null){
-//                roomList = RoomDAO.query(MyApplication.getSQLiteDatabase(),UserInfo.getInstance().getUid());
-//            }
-//        }
     }
 
     @Override
@@ -202,10 +206,6 @@ public class HallFragment extends Fragment  {
 //        roomList.clear();
     }
 
-
-    public void refreshMessage(){
-
-    }
 
     public void addChatMessage(ChatMessage msg){
         for(int i = 0;i<roomList.size();i++){
@@ -272,6 +272,5 @@ public class HallFragment extends Fragment  {
         });
         //更新数据
         roomAdapter.notifyDataSetChanged();
-
     }
 }

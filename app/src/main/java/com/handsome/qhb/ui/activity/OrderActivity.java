@@ -7,6 +7,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Response;
@@ -52,7 +53,7 @@ public class OrderActivity extends BaseActivity {
 
     private TextView tv_title;
 
-    private ImageButton ib_back;
+    private LinearLayout ll_back;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -75,7 +76,7 @@ public class OrderActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order);
         tv_title = (TextView) findViewById(R.id.tv_title);
-        ib_back = (ImageButton)findViewById(R.id.ib_back);
+        ll_back = (LinearLayout)findViewById(R.id.ll_back);
 
         refreshListView = (RefreshListView) findViewById(R.id.refreshlistview);
 
@@ -86,7 +87,7 @@ public class OrderActivity extends BaseActivity {
             startActivity(i);
             return;
         }
-        ib_back.setOnClickListener(new View.OnClickListener() {
+        ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

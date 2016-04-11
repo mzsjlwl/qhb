@@ -52,7 +52,7 @@ public class GwcActivity extends BaseActivity {
     private SQLiteDatabase db;
     private List<Product> shopCarList;
     private ListView listView;
-    private ImageButton ib_back;
+    private LinearLayout ll_back;
     private LinearLayout ll_address;
     private List<Address> addressList = new ArrayList<Address>();
     private Gson gson = new Gson();
@@ -70,7 +70,7 @@ public class GwcActivity extends BaseActivity {
         //初始化数据表
         db = UserDBOpenHelper.getInstance(this).getWritableDatabase();
         listView = (ListView) findViewById(R.id.ll_gwc);
-        ib_back = (ImageButton) findViewById(R.id.ib_back);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ll_address = (LinearLayout) findViewById(R.id.ll_address);
         tv_receName = (TextView)findViewById(R.id.tv_receName);
         tv_recePhone = (TextView) findViewById(R.id.tv_recePhone);
@@ -99,8 +99,7 @@ public class GwcActivity extends BaseActivity {
                 listView.setAdapter(shopCarAdapter);
             }
         }
-
-        ib_back.setOnClickListener(new View.OnClickListener() {
+        ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

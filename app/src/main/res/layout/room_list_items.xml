@@ -7,22 +7,22 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_margin="8dp"
+        android:layout_height="@dimen/y50"
+        android:layout_margin="@dimen/y3"
         android:orientation="horizontal">
-    <LinearLayout
-        android:layout_width="70dp"
-        android:layout_height="70dp">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:src="@mipmap/test_icon"/>
-    </LinearLayout>
+        <LinearLayout
+            android:layout_width="@dimen/x55"
+            android:layout_height="@dimen/y45">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@mipmap/test_icon"/>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_margin="8dp">
+            android:layout_margin="@dimen/y3">
             <RelativeLayout
                 android:layout_weight="1"
                 android:layout_width="match_parent"
@@ -32,16 +32,16 @@
                     android:layout_alignParentLeft="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="18sp"
+                    android:text="fdsfdsafasd"
+                    android:textSize="@dimen/x15"
                     android:textColor="#000000"/>
                 <TextView
                     android:id="@+id/id_tv_time"
                     android:layout_alignParentRight="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
-                    android:textSize="14sp"
+                    android:text="fdsa"
+                    android:textSize="@dimen/x14"
                     android:textColor="#77000000"/>
 
             </RelativeLayout>
@@ -55,9 +55,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/x12"
                     android:textColor="#88000000"
-                    android:text=""
+                    android:text="fdsafdsa"
                     />
                 <TextView
                     android:id="@+id/id_tv_content"
@@ -65,9 +65,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/id_tv_num"
-                    android:textSize="14sp"
+                    android:textSize="@dimen/x12"
                     android:textColor="#88000000"
-                    android:text=""/>
+                    android:text="ddasdas"/>
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

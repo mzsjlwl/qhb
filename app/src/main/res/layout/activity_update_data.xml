@@ -19,8 +19,8 @@
 
         <ImageView
             android:id="@+id/iv_user_photo"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="@dimen/x80"
+            android:layout_height="@dimen/y70"
             android:scaleType="fitXY"
             android:background="@mipmap/test_icon"
             android:layout_gravity="center_vertical|center"
@@ -28,12 +28,12 @@
             android:clickable="true"/>
         <EditText
             android:id="@+id/et_nackname"
-            android:layout_marginTop="40dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
+            android:layout_marginTop="@dimen/y28"
+            android:layout_marginLeft="@dimen/x28"
+            android:layout_marginRight="@dimen/x28"
             android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:paddingLeft="10dp"
+            android:layout_height="@dimen/y25"
+            android:paddingLeft="@dimen/x10"
             android:background="@drawable/et_bg_border"
             />
 
@@ -43,10 +43,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="@dimen/y28"
             android:text="@string/tx_makesure"
             android:textColor="#084ff5"
-            android:textSize="20dp"
+            android:textSize="@dimen/x16"
             android:clickable="true"/>
 
 

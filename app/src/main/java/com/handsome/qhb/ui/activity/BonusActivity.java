@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,7 +30,7 @@ public class BonusActivity extends BaseActivity {
     private ListView lv_bonus;
     private TextView tv_user_nackname;
     private ImageView iv_user_photo;
-    private ImageButton ib_back;
+    private LinearLayout ll_back;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,7 @@ public class BonusActivity extends BaseActivity {
         lv_bonus = (ListView) findViewById(R.id.lv_bonus);
         tv_user_nackname = (TextView) findViewById(R.id.tv_user_nackname);
         iv_user_photo = (ImageView) findViewById(R.id.iv_user_photo);
-        ib_back = (ImageButton) findViewById(R.id.ib_back);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
         if(getIntent().getSerializableExtra("ChatMessage")!=null&&getIntent().getSerializableExtra("bonusList")!=null){
 
             chatMessage = (ChatMessage) getIntent().getSerializableExtra("ChatMessage");
@@ -52,7 +53,7 @@ public class BonusActivity extends BaseActivity {
             lv_bonus.setAdapter(bonusAdapter);
         }
 
-        ib_back.setOnClickListener(new View.OnClickListener() {
+        ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();

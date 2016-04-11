@@ -3,15 +3,20 @@
     android:layout_width="match_parent"
     android:layout_height="40dp"
     android:background="#000000">
-    <ImageButton
-    android:id="@+id/ib_back"
-    android:layout_height="wrap_content"
-    android:layout_width="25dp"
-    android:scaleType="fitXY"
-    android:layout_alignParentLeft="true"
-    android:layout_margin="12dp"
-    android:background="@mipmap/zf_back_btn"
-    ></ImageButton>
+    <LinearLayout
+        android:id="@+id/ll_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true">
+        <ImageButton
+            android:layout_height="wrap_content"
+            android:layout_width="@dimen/x20"
+            android:scaleType="fitXY"
+            android:layout_margin="@dimen/x12"
+            android:background="@mipmap/zf_back_btn"
+
+            ></ImageButton>
+    </LinearLayout>
 
 
 
@@ -19,11 +24,11 @@
         android:id="@+id/tv_title"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_toRightOf="@+id/ib_back"
-        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/ll_back"
+        android:layout_marginLeft="@dimen/x5"
         android:gravity="center_vertical|left"
         android:text="@string/tx_update_data"
-        android:textSize="20dp"
+        android:textSize="@dimen/x16"
         android:textColor="#ffffff"
         />
 </RelativeLayout>

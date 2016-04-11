@@ -2,16 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+   >
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="@dimen/y50"
         android:layout_margin="8dp"
+        android:paddingTop="@dimen/y1"
+        android:paddingBottom="@dimen/y1"
         android:orientation="horizontal">
         <LinearLayout
-            android:layout_width="70dp"
-            android:layout_height="70dp">
+            android:layout_width="@dimen/y48"
+            android:layout_height="@dimen/y48"
+            android:padding="@dimen/y3">
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -22,7 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:layout_margin="5dp">
+            android:layout_margin="@dimen/x5">
             <RelativeLayout
                 android:layout_weight="1"
                 android:layout_width="match_parent"
@@ -33,47 +37,47 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="商品名称"
-                    android:textSize="18dp"
+                    android:textSize="@dimen/x16"
                     android:textColor="#000000"/>
 
             </RelativeLayout>
             <RelativeLayout
                 android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="@dimen/y5"
                 android:layout_height="0dp"
                 >
 
                     <Button
-                        android:layout_height="20dp"
-                        android:layout_width="20dp"
+                        android:layout_height="@dimen/y20"
+                        android:layout_width="@dimen/x20"
                         android:background="@drawable/btn_bg_border"
                         android:id="@+id/btn_add"
                         android:text="@string/tx_add"
                         android:textColor="#ffffff"
                         android:textStyle="bold"
-                        android:textSize="18dp"
+                        android:textSize="@dimen/x16"
                         />
                     <TextView
                         android:layout_height="wrap_content"
                         android:layout_width="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="@dimen/x5"
+                        android:layout_marginRight="@dimen/x5"
                         android:layout_toRightOf="@+id/btn_add"
                         android:id="@+id/tv_num"
                         android:text="1"
-                        android:textSize="18dp"
+                        android:textSize="@dimen/x18"
                         />
                     <Button
-                        android:layout_height="20dp"
-                        android:layout_width="20dp"
+                        android:layout_height="@dimen/y20"
+                        android:layout_width="@dimen/x20"
                         android:background="@drawable/btn_bg_border"
                         android:layout_toRightOf="@+id/tv_num"
                         android:text="@string/tx_subtract"
                         android:textColor="#ffffff"
-                        android:paddingTop="2dp"
+
                         android:textStyle="bold"
-                        android:textSize="16dp"
+                        android:textSize="@dimen/x16"
                         android:id="@+id/btn_sub"
                         />
 
@@ -83,7 +87,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="99.9￥"
-                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/x16"
                     android:textColor="#88FA0206"/>
             </RelativeLayout>
         </LinearLayout>

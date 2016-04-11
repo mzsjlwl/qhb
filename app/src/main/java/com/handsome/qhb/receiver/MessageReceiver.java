@@ -41,10 +41,8 @@ public class MessageReceiver extends XGPushBaseReceiver {
     private List<Room> rooms = new ArrayList<Room>();
     private ChatMessage chatMessage;
     private static final int NOTIFYID_1 = 1;
-    private RandomBonus randomBonus;
     private Bitmap LargeBitmap = BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.mipmap.test_icon);
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private List<RandomBonus> bonusList = new ArrayList<RandomBonus>();
 
 
     @Override
@@ -72,7 +70,6 @@ public class MessageReceiver extends XGPushBaseReceiver {
         if(UserInfo.getInstance()==null){
             return;
         }
-        LogUtils.e("title==>", xgPushTextMessage.getTitle());
         if(xgPushTextMessage.getTitle().equals("Room")) {
             roomList = gson.fromJson(xgPushTextMessage.getContent(), new TypeToken<List<Room>>() {
             }.getType());
@@ -83,11 +80,13 @@ public class MessageReceiver extends XGPushBaseReceiver {
                 MyApplication.getRoomHandler().handleMessage(message);
             }
         }else {
+            //数据库中获取存储的房间
             rooms = RoomDAO.query(MyApplication.getSQLiteDatabase(), UserInfo.getInstance().getUid());
             chatMessage = gson.fromJson(xgPushTextMessage.getContent(), ChatMessage.class);
             String time = format.format(new Date());
             chatMessage.setDate(time);
             chatMessage.setStatus(1);
+            //查找这条消息所对应的房间
             int i = 0;
             for(;i<rooms.size();i++){
                 if(rooms.get(i).getRid()==chatMessage.getRid()){
@@ -95,11 +94,16 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     break;
                 }
             }
+
+            //没有对应的房间，直接退出
             if(i==rooms.size()){
                 return;
             }
+
             Notification.Builder mBuilder = new Notification.Builder(MyApplication.getContext());
             mBuilder.setContentTitle("楼下购");
+
+
             //普通消息
             if(xgPushTextMessage.getTitle().equals("chat")){
                 mBuilder.setContentText(chatMessage.getNackname()+" : "+chatMessage.getContent())
@@ -189,6 +193,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
                 //红包消息
                 mBuilder.setContentText(chatMessage.getNackname()+chatMessage.getContent())
                         .setTicker("收到" + chatMessage.getNackname() + "发送过来的信息");
+
                 chatMessage.setType(Config.TYPE_CDSBONUS);
 
                 if(MyApplication.getChatHandler()!=null&&MyApplication.getRoomId()==chatMessage.getRid()){
@@ -199,6 +204,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     Message message1 = new Message();
                     message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
                     message1.obj = chatMessage;
+
 
                     MyApplication.getChatHandler().handleMessage(message);
                     MyApplication.getRoomHandler().handleMessage(message1);
@@ -229,14 +235,16 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     MyApplication.getRoomHandler().handleMessage(message);
                 }
             }
-            mBuilder.setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.mipmap.test_icon)
-                    .setLargeIcon(LargeBitmap)
-                    .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
-                    .setAutoCancel(true);
-            MyApplication.getNotificationManager().notify(NOTIFYID_1, mBuilder.build());
+            if(chatMessage.getUid()!=UserInfo.getInstance().getUid()){
+                mBuilder.setWhen(System.currentTimeMillis())
+                        .setSmallIcon(R.mipmap.test_icon)
+                        .setLargeIcon(LargeBitmap)
+                        .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
+                        .setAutoCancel(true);
+                MyApplication.getNotificationManager().notify(NOTIFYID_1, mBuilder.build());
+            }
             MessageDAO.insert(MyApplication.getSQLiteDatabase(), chatMessage.getId(), chatMessage.getRid(), chatMessage.getUid(), chatMessage.getContent(),
-                    chatMessage.getNackname(), chatMessage.getDate(), chatMessage.getStatus(), chatMessage.getType(), chatMessage.getBonus_total());
+                    chatMessage.getNackname(), chatMessage.getDate(), chatMessage.getStatus(), chatMessage.getType(), chatMessage.getBonus_total(),chatMessage.getDsTime());
         }
     }
 

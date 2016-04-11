@@ -10,15 +10,20 @@
         android:layout_height="45dp"
         android:background="#000000" >
 
-        <ImageButton
-            android:id="@+id/ib_back"
+        <LinearLayout
+            android:id="@+id/ll_back"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="25dp"
-            android:scaleType="fitXY"
-            android:layout_alignParentLeft="true"
-            android:layout_margin="12dp"
-            android:background="@mipmap/zf_back_btn"
-            ></ImageButton>
+            android:layout_alignParentLeft="true">
+            <ImageButton
+                android:layout_height="wrap_content"
+                android:layout_width="@dimen/x20"
+                android:scaleType="fitXY"
+                android:layout_margin="@dimen/x12"
+                android:background="@mipmap/zf_back_btn"
+
+                ></ImageButton>
+        </LinearLayout>
 
 
 
@@ -26,10 +31,10 @@
             android:id="@+id/tv_room_title"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:layout_toRightOf="@+id/ib_back"
-            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/ll_back"
+            android:layout_marginLeft="@dimen/x4"
             android:gravity="center_vertical|left"
-            android:textSize="20dp"
+            android:textSize="@dimen/x16"
             android:textColor="#ffffff"
             />
     </RelativeLayout>
@@ -42,27 +47,27 @@
          >
         <ImageButton
             android:id="@+id/ib_chat_send"
-            android:layout_height="40dp"
-            android:layout_width="40dp"
+            android:layout_height="@dimen/y30"
+            android:layout_width="@dimen/x35"
             android:scaleType="fitXY"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="@dimen/x5"
             android:background="@mipmap/zf_album_img_selected"
 
             ></ImageButton>
         <EditText
             android:id="@+id/et_chat_msg"
             android:layout_width="fill_parent"
-            android:layout_height="40dp"
+            android:layout_height="@dimen/y30"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:paddingLeft="10dp"
+            android:paddingLeft="@dimen/x5"
             android:layout_toLeftOf="@id/ib_chat_send"
             android:background="@drawable/et_bg_border"
             android:singleLine="true"
-            android:textSize="18dp" />
+            android:textSize="@dimen/x15" />
     </RelativeLayout>
 
     <ListView
@@ -73,7 +78,7 @@
         android:layout_below="@id/ly_chat_title"
         android:cacheColorHint="#0000"
         android:divider="@null"
-        android:dividerHeight="5dp"
+        android:dividerHeight="@dimen/y5"
         android:scrollbarStyle="outsideOverlay" >
     </ListView>
 </RelativeLayout>

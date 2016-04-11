@@ -38,9 +38,9 @@ public class MessageDAO  {
         return messageList;
     }
 
-    public static void insert(SQLiteDatabase db,Integer id,Integer rid,Integer uid,String content,String nackname,String date,int status,int type,float bonus_total){
-        db.execSQL("insert into message(id,rid,uid,content,nackname,date,status,type,bonus_total) values(?,?,?,?,?,?,?,?,?)", new String[]{
-                String.valueOf(id),String.valueOf(rid),String.valueOf(uid),content,nackname,date,String.valueOf(status),String.valueOf(type),String.valueOf(bonus_total)
+    public static void insert(SQLiteDatabase db,Integer id,Integer rid,Integer uid,String content,String nackname,String date,int status,int type,float bonus_total,int dsTime){
+        db.execSQL("insert into message(id,rid,uid,content,nackname,date,status,type,bonus_total,dsTime) values(?,?,?,?,?,?,?,?,?,?)", new String[]{
+                String.valueOf(id),String.valueOf(rid),String.valueOf(uid),content,nackname,date,String.valueOf(status),String.valueOf(type),String.valueOf(bonus_total),String.valueOf(dsTime)
         });
     }
 

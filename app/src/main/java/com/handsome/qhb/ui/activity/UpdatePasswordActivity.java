@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +37,7 @@ public class UpdatePasswordActivity extends BaseActivity {
     //标题
     private TextView tv_title;
     //返回键
-    private ImageButton ib_back;
+    private LinearLayout ll_back;
     //旧密码
     private EditText et_oldPassword;
     //新密码
@@ -54,7 +55,7 @@ public class UpdatePasswordActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_password);
         tv_title = (TextView) findViewById(R.id.tv_title);
-        ib_back = (ImageButton) findViewById(R.id.ib_back);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
 
         et_oldPassword = (EditText)findViewById(R.id.et_oldPassword);
         et_password =(EditText) findViewById(R.id.et_password);
@@ -63,7 +64,7 @@ public class UpdatePasswordActivity extends BaseActivity {
         tv_back = (TextView)findViewById(R.id.tv_back);
 
         tv_title.setText("修改密码");
-        ib_back.setOnClickListener(new View.OnClickListener() {
+        ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
