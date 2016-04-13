@@ -1,11 +1,7 @@
 package com.handsome.qhb.ui.activity;
 
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -13,24 +9,13 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.handsome.qhb.bean.Product;
-import com.handsome.qhb.bean.ShopCar;
-import com.handsome.qhb.bean.Slider;
 import com.handsome.qhb.bean.User;
-import com.handsome.qhb.db.UserDAO;
-import com.handsome.qhb.db.UserDBOpenHelper;
 import com.handsome.qhb.ui.fragment.FragmentController;
-import com.handsome.qhb.ui.fragment.HallFragment;
 import com.handsome.qhb.ui.fragment.ShopFragment;
-import com.handsome.qhb.ui.fragment.UserFragment;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import tab.com.handsome.handsome.R;
 

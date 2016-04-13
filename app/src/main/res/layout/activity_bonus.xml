@@ -19,6 +19,7 @@
                 android:scaleType="fitXY"
                 android:layout_margin="@dimen/x12"
                 android:background="@mipmap/zf_back_btn"
+                android:clickable="false"
                 ></ImageButton>
         </LinearLayout>
 
