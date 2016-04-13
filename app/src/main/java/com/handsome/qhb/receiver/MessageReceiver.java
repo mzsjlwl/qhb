@@ -45,7 +45,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
     private static final int NOTIFYID_1 = 1;
     private Bitmap LargeBitmap = BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.mipmap.test_icon);
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private Refresh refresh;
+//    private Refresh refresh;
 
 
     @Override
