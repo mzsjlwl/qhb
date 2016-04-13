@@ -57,7 +57,6 @@ public class HallFragment extends Fragment  {
     private static List<Room> roomList = new ArrayList<Room>();
     private RoomAdapter roomAdapter;
 
-    private SQLiteDatabase db ;
     private TextView tv_add ;
     public Handler handler = new Handler(){
         @Override
@@ -112,8 +111,13 @@ public class HallFragment extends Fragment  {
                                         int j = 0;
                                         for(;j<roomList.size();j++){
                                             if(roomList.get(j).getRid()==roomLists.get(i).getRid()){
+                                                roomList.set(j,roomLists.get(i));
+                                                RoomDAO.updateRoom(MyApplication.getSQLiteDatabase(), roomLists.get(i).getRoomPhoto(),
+                                                        roomLists.get(i).getRoomName(), roomLists.get(i).getRoomCreater(), roomLists.get(i).getRid(),
+                                                        roomLists.get(i).getRid());
                                                 break;
                                             }
+
                                         }
                                         if(j==roomList.size()) {
                                             Room r = new Room();
@@ -122,6 +126,7 @@ public class HallFragment extends Fragment  {
                                         }
                                     }
                                 }
+
                                 Message message = new Message();
                                 message.what = Config.INITROOM_MESSAGE;
                                 message.obj = roomList;
@@ -161,7 +166,7 @@ public class HallFragment extends Fragment  {
         //先从数据库中获取房间信息,对比后更新房间数据
        List<Room> rooms = new ArrayList<Room>();
         if(UserInfo.getInstance()!=null&&rooms!=null){
-            rooms = RoomDAO.query(db,UserInfo.getInstance().getUid());
+            rooms = RoomDAO.query(MyApplication.getSQLiteDatabase(),UserInfo.getInstance().getUid());
         }
         if(roomList!=null&&rooms!=null&&UserInfo.getInstance()!=null){
             for(int i = 0;i<roomList.size();i++){
@@ -178,7 +183,7 @@ public class HallFragment extends Fragment  {
                     }
                 }
                 if(j==rooms.size()){
-                    RoomDAO.insert(db,roomList.get(i).getRid(),UserInfo.getInstance().getUid(),
+                    RoomDAO.insert(MyApplication.getSQLiteDatabase(),roomList.get(i).getRid(),UserInfo.getInstance().getUid(),
                             roomList.get(i).getRoomPhoto(),
                            roomList.get(i).getRoomName(),roomList.get(i).getRoomCreater(),
                             MyApplication.getGson().toJson(roomList.get(i).getLastMessage()),

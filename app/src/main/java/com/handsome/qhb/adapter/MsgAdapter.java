@@ -57,7 +57,7 @@ public class MsgAdapter extends BaseAdapter{
     private List<RandomBonus> bonusList = new ArrayList<RandomBonus>();
     private Context context;
     private Gson gson = new Gson();
-    private Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+//    private Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     public MsgAdapter(Context context, List<ChatMessage> datas)
     {
@@ -188,14 +188,11 @@ public class MsgAdapter extends BaseAdapter{
     class RandomBonusOnclickListener implements View.OnClickListener{
 
         private int position;
-
-
         public RandomBonusOnclickListener(int position){
             this.position = position;
         }
         @Override
         public void onClick(View view) {
-
                 final ProgressDialog progressDialog = new ProgressDialog(context);
                 progressDialog.setMessage("获取中");
                 progressDialog.setCancelable(true);

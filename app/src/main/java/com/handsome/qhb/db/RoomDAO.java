@@ -62,6 +62,14 @@ public class RoomDAO {
         });
     }
 
+    public static void updateRoom(SQLiteDatabase db,String roomPhoto,String roomName,String roomCreater,
+                                   Integer rid,Integer uid){
+        db.execSQL("update room set roomPhoto = ?,roomName = ?,roomCreater= ?" +
+                " where rid = ? and uid = ?",new String[]{
+                roomPhoto,roomName,roomCreater,String.valueOf(rid),String.valueOf(uid)
+        });
+    }
+
 
     public static void delete(SQLiteDatabase db,Integer rid,Integer uid ){
         db.execSQL("delete from room  where uid = ? and rid = ?",new String[]{

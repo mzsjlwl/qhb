@@ -38,14 +38,13 @@ import tab.com.handsome.handsome.R;
 public class MessageReceiver extends XGPushBaseReceiver {
 
 
-    private Gson gson = new Gson();
     private List<Room>  roomList = new ArrayList<Room>();
     private List<Room> rooms = new ArrayList<Room>();
     private ChatMessage chatMessage;
     private static final int NOTIFYID_1 = 1;
     private Bitmap LargeBitmap = BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.mipmap.test_icon);
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//    private Refresh refresh;
+//  private Refresh refresh;
 
 
     @Override
@@ -74,7 +73,8 @@ public class MessageReceiver extends XGPushBaseReceiver {
             return;
         }
         if(xgPushTextMessage.getTitle().equals("Room")) {
-            roomList = gson.fromJson(xgPushTextMessage.getContent(), new TypeToken<List<Room>>() {
+            LogUtils.e("room","===>xg");
+            roomList = MyApplication.getGson().fromJson(xgPushTextMessage.getContent(), new TypeToken<List<Room>>() {
             }.getType());
             if (roomList != null) {
                 Message message = new Message();
@@ -83,9 +83,10 @@ public class MessageReceiver extends XGPushBaseReceiver {
                 MyApplication.getRoomHandler().handleMessage(message);
             }
         }else {
+            LogUtils.e("putong","=====>xg");
             //数据库中获取存储的房间
             rooms = RoomDAO.query(MyApplication.getSQLiteDatabase(), UserInfo.getInstance().getUid());
-            chatMessage = gson.fromJson(xgPushTextMessage.getContent(), ChatMessage.class);
+            chatMessage = MyApplication.getGson().fromJson(xgPushTextMessage.getContent(), ChatMessage.class);
             String time = format.format(new Date());
             chatMessage.setDate(time);
             chatMessage.setStatus(1);

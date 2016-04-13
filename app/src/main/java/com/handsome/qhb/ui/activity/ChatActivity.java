@@ -102,9 +102,7 @@ public class ChatActivity extends BaseActivity {
         lv_chat.setAdapter(msgAdapter);
         lv_chat.setSelection(messageList.size() - 1);
 
-
         tv_room_title.setText(room.getRoomName());
-
 
         ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,6 +116,7 @@ public class ChatActivity extends BaseActivity {
             public void onClick(View view) {
                 message = new ChatMessage();
                 message.setUid(UserInfo.getInstance().getUid());
+                message.setPhoto(UserInfo.getInstance().getPhoto());
                 message.setContent(et_chat_msg.getText().toString());
                 Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 message.setDate(format.format(new Date()));
