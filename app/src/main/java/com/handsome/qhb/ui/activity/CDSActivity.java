@@ -22,6 +22,7 @@ import com.handsome.qhb.bean.DS;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.MessageDAO;
+import com.handsome.qhb.receiver.MessageReceiver;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 
@@ -42,7 +43,7 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/4/1.
  */
-public class CDSActivity extends BaseActivity {
+public class CDSActivity extends BaseActivity implements MessageReceiver.Refresh {
 
 
     private TextView tv_Btime,tv_money,tv_person,tv_time,tv_guess,tv_single,tv_double,tv_result;
@@ -57,7 +58,8 @@ public class CDSActivity extends BaseActivity {
     private SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Date date;
     private long hbtime,nowtime,subtime;
-    private String intime;
+    private int minute,seconds;
+    private String s_minute,s_seconds;
 
 
     private Handler handler = new Handler() {
@@ -65,14 +67,24 @@ public class CDSActivity extends BaseActivity {
         public void handleMessage(Message msg) {
             if(msg.what==Config.DS_RESULT){
                 refreshResult((ChatMessage) msg.obj);
-            }else if(msg.what==10){
-                if((Long)msg.obj<10){
-                    intime = "0"+msg.obj.toString();
-                    tv_Btime.setText("00:"+intime);
-                }else{
-                    tv_Btime.setText("00:"+msg.obj.toString());
+            }else if(msg.what==Config.CDS_TIME){
+                if(subtime<0){
+                    timer.cancel();
+                    return;
                 }
-                LogUtils.e("time----->","");
+                minute =(int)subtime/60;
+                seconds = (int)subtime%60;
+                if(minute<10){
+                    s_minute = "0"+minute;
+                }else{
+                    s_minute =""+minute;
+                }
+                if(seconds<10){
+                   s_seconds = "0"+seconds;
+                }else{
+                    s_seconds = ""+seconds;
+                }
+                tv_Btime.setText(s_minute + ":" + s_seconds);
             }
         }
     };
@@ -129,32 +141,24 @@ public class CDSActivity extends BaseActivity {
         tv_single.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(UserInfo.getInstance().getIntegral()-chatMessage.getBonus_total()<0){
-                    Toast toast = Toast.makeText(CDSActivity.this,"积分不足,请充值",Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER,0,0);
-                    toast.show();
-                    return;
-                }
-                ll_guess.setVisibility(View.INVISIBLE);
-                tv_guess.setText("单");
-                ll_myguess.setVisibility(View.VISIBLE);
-                LogUtils.e("singleOnclick", String.valueOf(Config.STATE_CDSBONUS_GUESSED));
-                LogUtils.e("singlesecondOnclick",String.valueOf(chatMessage.getId()));
+
+
                 MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_GUESSED, chatMessage.getId());
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL + "DS/cds", new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
+                            LogUtils.e("single==>response==>",response);
                             JSONObject jsonObject = new JSONObject(response);
-                            if(jsonObject.getString("status").equals(0)){
-                                Toast toast = Toast.makeText(CDSActivity.this,"操作失败",Toast.LENGTH_LONG);
+                            if(jsonObject.getString("status").equals("0")){
+                                Toast toast = Toast.makeText(CDSActivity.this,jsonObject.getString("info"),Toast.LENGTH_SHORT);
                                 toast.setGravity(Gravity.CENTER,0,0);
                                 toast.show();
+                                return;
                             }
-                            User user = MyApplication.getGson().fromJson(jsonObject.getString("data"),User.class);
-                            UserInfo.setUser(user);
-                            LogUtils.e("user", user.toString());
-
+                            ll_guess.setVisibility(View.INVISIBLE);
+                            tv_guess.setText("单");
+                            ll_myguess.setVisibility(View.VISIBLE);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -184,31 +188,26 @@ public class CDSActivity extends BaseActivity {
         tv_double.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(UserInfo.getInstance().getIntegral()-chatMessage.getBonus_total()<0){
-                    Toast toast = Toast.makeText(CDSActivity.this,"积分不足,请充值",Toast.LENGTH_LONG);
-                    toast.setGravity(Gravity.CENTER,0,0);
-                    toast.show();
-                    return;
-                }
-                ll_guess.setVisibility(View.INVISIBLE);
-                tv_guess.setText("双");
-                ll_myguess.setVisibility(View.VISIBLE);
+
+                tv_double.setClickable(false);
                 MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_GUESSED, chatMessage.getId());
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL + "DS/cds",
                         new Response.Listener<String>() {
                             @Override
                             public void onResponse(String response) {
                                 try {
+                                    tv_double.setClickable(true);
+                                    LogUtils.e("tv_double====response==>",response);
                                     JSONObject jsonObject = new JSONObject(response);
-                                    if(jsonObject.getString("status").equals(0)){
-                                        Toast toast = Toast.makeText(CDSActivity.this,"操作失败",Toast.LENGTH_LONG);
+                                    if(jsonObject.getString("status").equals("0")){
+                                        Toast toast = Toast.makeText(CDSActivity.this,jsonObject.getString("info"),Toast.LENGTH_SHORT);
                                         toast.setGravity(Gravity.CENTER,0,0);
                                         toast.show();
+                                        return;
                                     }
-                                    User user = MyApplication.getGson().fromJson(jsonObject.getString("data"),User.class);
-                                    UserInfo.setUser(user);
-                                    LogUtils.e("user", user.toString());
-                                    LogUtils.e("double-response",response);
+                                    ll_guess.setVisibility(View.INVISIBLE);
+                                    tv_guess.setText("双");
+                                    ll_myguess.setVisibility(View.VISIBLE);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -233,38 +232,28 @@ public class CDSActivity extends BaseActivity {
                 MyApplication.getmQueue().add(stringRequest);
             }
         });
-
         ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
-
         try {
             date = simpleDateFormat.parse(chatMessage.getDate());
             hbtime= date.getTime();
-
-
         } catch (ParseException e) {
             e.printStackTrace();
         }
         timerTask = new TimerTask() {
-
             @Override
             public void run() {
                 Message msg = new Message();
-                msg.what = 10;
+                msg.what = Config.CDS_TIME;
                 nowtime = System.currentTimeMillis();
-                subtime = 60-(nowtime-hbtime)/1000;
-                if(subtime<0){
-                    return;
-                }
-                msg.obj = subtime;
+                subtime = chatMessage.getDsTime()*60-(nowtime-hbtime)/1000;
                 handler.sendMessage(msg);
             }
         };
-
         timer = new Timer();
         timer.schedule(timerTask,0,1000);
     }
@@ -272,7 +261,8 @@ public class CDSActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        MyApplication.setCdsHandler(null,0);
+        MyApplication.setCdsHandler(null, 0);
+        timer.cancel();
     }
 
     public void refreshResult(ChatMessage msg){
@@ -282,6 +272,12 @@ public class CDSActivity extends BaseActivity {
         }else if(msg.getContent().equals("2")){
             tv_result.setText("双");
         }
+        ll_guess.setVisibility(View.INVISIBLE);
         ll_result.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void dealMessage(ChatMessage chatMessage) {
+
     }
 }

@@ -63,7 +63,7 @@
 
 
                 <ImageView
-                    android:id="@+id/chat_send_icon"
+                    android:id="@+id/chat_icon"
                     android:layout_width="@dimen/x50"
                     android:layout_height="@dimen/x45"
                     android:layout_marginRight="@dimen/x5"

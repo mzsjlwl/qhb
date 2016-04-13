@@ -19,13 +19,14 @@ public class UserDBOpenHelper extends SQLiteOpenHelper {
     public static final String CREATE_ROOMLIST = "create table room "+
             "(id integer primary key AUTOINCREMENT,"+
             "rid integer,uid integer,"+
+            "roomPhoto text,"+
             "roomName text,"+
             "roomCreater text,lastMessage text,chatMessage text)";
     public static final String CREATE_MESSAGE = "create table message"+
             "(mid integer primary key AUTOINCREMENT,"+
             "id integer,rid integer,uid integer,content text,"+
             "nackname text,date text,status integer,"+
-            "type integer,bonus_total float,dsTime ,integer)";
+            "type integer,bonus_total float,dsTime integer,photo text)";
 
     private static  UserDBOpenHelper userDBOpenHelper;
     public UserDBOpenHelper(Context context,String name,SQLiteDatabase.CursorFactory factory,int version){
@@ -35,7 +36,7 @@ public class UserDBOpenHelper extends SQLiteOpenHelper {
 
     public static synchronized  UserDBOpenHelper getInstance(Context context){
         if(userDBOpenHelper==null){
-            userDBOpenHelper = new UserDBOpenHelper(context,DATABASE_NAME,null,9);
+            userDBOpenHelper = new UserDBOpenHelper(context,DATABASE_NAME,null,11);
 
         }
         return userDBOpenHelper;

@@ -62,7 +62,6 @@ public class ChatActivity extends BaseActivity {
     private List<ChatMessage> messageList = new ArrayList<ChatMessage>();
     private MsgAdapter msgAdapter;
     private ChatMessage message;
-    private Gson gson = new Gson();
 
 
     public Handler handler = new Handler(){
@@ -162,12 +161,12 @@ public class ChatActivity extends BaseActivity {
                         xgMessage.setContent(message);
                         xgMessage.setTitle("chat");
                         map.put("message_type", String.valueOf(Config.TYPE_MESSAGE));
-                        map.put("message", gson.toJson(xgMessage));
+                        map.put("message", MyApplication.getGson().toJson(xgMessage));
                         map.put("access_id", String.valueOf(Config.ACCESSID));
                         map.put("timestamp", timestamp);
 
 
-                        params.put("message",gson.toJson(xgMessage));
+                        params.put("message",MyApplication.getGson().toJson(xgMessage));
                         params.put("message_type",String.valueOf(Config.TYPE_MESSAGE));
                         params.put("access_id", String.valueOf(Config.ACCESSID));
                         params.put("timestamp",timestamp);

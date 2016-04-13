@@ -23,6 +23,9 @@ public class ChatMessage implements Serializable{
     //单双红包的时间
     private int dsTime;
 
+    //头像
+    private String photo;
+
     public int getId() {
         return id;
     }
@@ -105,11 +108,19 @@ public class ChatMessage implements Serializable{
         this.dsTime = dsTime;
     }
 
+    public String getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
     public ChatMessage(){
 
     }
 
-    public ChatMessage(int id, int rid, int uid, String content, String nackname, String date, int status, int type, float bonus_total, int dsTime) {
+    public ChatMessage(int id, int rid, int uid, String content, String nackname, String date, int status, int type, float bonus_total, int dsTime, String photo) {
         this.id = id;
         this.rid = rid;
         this.uid = uid;
@@ -120,6 +131,7 @@ public class ChatMessage implements Serializable{
         this.type = type;
         this.bonus_total = bonus_total;
         this.dsTime = dsTime;
+        this.photo = photo;
     }
 
     @Override
@@ -135,6 +147,7 @@ public class ChatMessage implements Serializable{
                 ", type=" + type +
                 ", bonus_total=" + bonus_total +
                 ", dsTime=" + dsTime +
+                ", photo='" + photo + '\'' +
                 '}';
     }
 }

@@ -73,6 +73,8 @@ public class RoomAdapter extends CommonAdapter<Room> {
                 holder.setText(R.id.id_tv_time,chatMessage.getDate());
             }
         }
+
+        holder.setImage(R.id.iv_roomPhoto,room.getRoomPhoto());
     }
 
     class RoomItemOnclick implements View.OnClickListener{

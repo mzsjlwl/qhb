@@ -10,6 +10,7 @@ import java.util.List;
 public class Room implements Serializable {
     private int rid;
     private int sortId;
+    private String roomPhoto;
     private int roomGameNum;
     private String roomName;
     private String roomMember;
@@ -129,13 +130,23 @@ public class Room implements Serializable {
         this.lastMessage = lastMessage;
     }
 
+
+    public String getRoomPhoto() {
+        return roomPhoto;
+    }
+
+    public void setRoomPhoto(String roomPhoto) {
+        this.roomPhoto = roomPhoto;
+    }
+
     public Room(){
 
     }
 
-    public Room(int rid, int sortId, int roomGameNum, String roomName, String roomMember, String roomPassword, String roomCreater, String roomCreateTime, String roomEndTime, String roomState, String flag, List<ChatMessage> chatMessageList, ChatMessage lastMessage) {
+    public Room(int rid, int sortId, String roomPhoto, int roomGameNum, String roomName, String roomMember, String roomPassword, String roomCreater, String roomCreateTime, String roomEndTime, String roomState, String flag, List<ChatMessage> chatMessageList, ChatMessage lastMessage) {
         this.rid = rid;
         this.sortId = sortId;
+        this.roomPhoto = roomPhoto;
         this.roomGameNum = roomGameNum;
         this.roomName = roomName;
         this.roomMember = roomMember;
@@ -154,6 +165,7 @@ public class Room implements Serializable {
         return "Room{" +
                 "rid=" + rid +
                 ", sortId=" + sortId +
+                ", roomPhoto='" + roomPhoto + '\'' +
                 ", roomGameNum=" + roomGameNum +
                 ", roomName='" + roomName + '\'' +
                 ", roomMember='" + roomMember + '\'' +

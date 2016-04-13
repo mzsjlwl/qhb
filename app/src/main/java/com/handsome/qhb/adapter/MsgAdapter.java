@@ -5,10 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +30,7 @@ import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.MessageDAO;
 import com.handsome.qhb.ui.activity.BonusActivity;
 import com.handsome.qhb.ui.activity.CDSActivity;
+import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 
@@ -111,6 +114,7 @@ public class MsgAdapter extends BaseAdapter{
                 viewHolder.nackname = (TextView) convertView
                         .findViewById(R.id.chat_from_name);
                 viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_progressBar);
+                viewHolder.chat_icon = (ImageView)convertView.findViewById(R.id.chat_icon);
                 convertView.setTag(viewHolder);
             }else if(chatMessage.getUid()==UserInfo.getInstance().getUid())
             {
@@ -123,6 +127,7 @@ public class MsgAdapter extends BaseAdapter{
                 viewHolder.nackname = (TextView) convertView
                         .findViewById(R.id.chat_send_name);
                 viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_progressBar);
+                viewHolder.chat_icon = (ImageView)convertView.findViewById(R.id.chat_icon);
                 convertView.setTag(viewHolder);
             }
 
@@ -131,6 +136,7 @@ public class MsgAdapter extends BaseAdapter{
         }
 
         viewHolder.createDate.setText(chatMessage.getDate());
+        ImageUtils.imageLoader(MyApplication.getmQueue(), chatMessage.getPhoto(),viewHolder.chat_icon);
         if(chatMessage.getType()== Config.TYPE_RANDOMBONUS){
             if(chatMessage.getUid()==UserInfo.getInstance().getUid()){
                 viewHolder.content.setBackgroundResource(R.mipmap.sjhb);
@@ -175,6 +181,8 @@ public class MsgAdapter extends BaseAdapter{
         public TextView nackname;
         public TextView content;
         public ProgressBar progressBar;
+        public ImageView chat_icon;
+
     }
 
     class RandomBonusOnclickListener implements View.OnClickListener{
@@ -198,10 +206,13 @@ public class MsgAdapter extends BaseAdapter{
                             public void onResponse(String response) {
                                 try {
                                     progressDialog.dismiss();
+                                    LogUtils.e("hbresponse", response);
                                     JSONObject jsonObject = new JSONObject(response);
                                     String status = jsonObject.getString("status");
-                                    if(status == "0"){
-                                        Toast.makeText(context, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
+                                    if(status.equals("0")){
+                                        Toast toast = Toast.makeText(context, jsonObject.getString("info"),Toast.LENGTH_SHORT);
+                                        toast.setGravity(Gravity.CENTER,0,0);
+                                        toast.show();
                                         return;
                                     }
                                     String data = jsonObject.getString("data");

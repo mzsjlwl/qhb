@@ -37,7 +37,7 @@ public class AddressActivity extends BaseActivity{
 
     private SQLiteDatabase db;
 
-    private Gson gson = new Gson();
+
     private List<Address> addressList = new ArrayList<Address>();
     private int size;
     @Override
@@ -74,7 +74,7 @@ public class AddressActivity extends BaseActivity{
     protected void onStart() {
         super.onStart();
         //本地数据表获取
-        addressList = gson.fromJson(UserDAO.findAddress(db, UserInfo.getInstance().getUid()),
+        addressList = MyApplication.getGson().fromJson(UserDAO.findAddress(db, UserInfo.getInstance().getUid()),
                 new TypeToken<List<Address>>() {
                 }.getType());
 
@@ -129,7 +129,7 @@ public class AddressActivity extends BaseActivity{
     @Override
     protected void onStop() {
         super.onStop();
-        UserDAO.updateAddress(db, UserInfo.getInstance().getUid(), gson.toJson(addressList));
+        UserDAO.updateAddress(db, UserInfo.getInstance().getUid(),MyApplication.getGson().toJson(addressList));
         LogUtils.e("addressActivity","onStop");
     }
 }

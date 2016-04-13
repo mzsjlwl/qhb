@@ -15,6 +15,8 @@ import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.MessageDAO;
 import com.handsome.qhb.db.RoomDAO;
+import com.handsome.qhb.ui.activity.AddressActivity;
+import com.handsome.qhb.ui.activity.CDSActivity;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 import com.tencent.android.tpush.XGPushBaseReceiver;
@@ -43,6 +45,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
     private static final int NOTIFYID_1 = 1;
     private Bitmap LargeBitmap = BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.mipmap.test_icon);
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private Refresh refresh;
 
 
     @Override
@@ -103,7 +106,8 @@ public class MessageReceiver extends XGPushBaseReceiver {
             Notification.Builder mBuilder = new Notification.Builder(MyApplication.getContext());
             mBuilder.setContentTitle("楼下购");
 
-
+            //消息到达时间
+            chatMessage.setDate(format.format(new Date()));
             //普通消息
             if(xgPushTextMessage.getTitle().equals("chat")){
                 mBuilder.setContentText(chatMessage.getNackname()+" : "+chatMessage.getContent())
@@ -116,6 +120,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     Message message1 = new Message();
                     message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
                     message1.obj = chatMessage;
+
                     MyApplication.getChatHandler().handleMessage(message);
                     MyApplication.getRoomHandler().handleMessage(message1);
                 }else{
@@ -178,6 +183,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     Message message1 = new Message();
                     message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
                     message1.obj = chatMessage;
+
                     MyApplication.getChatHandler().handleMessage(message);
                     MyApplication.getRoomHandler().handleMessage(message1);
                 }else{
@@ -195,7 +201,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
                         .setTicker("收到" + chatMessage.getNackname() + "发送过来的信息");
 
                 chatMessage.setType(Config.TYPE_CDSBONUS);
-
+                LogUtils.e("message-cds-time",String.valueOf(chatMessage.getDsTime()));
                 if(MyApplication.getChatHandler()!=null&&MyApplication.getRoomId()==chatMessage.getRid()){
                     Message message = new Message();
                     message.what = Config.CDSBONUS_MESSAGE;
@@ -204,8 +210,6 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     Message message1 = new Message();
                     message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
                     message1.obj = chatMessage;
-
-
                     MyApplication.getChatHandler().handleMessage(message);
                     MyApplication.getRoomHandler().handleMessage(message1);
                 }else{
@@ -225,6 +229,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     Message message1 = new Message();
                     message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
                     message1.obj = chatMessage;
+
                     MyApplication.getChatHandler().handleMessage(message);
                     MyApplication.getRoomHandler().handleMessage(message1);
                 }else{
@@ -235,6 +240,8 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     MyApplication.getRoomHandler().handleMessage(message);
                 }
             }
+
+            //判断是不是自己的消息，若是自己的消息，不提醒
             if(chatMessage.getUid()!=UserInfo.getInstance().getUid()){
                 mBuilder.setWhen(System.currentTimeMillis())
                         .setSmallIcon(R.mipmap.test_icon)
@@ -244,7 +251,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
                 MyApplication.getNotificationManager().notify(NOTIFYID_1, mBuilder.build());
             }
             MessageDAO.insert(MyApplication.getSQLiteDatabase(), chatMessage.getId(), chatMessage.getRid(), chatMessage.getUid(), chatMessage.getContent(),
-                    chatMessage.getNackname(), chatMessage.getDate(), chatMessage.getStatus(), chatMessage.getType(), chatMessage.getBonus_total(),chatMessage.getDsTime());
+                    chatMessage.getNackname(), chatMessage.getDate(), chatMessage.getStatus(), chatMessage.getType(), chatMessage.getBonus_total(),chatMessage.getDsTime(),chatMessage.getPhoto());
         }
     }
 
@@ -258,4 +265,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
 
     }
 
+    public interface Refresh{
+        void dealMessage(ChatMessage chatMessage);
+    }
 }

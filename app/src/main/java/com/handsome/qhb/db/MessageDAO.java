@@ -32,15 +32,16 @@ public class MessageDAO  {
                 chatMessage.setUid(cursor.getInt(cursor.getColumnIndex("uid")));
                 chatMessage.setDate(cursor.getString(cursor.getColumnIndex("date")));
                 chatMessage.setBonus_total(cursor.getFloat(cursor.getColumnIndex("bonus_total")));
+                chatMessage.setDsTime(cursor.getInt(cursor.getColumnIndex("dsTime")));
                 messageList.add(chatMessage);
             }while(cursor.moveToNext());
         }
         return messageList;
     }
 
-    public static void insert(SQLiteDatabase db,Integer id,Integer rid,Integer uid,String content,String nackname,String date,int status,int type,float bonus_total,int dsTime){
-        db.execSQL("insert into message(id,rid,uid,content,nackname,date,status,type,bonus_total,dsTime) values(?,?,?,?,?,?,?,?,?,?)", new String[]{
-                String.valueOf(id),String.valueOf(rid),String.valueOf(uid),content,nackname,date,String.valueOf(status),String.valueOf(type),String.valueOf(bonus_total),String.valueOf(dsTime)
+    public static void insert(SQLiteDatabase db,Integer id,Integer rid,Integer uid,String content,String nackname,String date,int status,int type,float bonus_total,int dsTime,String photo){
+        db.execSQL("insert into message(id,rid,uid,content,nackname,date,status,type,bonus_total,dsTime,photo) values(?,?,?,?,?,?,?,?,?,?,?)", new String[]{
+                String.valueOf(id),String.valueOf(rid),String.valueOf(uid),content,nackname,date,String.valueOf(status),String.valueOf(type),String.valueOf(bonus_total),String.valueOf(dsTime),photo
         });
     }
 

@@ -27,6 +27,7 @@ public class RoomDAO {
                 Room room = new Room();
                 room.setRid(cursor.getInt(cursor.getColumnIndex("rid")));
                 room.setRoomCreater(cursor.getString(cursor.getColumnIndex("roomCreater")));
+                room.setRoomPhoto(cursor.getString(cursor.getColumnIndex("roomPhoto")));
                 room.setRoomName(cursor.getString(cursor.getColumnIndex("roomName")));
                 if(!TextUtils.isEmpty(cursor.getString(cursor.getColumnIndex("lastMessage")))){
                     ChatMessage chatMessage  = new ChatMessage();
@@ -44,9 +45,9 @@ public class RoomDAO {
         return roomList;
     }
 
-    public static void insert(SQLiteDatabase db,Integer rid,Integer uid,String roomName,String roomCreater,String lastMessage,String chatMessage){
-        db.execSQL("insert into room(rid,uid,roomName,roomCreater,lastMessage,chatMessage) values(?,?,?,?,?,?)", new String[]{
-                String.valueOf(rid),String.valueOf(uid),roomName,roomCreater,lastMessage,chatMessage
+    public static void insert(SQLiteDatabase db,Integer rid,Integer uid,String roomPhoto,String roomName,String roomCreater,String lastMessage,String chatMessage){
+        db.execSQL("insert into room(rid,uid,roomPhoto,roomName,roomCreater,lastMessage,chatMessage) values(?,?,?,?,?,?,?)", new String[]{
+                String.valueOf(rid),String.valueOf(uid),roomPhoto,roomName,roomCreater,lastMessage,chatMessage
         });
     }
 

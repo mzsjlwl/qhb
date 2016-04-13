@@ -40,7 +40,7 @@
     android:id="@+id/tv_Btime"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="00:59"
+    android:text="00:00"
     android:textSize="@dimen/x38"
     android:textStyle="bold"
     android:layout_gravity="center"

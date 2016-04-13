@@ -84,8 +84,6 @@ public class ShopFragment extends Fragment {
     //商品下一页
     private String nextpage;
 
-    //Gson解析
-    private Gson gson = new Gson();
 
     //加载轮播图片消息
     private Message msg1 = new Message();
@@ -138,7 +136,8 @@ public class ShopFragment extends Fragment {
                         msg1.what = Config.INIT_SLIDER_PICTURE;
                         msg1.obj = 1;
                         try {
-                            sliderLists = gson.fromJson(response.getString("slider"), new TypeToken<List<Slider>>() {}.getType());
+                            sliderLists = MyApplication.getGson().fromJson(response.getString("slider"), new TypeToken<List<Slider>>() {
+                            }.getType());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -161,10 +160,11 @@ public class ShopFragment extends Fragment {
                         try {
                             productLists = new ArrayList<Product>();
                             //服务器端获取的product
-                            productLists = gson.fromJson(response.getString("products"), new TypeToken<List<Product>>() {}.getType());
+                            productLists = MyApplication.getGson().fromJson(response.getString("products"), new TypeToken<List<Product>>() {
+                            }.getType());
                             addShopCar();
                             //存储到activity中
-                            getActivity().getIntent().putExtra("products",gson.toJson(productLists));
+                            getActivity().getIntent().putExtra("products",MyApplication.getGson().toJson(productLists));
                             pageJson = new JSONObject(response.getString("page"));
                             nextpage = pageJson.getString("next");
                             //存储到activity中
@@ -341,7 +341,8 @@ public class ShopFragment extends Fragment {
                                         return;
                                     }
                                     List<Product> nextProducts = new ArrayList<Product>();
-                                    nextProducts = gson.fromJson(response.getString("products"), new TypeToken<List<Product>>() {}.getType());
+                                    nextProducts = MyApplication.getGson().fromJson(response.getString("products"), new TypeToken<List<Product>>() {
+                                    }.getType());
                                     for(Product product:nextProducts){
                                         productLists.add(product);
                                     }
@@ -428,7 +429,7 @@ public class ShopFragment extends Fragment {
                     shopCarList.add(p);
                 }
             }
-            String product = gson.toJson(shopCarList);
+            String product = MyApplication.getGson().toJson(shopCarList);
             if(UserInfo.getInstance()!=null) {
                 if(UserDAO.find(db,UserInfo.getInstance().getUid())!=null){
                     UserDAO.update(db,UserInfo.getInstance().getUid(),product);
@@ -461,7 +462,7 @@ public class ShopFragment extends Fragment {
     public void addShopCar(){
         //本地获取的购物车
         if(UserInfo.getInstance()!=null){
-            shopCarList = gson.fromJson(UserDAO.find(db, UserInfo.getInstance().getUid()), new TypeToken<List<Product>>() {
+            shopCarList = MyApplication.getGson().fromJson(UserDAO.find(db, UserInfo.getInstance().getUid()), new TypeToken<List<Product>>() {
             }.getType());
             if(shopCarList!=null){
                 for(int i= 0;i<shopCarList.size();i++){

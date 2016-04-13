@@ -14,6 +14,7 @@
             android:layout_width="@dimen/x55"
             android:layout_height="@dimen/y45">
             <ImageView
+                android:id="@+id/iv_roomPhoto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:src="@mipmap/test_icon"/>

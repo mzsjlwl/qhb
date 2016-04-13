@@ -56,25 +56,19 @@ public class HallFragment extends Fragment  {
     private ListView lv_room;
     private static List<Room> roomList = new ArrayList<Room>();
     private RoomAdapter roomAdapter;
-    private RequestQueue requestQueue = MyApplication.getmQueue();
+
     private SQLiteDatabase db ;
-    private Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private TextView tv_add ;
     public Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
             if(msg.what== Config.INITROOM_MESSAGE){
-                LogUtils.e("0x128","-------->");
                 roomList = (List<Room>)msg.obj;
                 roomAdapter.notifyDataSetChanged();
             }else if(msg.what == Config.ADD_MESSAGE){
-                ChatMessage chatMessage = new ChatMessage();
-                chatMessage = (ChatMessage) msg.obj;
-                addChatMessage(chatMessage);
+                addChatMessage((ChatMessage) msg.obj);
             }else if(msg.what==Config.ROOM_REFRESH_LASTMESSAGE){
-                ChatMessage chatMessage = new ChatMessage();
-                chatMessage = (ChatMessage)msg.obj;
-                refreshLastMessage(chatMessage);
+                refreshLastMessage((ChatMessage)msg.obj);
             }
         }
     };
@@ -83,13 +77,13 @@ public class HallFragment extends Fragment  {
     public void onCreate(Bundle savedInstanceState) {
         LogUtils.e("HallFragment", "oncreate");
         super.onCreate(savedInstanceState);
-        db = MyApplication.getSQLiteDatabase();
-        if(UserInfo.getInstance()!=null){
-            roomList = RoomDAO.query(MyApplication.getSQLiteDatabase(),UserInfo.getInstance().getUid());
-        }
-        for(Room r : roomList){
-            LogUtils.e("room=====>",r.toString());
-        }
+//        db = MyApplication.getSQLiteDatabase();
+//        if(UserInfo.getInstance()!=null){
+//            roomList = RoomDAO.query(MyApplication.getSQLiteDatabase(),UserInfo.getInstance().getUid());
+//        }
+//        for(Room r : roomList){
+//            LogUtils.e("room=====>",r.toString());
+//        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -108,11 +102,11 @@ public class HallFragment extends Fragment  {
                             LogUtils.e("room",response);
                             JSONObject jsonObject = new JSONObject(response);
                             String status = jsonObject.getString("status");
-                            if(status.equals(0)){
+                            if(status.equals("0")){
                                 LogUtils.e("room","服务器发送失败");
                             }else{
-                                Gson gson = new Gson();
-                                List<Room> roomLists = gson.fromJson(jsonObject.getString("data"),new TypeToken<List<Room>>(){}.getType());
+                                List<Room> roomLists =MyApplication.getGson().fromJson(jsonObject.getString("data"), new TypeToken<List<Room>>() {
+                                }.getType());
                                 if(roomList!=null&&roomLists!=null){
                                     for(int i = 0;i<roomLists.size();i++){
                                         int j = 0;
@@ -158,7 +152,6 @@ public class HallFragment extends Fragment  {
     @Override
     public void onStart() {
         super.onStart();
-        LogUtils.e("hallFragment====>", "onstart");
     }
 
     @Override
@@ -186,6 +179,7 @@ public class HallFragment extends Fragment  {
                 }
                 if(j==rooms.size()){
                     RoomDAO.insert(db,roomList.get(i).getRid(),UserInfo.getInstance().getUid(),
+                            roomList.get(i).getRoomPhoto(),
                            roomList.get(i).getRoomName(),roomList.get(i).getRoomCreater(),
                             MyApplication.getGson().toJson(roomList.get(i).getLastMessage()),
                             MyApplication.getGson().toJson(roomList.get(i).getChatMessageList()));
@@ -203,7 +197,6 @@ public class HallFragment extends Fragment  {
         if(roomAdapter!=null){
             roomAdapter.notifyDataSetChanged();
         }
-//        roomList.clear();
     }
 
 
@@ -226,8 +219,6 @@ public class HallFragment extends Fragment  {
                         }
                         String s1 = room.getLastMessage().getDate();
                         String s2 = t1.getLastMessage().getDate();
-                        LogUtils.e("s1====>",s1);
-                        LogUtils.e("s2===>",s2);
                         if(s2.compareTo(s1)==0){
                             return Integer.valueOf(t1.getRid()).compareTo(Integer.valueOf(
                                     room.getRid()
@@ -259,8 +250,6 @@ public class HallFragment extends Fragment  {
                 }
                 String s1 = room.getLastMessage().getDate();
                 String s2 = t1.getLastMessage().getDate();
-                LogUtils.e("s1====>",s1);
-                LogUtils.e("s2===>",s2);
                 if(s2.compareTo(s1)==0){
                     return Integer.valueOf(t1.getRid()).compareTo(Integer.valueOf(
                             room.getRid()

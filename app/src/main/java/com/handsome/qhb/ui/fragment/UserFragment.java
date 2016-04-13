@@ -6,6 +6,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +52,16 @@ public class UserFragment extends Fragment {
     private LinearLayout ll_logout;
     //头像
     private ImageView iv_user_photo;
+
+
+    private Handler handler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user,container,false);
@@ -144,6 +156,13 @@ public class UserFragment extends Fragment {
             }
         });
         return view;
+    }
+
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
     }
 
     @Override
