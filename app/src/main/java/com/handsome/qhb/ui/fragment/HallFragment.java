@@ -178,7 +178,7 @@ public class HallFragment extends Fragment  {
                         break;
                     }
                 }
-                if(j==rooms.size()){
+                if(j==rooms.size()&&UserInfo.getInstance()!=null){
                     RoomDAO.insert(MyApplication.getSQLiteDatabase(),roomList.get(i).getRid(),UserInfo.getInstance().getUid(),
                             roomList.get(i).getRoomPhoto(),
                            roomList.get(i).getRoomName(),roomList.get(i).getRoomCreater(),
