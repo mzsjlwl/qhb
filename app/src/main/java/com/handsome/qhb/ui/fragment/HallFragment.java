@@ -62,8 +62,7 @@ public class HallFragment extends Fragment  {
         @Override
         public void handleMessage(Message msg) {
             if(msg.what== Config.INITROOM_MESSAGE){
-                roomList = (List<Room>)msg.obj;
-                roomAdapter.notifyDataSetChanged();
+                initRoom();
             }else if(msg.what == Config.ADD_MESSAGE){
                 addChatMessage((ChatMessage) msg.obj);
             }else if(msg.what==Config.ROOM_REFRESH_LASTMESSAGE){
@@ -74,15 +73,10 @@ public class HallFragment extends Fragment  {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        LogUtils.e("HallFragment", "oncreate");
         super.onCreate(savedInstanceState);
-//        db = MyApplication.getSQLiteDatabase();
-//        if(UserInfo.getInstance()!=null){
-//            roomList = RoomDAO.query(MyApplication.getSQLiteDatabase(),UserInfo.getInstance().getUid());
-//        }
-//        for(Room r : roomList){
-//            LogUtils.e("room=====>",r.toString());
-//        }
+        if(UserInfo.getInstance()!=null){
+            roomList = RoomDAO.query(MyApplication.getSQLiteDatabase(),UserInfo.getInstance().getUid());
+        }
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -111,7 +105,8 @@ public class HallFragment extends Fragment  {
                                         int j = 0;
                                         for(;j<roomList.size();j++){
                                             if(roomList.get(j).getRid()==roomLists.get(i).getRid()){
-                                                roomList.set(j,roomLists.get(i));
+                                                roomList.get(j).setRoomPhoto(roomLists.get(i).getRoomPhoto());
+                                                roomList.get(j).setRoomName(roomLists.get(i).getRoomName());
                                                 RoomDAO.updateRoom(MyApplication.getSQLiteDatabase(), roomLists.get(i).getRoomPhoto(),
                                                         roomLists.get(i).getRoomName(), roomLists.get(i).getRoomCreater(), roomLists.get(i).getRid(),
                                                         roomLists.get(i).getRid());
@@ -123,13 +118,14 @@ public class HallFragment extends Fragment  {
                                             Room r = new Room();
                                             r = roomLists.get(i);
                                             roomList.add(r);
+                                            RoomDAO.insert(MyApplication.getSQLiteDatabase(),r.getRid(),UserInfo.getInstance().getUid(),
+                                                    r.getRoomPhoto(),r.getRoomName(),r.getRoomCreater(),"","");
                                         }
                                     }
                                 }
 
                                 Message message = new Message();
                                 message.what = Config.INITROOM_MESSAGE;
-                                message.obj = roomList;
                                 handler.handleMessage(message);
                             }
                         } catch (JSONException e) {
@@ -147,7 +143,7 @@ public class HallFragment extends Fragment  {
         tv_add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+
             }
         });
         return view;
@@ -246,6 +242,28 @@ public class HallFragment extends Fragment  {
                 roomList.get(i).setLastMessage(msg);
             }
         }
+        //排序
+        Collections.sort(roomList, new Comparator<Room>() {
+            @Override
+            public int compare(Room room, Room t1) {
+                if(room.getLastMessage()==null||t1.getLastMessage()==null){
+                    return t1.getLastMessage()==null?-1:1;
+                }
+                String s1 = room.getLastMessage().getDate();
+                String s2 = t1.getLastMessage().getDate();
+                if(s2.compareTo(s1)==0){
+                    return Integer.valueOf(t1.getRid()).compareTo(Integer.valueOf(
+                            room.getRid()
+                    ));
+                }else{
+                    return s2.compareTo(s1);
+                }
+            }
+        });
+        //更新数据
+        roomAdapter.notifyDataSetChanged();
+    }
+    public void initRoom(){
         //排序
         Collections.sort(roomList, new Comparator<Room>() {
             @Override

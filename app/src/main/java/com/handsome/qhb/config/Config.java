@@ -27,6 +27,7 @@ public class Config {
     public static final int DS_RESULT = 13;
     public static final int BONUSLIST = 14;
     public static final int CDS_TIME = 15;
+    public static final int REFRESH_USER = 16;
 
 
     public static final String XG_PUSH_URL = "http://openapi.xg.qq.com/v2/push/";

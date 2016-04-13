@@ -83,13 +83,11 @@ public class MessageReceiver extends XGPushBaseReceiver {
                 MyApplication.getRoomHandler().handleMessage(message);
             }
         }else {
-            LogUtils.e("putong","=====>xg");
             //数据库中获取存储的房间
             rooms = RoomDAO.query(MyApplication.getSQLiteDatabase(), UserInfo.getInstance().getUid());
             chatMessage = MyApplication.getGson().fromJson(xgPushTextMessage.getContent(), ChatMessage.class);
             String time = format.format(new Date());
             chatMessage.setDate(time);
-            chatMessage.setStatus(1);
             //查找这条消息所对应的房间
             int i = 0;
             for(;i<rooms.size();i++){
@@ -202,7 +200,6 @@ public class MessageReceiver extends XGPushBaseReceiver {
                         .setTicker("收到" + chatMessage.getNackname() + "发送过来的信息");
 
                 chatMessage.setType(Config.TYPE_CDSBONUS);
-                LogUtils.e("message-cds-time",String.valueOf(chatMessage.getDsTime()));
                 if(MyApplication.getChatHandler()!=null&&MyApplication.getRoomId()==chatMessage.getRid()){
                     Message message = new Message();
                     message.what = Config.CDSBONUS_MESSAGE;

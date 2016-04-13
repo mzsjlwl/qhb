@@ -2,12 +2,9 @@ package com.handsome.qhb.db;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Message;
 
 import com.handsome.qhb.bean.ChatMessage;
-import com.handsome.qhb.bean.Room;
 
-import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +30,7 @@ public class MessageDAO  {
                 chatMessage.setDate(cursor.getString(cursor.getColumnIndex("date")));
                 chatMessage.setBonus_total(cursor.getFloat(cursor.getColumnIndex("bonus_total")));
                 chatMessage.setDsTime(cursor.getInt(cursor.getColumnIndex("dsTime")));
+                chatMessage.setPhoto(cursor.getString(cursor.getColumnIndex("photo")));
                 messageList.add(chatMessage);
             }while(cursor.moveToNext());
         }

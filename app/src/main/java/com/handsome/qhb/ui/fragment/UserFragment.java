@@ -4,27 +4,48 @@ import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.handsome.qhb.application.MyApplication;
+import com.handsome.qhb.bean.User;
+import com.handsome.qhb.config.Config;
 import com.handsome.qhb.ui.activity.AddMoneyActivity;
 import com.handsome.qhb.ui.activity.AddressActivity;
 import com.handsome.qhb.ui.activity.LoginActivity;
+import com.handsome.qhb.ui.activity.MainActivity;
 import com.handsome.qhb.ui.activity.OrderActivity;
 import com.handsome.qhb.ui.activity.UpdateDataActivity;
 import com.handsome.qhb.ui.activity.UpdatePasswordActivity;
 import com.handsome.qhb.ui.activity.UpdatePhotoActivity;
 import com.handsome.qhb.utils.ImageUtils;
+import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import tab.com.handsome.handsome.R;
 
@@ -162,6 +183,39 @@ public class UserFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"",
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            LogUtils.e("response", response);
+                            JSONObject jsonObject = new JSONObject(response);
+                            String status = jsonObject.getString("status");
+                            if(status.equals("0")){
+                                return;
+                            }
+                            JSONObject jsonData = new JSONObject(jsonObject.getString("data"));
+                            User user =  MyApplication.getGson().fromJson(jsonData.getString("user"),User.class);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("TAG", error.getMessage(), error);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                map.put("lastLoginTime", dateFormat.format(new Date()));
+                return map;
+            }
+        };
+        MyApplication.getmQueue().add(stringRequest);
 
     }
 

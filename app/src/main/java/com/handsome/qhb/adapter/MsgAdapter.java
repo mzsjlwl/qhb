@@ -56,8 +56,6 @@ public class MsgAdapter extends BaseAdapter{
     private List<ChatMessage> mDatas;
     private List<RandomBonus> bonusList = new ArrayList<RandomBonus>();
     private Context context;
-    private Gson gson = new Gson();
-//    private Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     public MsgAdapter(Context context, List<ChatMessage> datas)
     {
@@ -97,7 +95,6 @@ public class MsgAdapter extends BaseAdapter{
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ChatMessage chatMessage = mDatas.get(position);
-
         ViewHolder viewHolder = null;
 
         if (convertView == null)
@@ -137,6 +134,7 @@ public class MsgAdapter extends BaseAdapter{
 
         viewHolder.createDate.setText(chatMessage.getDate());
         ImageUtils.imageLoader(MyApplication.getmQueue(), chatMessage.getPhoto(),viewHolder.chat_icon);
+        //随机红包
         if(chatMessage.getType()== Config.TYPE_RANDOMBONUS){
             if(chatMessage.getUid()==UserInfo.getInstance().getUid()){
                 viewHolder.content.setBackgroundResource(R.mipmap.sjhb);
@@ -147,13 +145,23 @@ public class MsgAdapter extends BaseAdapter{
             viewHolder.content.setText("");
             viewHolder.content.setOnClickListener(new RandomBonusOnclickListener(position));
             viewHolder.nackname.setText(chatMessage.getNackname());
-        }else if(chatMessage.getType()==Config.TYPE_CDSBONUS){
+            if(chatMessage.getStatus()==1) {
+                if(viewHolder.progressBar!=null){
+                    viewHolder.progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+
+        }
+        //单双红包
+        else if(chatMessage.getType()==Config.TYPE_CDSBONUS){
             viewHolder.content.setBackgroundResource(R.mipmap.cds1);
             viewHolder.content.setPadding(0, 0, 0, 0);
             viewHolder.content.setText("");
             viewHolder.content.setOnClickListener(new CDSBonusOnclickListener(position));
             viewHolder.nackname.setText(chatMessage.getNackname());
-        }else {
+        }
+        //普通消息
+        else {
             if(chatMessage.getUid()==UserInfo.getInstance().getUid()){
                 //将之前的红包背景设置回来
                 viewHolder.content.setBackgroundResource(R.drawable.balloon_r2);
@@ -165,13 +173,13 @@ public class MsgAdapter extends BaseAdapter{
             }
             viewHolder.content.setText(chatMessage.getContent());
             viewHolder.nackname.setText(chatMessage.getNackname());
-        }
-        if(chatMessage.getStatus()==1) {
-            if(viewHolder.progressBar!=null){
-                viewHolder.progressBar.setVisibility(View.INVISIBLE);
+            LogUtils.e("adapter-status", String.valueOf(chatMessage.getStatus()));
+            if(chatMessage.getStatus()==1) {
+                if(viewHolder.progressBar!=null){
+                    viewHolder.progressBar.setVisibility(View.INVISIBLE);
+                }
             }
         }
-
         return convertView;
     }
 
@@ -214,7 +222,8 @@ public class MsgAdapter extends BaseAdapter{
                                     }
                                     String data = jsonObject.getString("data");
                                     JSONObject jsonObject1 = new JSONObject(data);
-                                    bonusList = gson.fromJson(jsonObject1.getString("randombonus"),new TypeToken<List<RandomBonus>>(){}.getType());
+                                    bonusList = MyApplication.getGson().fromJson(jsonObject1.getString("randombonus"), new TypeToken<List<RandomBonus>>() {
+                                    }.getType());
                                     Intent i = new Intent(context, BonusActivity.class);
                                     Bundle b = new Bundle();
                                     b.putSerializable("ChatMessage", mDatas.get(position));
@@ -258,7 +267,7 @@ public class MsgAdapter extends BaseAdapter{
                     position).getType()));
             if(statuts==Config.STATE_CDSBONUS_START){
                 progressDialog.dismiss();
-                LogUtils.e("DSONCLICK=====>","1");
+                LogUtils.e("DSONCLICK=====>", "1");
                 getPersonNum(mDatas.get(position).getId(), mDatas.get(position).getRid(),
                         mDatas.get(position));
 
@@ -296,7 +305,7 @@ public class MsgAdapter extends BaseAdapter{
                             LogUtils.e("getPersonNum",s);
                             String data = jsonObject.getString("data");
                             DS ds = new DS();
-                            ds =  gson.fromJson(data,DS.class);
+                            ds = MyApplication.getGson().fromJson(data, DS.class);
                             LogUtils.e("getPersonNum-ds",ds.toString());
                             Intent i = new Intent(context, CDSActivity.class);
                             Bundle b = new Bundle();
@@ -339,7 +348,7 @@ public class MsgAdapter extends BaseAdapter{
                             LogUtils.e("getMyGuess",s);
                             String data = jsonObject.getString("data");
                             DS ds = new DS();
-                            ds =  gson.fromJson(data,DS.class);
+                            ds =  MyApplication.getGson().fromJson(data, DS.class);
                             LogUtils.e("getMyguess-ds",ds.toString());
                             Intent i = new Intent(context, CDSActivity.class);
                             Bundle b = new Bundle();
@@ -383,7 +392,7 @@ public class MsgAdapter extends BaseAdapter{
                             LogUtils.e("getMyResult",s);
                             String data = jsonObject.getString("data");
                             DS ds = new DS();
-                            ds =  gson.fromJson(data,DS.class);
+                            ds =MyApplication.getGson().fromJson(data, DS.class);
                             LogUtils.e("getResult-ds",ds.toString());
                             Intent i = new Intent(context, CDSActivity.class);
                             Bundle b = new Bundle();

@@ -114,6 +114,9 @@ public class ChatActivity extends BaseActivity {
         ib_chat_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if(et_chat_msg.getText().toString().trim().equals("")) {
+                    return;
+                }
                 message = new ChatMessage();
                 message.setUid(UserInfo.getInstance().getUid());
                 message.setPhoto(UserInfo.getInstance().getPhoto());
@@ -154,7 +157,6 @@ public class ChatActivity extends BaseActivity {
                         Map<String, String> map = new HashMap<String, String>();
                         Map<String,String> params = new TreeMap<String, String>();
                         String timestamp = String.valueOf((long)(System.currentTimeMillis()/1000));
-                        LogUtils.e("timestamp", timestamp);
 
                         XGMessage xgMessage = new XGMessage();
                         xgMessage.setContent(message);
@@ -191,9 +193,6 @@ public class ChatActivity extends BaseActivity {
         if(MyApplication.getChatHandler()==null){
             MyApplication.setChatHandler(handler,room.getRid());
         }
-        LogUtils.e("chatActivity","onstart");
-        //messageList = MessageDAO.query(MyApplication.getSQLiteDatabase(),room.getRid());
-        //msgAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -202,11 +201,13 @@ public class ChatActivity extends BaseActivity {
     }
 
     public void ReceiverMessage(ChatMessage message) {
+        LogUtils.e("message.before.status==>",String.valueOf(message.getStatus()));
         if (message.getRid() == room.getRid()) {
             if (message.getUid() == UserInfo.getInstance().getUid()) {
                 messageList.get(messageList.size() - 1).setStatus(1);
                 msgAdapter.notifyDataSetChanged();
                 lv_chat.setSelection(messageList.size() - 1);
+                LogUtils.e("message.status==>", "1");
                 return;
             }
             messageList.add(message);
