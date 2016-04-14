@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -44,7 +45,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import tab.com.handsome.handsome.R;
 
@@ -137,7 +140,15 @@ public class HallFragment extends Fragment  {
             public void onErrorResponse(VolleyError error) {
                 Log.e("TAG", error.getMessage(), error);
             }
-        });
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                map.put("token",String.valueOf(UserInfo.getInstance().getToken()));
+                return map;
+            }
+        };
         MyApplication.getmQueue().add(stringRequest);
 
         tv_add.setOnClickListener(new View.OnClickListener() {

@@ -14,10 +14,13 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.ProductAdapter;
@@ -25,6 +28,7 @@ import com.handsome.qhb.adapter.SliderAdapter;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.Product;
 import com.handsome.qhb.bean.Slider;
+import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.UserDAO;
 import com.handsome.qhb.db.UserDBOpenHelper;
@@ -40,8 +44,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -128,15 +137,20 @@ public class ShopFragment extends Fragment {
         super.onCreate(savedInstanceState);
         LogUtils.e("fragment", "oncreate");
         db = MyApplication.getSQLiteDatabase();
+
+        LogUtils.e("shopFragment-user====>",UserInfo.getInstance().toString());
         //异步加载轮播图片
-        JsonObjectRequest jsonObjectRequest1 = new JsonObjectRequest(Config.BASE_URL + "Slider/getJson", null,
-                new Response.Listener<JSONObject>() {
+        StringRequest stringRequest1 = new StringRequest(Request.Method.POST, Config.BASE_URL+"Slider/getJson",
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        msg1.what = Config.INIT_SLIDER_PICTURE;
-                        msg1.obj = 1;
+                    public void onResponse(String response) {
                         try {
-                            sliderLists = MyApplication.getGson().fromJson(response.getString("slider"), new TypeToken<List<Slider>>() {
+
+                            LogUtils.e("response", response);
+                            JSONObject jsonObject = new JSONObject(response);
+                            msg1.what = Config.INIT_SLIDER_PICTURE;
+                            msg1.obj = 1;
+                            sliderLists = MyApplication.getGson().fromJson(jsonObject.getString("slider"), new TypeToken<List<Slider>>() {
                             }.getType());
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -148,43 +162,62 @@ public class ShopFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
                 Log.e("TAG", error.getMessage(), error);
             }
-        });
-        mQueue.add(jsonObjectRequest1);
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                map.put("token",String.valueOf(UserInfo.getInstance().getToken()));
+                return map;
+            }
+        };
+        mQueue.add(stringRequest1);
         //异步加载商品图片
-        JsonObjectRequest jsonObjectRequest2 = new JsonObjectRequest(Config.BASE_URL+"Product/getJson",null,
-                new Response.Listener<JSONObject>(){
+        StringRequest stringRequest2 = new StringRequest(Request.Method.POST, Config.BASE_URL+"Product/getJson",
+                new Response.Listener<String>() {
                     @Override
-                    public void onResponse(JSONObject response) {
-                        msg2.what = Config.INIT_PRODUCT;
-                        msg2.obj = 1;
+                    public void onResponse(String response) {
                         try {
+                            msg2.what = Config.INIT_PRODUCT;
+                            msg2.obj = 1;
+                            LogUtils.e("response", response);
+                            JSONObject jsonObject = new JSONObject(response);
+
                             productLists = new ArrayList<Product>();
                             //服务器端获取的product
-                            productLists = MyApplication.getGson().fromJson(response.getString("products"), new TypeToken<List<Product>>() {
+                            productLists = MyApplication.getGson().fromJson(jsonObject.getString("products"), new TypeToken<List<Product>>() {
                             }.getType());
                             addShopCar();
+
                             //存储到activity中
                             getActivity().getIntent().putExtra("products",MyApplication.getGson().toJson(productLists));
-                            pageJson = new JSONObject(response.getString("page"));
+                            pageJson = new JSONObject(jsonObject.getString("page"));
                             nextpage = pageJson.getString("next");
                             //存储到activity中
                             getActivity().getIntent().putExtra("next",pageJson.getString("next"));
                             page =Integer.valueOf(pageJson.getString("nums"));
-                            getActivity().getIntent().putExtra("page",pageJson.getString("nums"));
+                            getActivity().getIntent().putExtra("page", pageJson.getString("nums"));
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         handler.handleMessage(msg2);
-
                     }
-                },new Response.ErrorListener(){
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("TAG", error.getMessage(),error);
+                Log.e("TAG", error.getMessage(), error);
             }
-
-        });
-        mQueue.add(jsonObjectRequest2);
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                map.put("token",String.valueOf(UserInfo.getInstance().getToken()));
+                return map;
+            }
+        };
+        mQueue.add(stringRequest2);
     }
 
 
@@ -298,29 +331,37 @@ public class ShopFragment extends Fragment {
         rListView.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onDownPullRefresh() {
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Config.BASE_URL+"Product/getJson",null,
-                        new Response.Listener<JSONObject>(){
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Product/getJson",
+                        new Response.Listener<String>() {
                             @Override
-                            public void onResponse(JSONObject response) {
-                                Message msg = new Message();
-                                msg.what = Config.REFERSH_PRODUCT;
+                            public void onResponse(String response) {
                                 try {
-                                    msg.obj = response.getString("products");
-                                    pageJson = new JSONObject(response.getString("page"));
-                                    LogUtils.e("===",pageJson.getString("next"));
+                                    LogUtils.e("response", response);
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    Message msg = new Message();
+                                    msg.what = Config.REFERSH_PRODUCT;
+                                    msg.obj = jsonObject.getString("products");
+                                    pageJson = new JSONObject(jsonObject.getString("page"));
+                                    handler.handleMessage(msg);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                handler.handleMessage(msg);
                             }
-                        },new Response.ErrorListener(){
-
+                        }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("TAG",error.getMessage(),error);
+                        Log.e("TAG", error.getMessage(), error);
                     }
-                });
-                mQueue.add(jsonObjectRequest);
+                }){
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> map = new HashMap<String, String>();
+                        map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                        map.put("token",String.valueOf(UserInfo.getInstance().getToken()));
+                        return map;
+                    }
+                };
+                mQueue.add(stringRequest);
             }
             @Override
             public void onLoadingMore() {
@@ -330,40 +371,48 @@ public class ShopFragment extends Fragment {
                 }else{
                     page--;
                 }
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(nextpage,null,
-                        new Response.Listener<JSONObject>(){
+                StringRequest stringRequest = new StringRequest(Request.Method.POST, nextpage,
+                        new Response.Listener<String>() {
                             @Override
-                            public void onResponse(JSONObject response) {
-                                Message msg = new Message();
-                                msg.what = Config.LoadMORE_PRODUCT;
+                            public void onResponse(String response) {
                                 try {
-                                    if(response.getString("products")==""){
+                                    LogUtils.e("response", response);
+                                    JSONObject jsonObject = new JSONObject(response);
+
+                                    if(jsonObject.getString("products")==""){
                                         return;
                                     }
                                     List<Product> nextProducts = new ArrayList<Product>();
-                                    nextProducts = MyApplication.getGson().fromJson(response.getString("products"), new TypeToken<List<Product>>() {
+                                    nextProducts = MyApplication.getGson().fromJson(jsonObject.getString("products"), new TypeToken<List<Product>>() {
                                     }.getType());
                                     for(Product product:nextProducts){
                                         productLists.add(product);
                                     }
                                     productAdapter.notifyDataSetChanged();
-                                    rListView.setSelection(productLists.size()-nextProducts.size());
+                                    rListView.setSelection(productLists.size() - nextProducts.size());
 
-                                    pageJson =new JSONObject(response.getString("page"));
+                                    pageJson =new JSONObject(jsonObject.getString("page"));
                                     nextpage = pageJson.getString("next");
                                     rListView.hideFooterView();
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
                             }
-                        },new Response.ErrorListener(){
-
+                        }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.e("TAG",error.getMessage(),error);
+                        Log.e("TAG", error.getMessage(), error);
                     }
-                });
-                mQueue.add(jsonObjectRequest);
+                }){
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> map = new HashMap<String, String>();
+                        map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                        map.put("token",String.valueOf(UserInfo.getInstance().getToken()));
+                        return map;
+                    }
+                };
+                mQueue.add(stringRequest);
             }
         });
     }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -20,6 +21,7 @@ import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.MD5Utils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -43,12 +45,11 @@ public class LoginActivity extends BaseActivity  {
     //注册
     private TextView tv_register;
 
-    private Gson gson;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        gson =  new Gson();
         et_telphone = (EditText) findViewById(R.id.et_telphone);
         et_password = (EditText) findViewById(R.id.et_password);
 
@@ -58,7 +59,17 @@ public class LoginActivity extends BaseActivity  {
         tv_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                if(et_telphone.getText().toString().equals("")){
+                    Toast toast = Toast.makeText(LoginActivity.this,"请输入用户名",Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.show();
+                    return;
+                }else if(et_password.getText().toString().equals("")){
+                    Toast toast = Toast.makeText(LoginActivity.this,"请输入密码",Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                    return;
+                }
                 final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this);
                 progressDialog.setMessage("登录中");
                 progressDialog.setCancelable(true);
@@ -77,7 +88,7 @@ public class LoginActivity extends BaseActivity  {
                                         return;
                                     }
                                     JSONObject jsonData = new JSONObject(jsonObject.getString("data"));
-                                    User user =  gson.fromJson(jsonData.getString("user"),User.class);
+                                    User user =  MyApplication.getGson().fromJson(jsonData.getString("user"),User.class);
                                     Intent i =new Intent(LoginActivity.this,MainActivity.class);
                                     Bundle b = new Bundle();
                                     SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
@@ -104,7 +115,7 @@ public class LoginActivity extends BaseActivity  {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> map = new HashMap<String, String>();
                         map.put("username",et_telphone.getText().toString());
-                        map.put("password",et_password.getText().toString());
+                        map.put("password", MD5Utils.digest(et_password.getText().toString()));
                         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         map.put("lastLoginTime", dateFormat.format(new Date()));
                         return map;

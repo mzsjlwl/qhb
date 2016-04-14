@@ -83,6 +83,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
                 MyApplication.getRoomHandler().handleMessage(message);
             }
         }else {
+            LogUtils.e("xgMessage==>",xgPushTextMessage.getContent());
             //数据库中获取存储的房间
             rooms = RoomDAO.query(MyApplication.getSQLiteDatabase(), UserInfo.getInstance().getUid());
             chatMessage = MyApplication.getGson().fromJson(xgPushTextMessage.getContent(), ChatMessage.class);

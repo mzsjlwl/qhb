@@ -36,6 +36,7 @@ import com.handsome.qhb.ui.activity.UpdatePasswordActivity;
 import com.handsome.qhb.ui.activity.UpdatePhotoActivity;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.MD5Utils;
 import com.handsome.qhb.utils.UserInfo;
 
 import org.json.JSONException;
@@ -78,7 +79,11 @@ public class UserFragment extends Fragment {
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            super.handleMessage(msg);
+            if(msg.what==Config.REFRESH_USER){
+                ImageUtils.imageLoader(MyApplication.getmQueue(), UserInfo.getInstance().getPhoto(), iv_user_photo);
+                tv_name.setText(UserInfo.getInstance().getNackname().toString());
+                tv_integral.setText(String.valueOf(UserInfo.getInstance().getIntegral()));
+            }
 
         }
     };
@@ -183,7 +188,15 @@ public class UserFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"",
+        LogUtils.e("Userfragment", "onstart");
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        LogUtils.e("Userfragment", "onResume");
+        StringRequest stringRequest1= new StringRequest(Request.Method.POST, Config.BASE_URL+"User/getInfo",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -192,10 +205,61 @@ public class UserFragment extends Fragment {
                             JSONObject jsonObject = new JSONObject(response);
                             String status = jsonObject.getString("status");
                             if(status.equals("0")){
+                                if(UserInfo.getInstance()!=null){
+                                    StringRequest stringRequest = new StringRequest(Request.Method.POST,Config.BASE_URL+"User/login",
+                                            new Response.Listener<String>() {
+                                                @Override
+                                                public void onResponse(String response) {
+                                                    try {
+                                                        LogUtils.e("response-zidongdenglu",response);
+                                                        JSONObject jsonObject = new JSONObject(response);
+                                                        String status = jsonObject.getString("status");
+                                                        if(status.equals("0")){
+                                                            return;
+                                                        }
+                                                        User user =  MyApplication.getGson().fromJson(jsonObject.getString("data"),User.class);
+                                                        UserInfo.setUser(user);
+                                                        SharedPreferences.Editor editor =getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE).edit();
+                                                        editor.clear();
+                                                        editor.putString("user", jsonObject.getString("data"));
+                                                        editor.putLong("date", new Date().getTime());
+                                                        editor.commit();
+                                                        Message message = new Message();
+                                                        message.what=Config.REFRESH_USER;
+                                                        handler.handleMessage(message);
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+
+                                                }
+                                            }, new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError error) {
+                                            Log.e("TAG", error.getMessage(), error);
+                                        }
+                                    }){
+                                        @Override
+                                        protected Map<String, String> getParams() throws AuthFailureError {
+                                            Map<String, String> map = new HashMap<String, String>();
+                                            map.put("username",UserInfo.getInstance().getUsername());
+                                            map.put("password",UserInfo.getInstance().getPassword());
+                                            return map;
+                                        }
+                                    };
+                                    MyApplication.getmQueue().add(stringRequest);
+                                }
                                 return;
                             }
-                            JSONObject jsonData = new JSONObject(jsonObject.getString("data"));
-                            User user =  MyApplication.getGson().fromJson(jsonData.getString("user"),User.class);
+                            User user =  MyApplication.getGson().fromJson(jsonObject.getString("data"),User.class);
+                            UserInfo.setUser(user);
+                            SharedPreferences.Editor editor =getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE).edit();
+                            editor.clear();
+                            editor.putString("user", jsonObject.getString("data"));
+                            editor.putLong("date", new Date().getTime());
+                            editor.commit();
+                            Message message = new Message();
+                            message.what=Config.REFRESH_USER;
+                            handler.handleMessage(message);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -210,22 +274,11 @@ public class UserFragment extends Fragment {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> map = new HashMap<String, String>();
-                DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                map.put("lastLoginTime", dateFormat.format(new Date()));
+                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                map.put("token",String.valueOf(UserInfo.getInstance().getToken()));
                 return map;
             }
         };
-        MyApplication.getmQueue().add(stringRequest);
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if(UserInfo.getInstance()!=null) {
-            ImageUtils.imageLoader(MyApplication.getmQueue(),UserInfo.getInstance().getPhoto(),iv_user_photo);
-            tv_name.setText(UserInfo.getInstance().getNackname().toString());
-            tv_integral.setText(String.valueOf(UserInfo.getInstance().getIntegral()));
-        }
+        MyApplication.getmQueue().add(stringRequest1);
     }
 }

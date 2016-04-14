@@ -22,6 +22,7 @@ import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.LoginUtils;
 import com.handsome.qhb.utils.UserInfo;
 
 import org.json.JSONException;
@@ -80,6 +81,8 @@ public class UpdateDataActivity extends BaseActivity {
                                     if (status == "0") {
                                         Toast.makeText(UpdateDataActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
                                         return;
+                                    }else if(status.equals("-1")){
+                                        LoginUtils.AutoLogin(UpdateDataActivity.this);
                                     }
                                     Toast.makeText(UpdateDataActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
                                     LogUtils.e("udpateUser", jsonObject.getString("data"));
@@ -103,6 +106,7 @@ public class UpdateDataActivity extends BaseActivity {
                         Map<String, String> map = new HashMap<String, String>();
                         map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
                         map.put("nackname", et_nackname.getText().toString());
+                        map.put("token",UserInfo.getInstance().getToken());
                         return map;
                     }
                 };

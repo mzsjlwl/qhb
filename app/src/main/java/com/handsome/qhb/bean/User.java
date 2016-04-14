@@ -8,7 +8,9 @@ import java.io.Serializable;
 public class User implements Serializable {
     private int uid;
     private String username;
+    private String password;
     private String nackname;
+
     private float integral;
     private String photo;
     private String token;
@@ -61,13 +63,22 @@ public class User implements Serializable {
         this.token = token;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public User(){
 
     }
 
-    public User(int uid, String username, String nackname, float integral, String photo, String token) {
+    public User(int uid, String username, String password, String nackname, float integral, String photo, String token) {
         this.uid = uid;
         this.username = username;
+        this.password = password;
         this.nackname = nackname;
         this.integral = integral;
         this.photo = photo;
@@ -79,6 +90,7 @@ public class User implements Serializable {
         return "User{" +
                 "uid=" + uid +
                 ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
                 ", nackname='" + nackname + '\'' +
                 ", integral=" + integral +
                 ", photo='" + photo + '\'' +

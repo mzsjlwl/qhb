@@ -32,6 +32,7 @@ import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.UserDAO;
 import com.handsome.qhb.db.UserDBOpenHelper;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.LoginUtils;
 import com.handsome.qhb.utils.UserInfo;
 
 import org.json.JSONException;
@@ -150,6 +151,8 @@ public class GwcActivity extends BaseActivity {
                                     if(status == "0"){
                                         Toast.makeText(GwcActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
                                         return;
+                                    }else if(status.equals("-1")){
+                                        LoginUtils.AutoLogin(GwcActivity.this);
                                     }
                                     LogUtils.e("data", jsonObject.getString("data"));
                                     UserDAO.update(db, UserInfo.getInstance().getUid(), "");
@@ -187,7 +190,9 @@ public class GwcActivity extends BaseActivity {
                                 +tv_recePhone.getText().toString()+";"
                                 +tv_receAddr.getText().toString(),et_liuyan.getText().toString(),idNumList);
                         LogUtils.e("orderJson",gson.toJson(orderJson));
-                        map.put("order",gson.toJson(orderJson));
+                        map.put("order", gson.toJson(orderJson));
+                        map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                        map.put("token",UserInfo.getInstance().getToken());
                         return map;
                     }
                 };

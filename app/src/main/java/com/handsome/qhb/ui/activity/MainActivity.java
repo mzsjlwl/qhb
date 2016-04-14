@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.ui.fragment.FragmentController;
 import com.handsome.qhb.ui.fragment.ShopFragment;
@@ -23,7 +24,6 @@ import tab.com.handsome.handsome.R;
 public class MainActivity extends BaseActivity implements View.OnClickListener{
     TextView tv_shop,tv_hall,tv_user;
     FrameLayout ly_content;
-    private Gson gson = new Gson();
     private FragmentController fragmentController;
     private ShopFragment shopFragment;
     @Override
@@ -33,14 +33,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         setContentView(R.layout.activity_main);
         //判断登录情况
         SharedPreferences sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
-        Long lastTime = sharedPreferences.getLong("date",0);
-        if(lastTime!=0){
-            Long now = new Date().getTime();
-            Long totalMinute = (now - lastTime)/(1000*60);
-            if((totalMinute/60)<12){
-                User user = (User)gson.fromJson(sharedPreferences.getString("user",""),new TypeToken<User>(){}.getType());
-                UserInfo.setUser(user);
-            }
+        if(sharedPreferences!=null){
+            User user = (User) MyApplication.getGson().fromJson(sharedPreferences.getString("user", ""), new TypeToken<User>() {
+            }.getType());
+            UserInfo.setUser(user);
+
         }
 
         if(UserInfo.getInstance()==null){
@@ -49,6 +46,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             finish();
             return;
         }
+        LogUtils.e("user==>",UserInfo.getInstance().toString());
         if(savedInstanceState==null){
             LogUtils.e("savedInstanceState","null");
             fragmentController = new FragmentController(this,R.id.ly_content,0);
@@ -159,13 +157,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         super.onDestroy();
         LogUtils.e("activity", "onDestroy");
         SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
-        editor.putString("user", gson.toJson(UserInfo.getInstance()));
+        editor.clear();
+        editor.putString("user", MyApplication.getGson().toJson(UserInfo.getInstance()));
         editor.putLong("date", new Date().getTime());
         editor.commit();
     }
-
-
-
-
-
 }

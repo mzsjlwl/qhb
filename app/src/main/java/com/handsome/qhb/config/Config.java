@@ -30,6 +30,7 @@ public class Config {
     public static final int REFRESH_USER = 16;
 
 
+
     public static final String XG_PUSH_URL = "http://openapi.xg.qq.com/v2/push/";
 
     public static final int CHAT_FROM_MSG = 1;

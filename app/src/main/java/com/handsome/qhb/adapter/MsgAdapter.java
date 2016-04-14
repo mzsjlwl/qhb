@@ -52,10 +52,12 @@ import tab.com.handsome.handsome.R;
  */
 public class MsgAdapter extends BaseAdapter{
 
+
     private LayoutInflater mInflater;
     private List<ChatMessage> mDatas;
     private List<RandomBonus> bonusList = new ArrayList<RandomBonus>();
     private Context context;
+    public String error = "CURL ERROR: Problem (2) in the Chunked-Encoded data";
 
     public MsgAdapter(Context context, List<ChatMessage> datas)
     {
@@ -63,6 +65,7 @@ public class MsgAdapter extends BaseAdapter{
         mInflater = LayoutInflater.from(context);
         mDatas = datas;
     }
+
 
     @Override
     public int getCount() {
@@ -173,7 +176,6 @@ public class MsgAdapter extends BaseAdapter{
             }
             viewHolder.content.setText(chatMessage.getContent());
             viewHolder.nackname.setText(chatMessage.getNackname());
-            LogUtils.e("adapter-status", String.valueOf(chatMessage.getStatus()));
             if(chatMessage.getStatus()==1) {
                 if(viewHolder.progressBar!=null){
                     viewHolder.progressBar.setVisibility(View.INVISIBLE);
@@ -212,12 +214,17 @@ public class MsgAdapter extends BaseAdapter{
                                 try {
                                     progressDialog.dismiss();
                                     LogUtils.e("hbresponse", response);
+                                    if(response.contains("CURL ERROR")){
+                                        response = response.substring(error.length());
+                                    }
+                                    LogUtils.e("response===>",response);
                                     JSONObject jsonObject = new JSONObject(response);
                                     String status = jsonObject.getString("status");
                                     if(status.equals("0")){
                                         Toast toast = Toast.makeText(context, jsonObject.getString("info"),Toast.LENGTH_SHORT);
                                         toast.setGravity(Gravity.CENTER,0,0);
                                         toast.show();
+                                        LogUtils.e("status===>","0");
                                         return;
                                     }
                                     String data = jsonObject.getString("data");
@@ -245,7 +252,8 @@ public class MsgAdapter extends BaseAdapter{
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> map = new HashMap<String, String>();
                         map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
-                        map.put("id",String.valueOf(mDatas.get(position).getId()));
+                        map.put("id", String.valueOf(mDatas.get(position).getId()));
+                        map.put("token",UserInfo.getInstance().getToken());
                         return map;
                     }
                 };
@@ -329,6 +337,8 @@ public class MsgAdapter extends BaseAdapter{
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("dsId", String.valueOf(id));
                 map.put("rid", String.valueOf(rid));
+                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                map.put("token",UserInfo.getInstance().getToken());
                 return map;
             }
         };
@@ -373,6 +383,7 @@ public class MsgAdapter extends BaseAdapter{
                 map.put("dsId", String.valueOf(id));
                 map.put("rid", String.valueOf(rid));
                 map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                map.put("token",UserInfo.getInstance().getToken());
                 return map;
             }
         };
@@ -417,6 +428,7 @@ public class MsgAdapter extends BaseAdapter{
                 map.put("dsId", String.valueOf(id));
                 map.put("rid", String.valueOf(rid));
                 map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                map.put("token",UserInfo.getInstance().getToken());
                 return map;
             }
         };

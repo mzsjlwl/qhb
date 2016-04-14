@@ -177,6 +177,7 @@ public class CDSActivity extends BaseActivity implements MessageReceiver.Refresh
                         map.put("rid",String.valueOf(chatMessage.getRid()));
                         map.put("dsId",String.valueOf(ds.getId()));
                         map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                        map.put("token",UserInfo.getInstance().getToken());
                         map.put("result",String.valueOf(1));
                         return map;
                     }
@@ -224,6 +225,7 @@ public class CDSActivity extends BaseActivity implements MessageReceiver.Refresh
                         Map<String, String> map = new HashMap<String, String>();
                         map.put("rid",String.valueOf(chatMessage.getRid()));
                         map.put("dsId",String.valueOf(ds.getId()));
+                        map.put("token",UserInfo.getInstance().getToken());
                         map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
                         map.put("result",String.valueOf(2));
                         return map;

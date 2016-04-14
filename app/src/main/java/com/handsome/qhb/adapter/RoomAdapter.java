@@ -52,6 +52,7 @@ public class RoomAdapter extends CommonAdapter<Room> {
 
     public ChatMessage chatMessage;
     public List<ChatMessage> chatMessageList = new ArrayList<ChatMessage>();
+    public String error = "CURL ERROR: Problem (2) in the Chunked-Encoded data";
     public RoomAdapter(Context context, List<Room> datas, int layoutId, RequestQueue mQueue){
         super(context,datas,layoutId,mQueue);
     }
@@ -105,6 +106,10 @@ public class RoomAdapter extends CommonAdapter<Room> {
                             try {
                                 progressDialog.dismiss();
                                 LogUtils.e("response", response);
+                                if(response.contains("CURL ERROR")){
+                                    response = response.substring(error.length());
+                                }
+                                LogUtils.e("response===>",response);
                                 JSONObject jsonObject = new JSONObject(response);
                                 String status = jsonObject.getString("status");
                                 if(status == "0"){
@@ -127,6 +132,7 @@ public class RoomAdapter extends CommonAdapter<Room> {
                 protected Map<String, String> getParams() throws AuthFailureError {
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+                    map.put("token",UserInfo.getInstance().getToken());
                     map.put("rid",String.valueOf(mDatas.get(position).getRid()));
                     return map;
                 }

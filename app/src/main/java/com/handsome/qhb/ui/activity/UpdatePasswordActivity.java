@@ -18,6 +18,8 @@ import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.config.Config;
+import com.handsome.qhb.utils.LoginUtils;
+import com.handsome.qhb.utils.MD5Utils;
 import com.handsome.qhb.utils.UserInfo;
 
 import org.json.JSONException;
@@ -86,6 +88,8 @@ public class UpdatePasswordActivity extends BaseActivity {
                                         if(status == "0"){
                                             Toast.makeText(UpdatePasswordActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
                                             return;
+                                        }else if(status.equals("-1")){
+                                            LoginUtils.AutoLogin(UpdatePasswordActivity.this);
                                         }
                                         Toast.makeText(UpdatePasswordActivity.this,"修改成功,请重新登录",Toast.LENGTH_LONG).show();
                                         Intent i =new Intent(UpdatePasswordActivity.this,LoginActivity.class);
@@ -106,9 +110,10 @@ public class UpdatePasswordActivity extends BaseActivity {
                         protected Map<String, String> getParams() throws AuthFailureError {
                             Map<String, String> map = new HashMap<String, String>();
                             map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
-                            map.put("oldPassword",et_oldPassword.getText().toString());
-                            map.put("password",et_password.getText().toString());
-                            map.put("repeatPassword",et_repeatPassword.getText().toString());
+                            map.put("oldPassword", MD5Utils.digest(et_oldPassword.getText().toString()));
+                            map.put("password",MD5Utils.digest(et_password.getText().toString()));
+                            map.put("repeatPassword",MD5Utils.digest(et_repeatPassword.getText().toString()));
+                            map.put("token",UserInfo.getInstance().getToken());
                             return map;
                         }
                     };
