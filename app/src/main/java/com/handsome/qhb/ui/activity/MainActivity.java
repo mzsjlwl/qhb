@@ -28,24 +28,25 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
     private ShopFragment shopFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        LogUtils.e("mainactivity","oncreate");
+        LogUtils.e("mainactivity", "oncreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //判断登录情况
-        SharedPreferences sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
-        if(sharedPreferences!=null){
-            User user = (User) MyApplication.getGson().fromJson(sharedPreferences.getString("user", ""), new TypeToken<User>() {
-            }.getType());
-            UserInfo.setUser(user);
-
-        }
 
         if(UserInfo.getInstance()==null){
-            Intent i = new Intent(MainActivity.this,LoginActivity.class);
-            startActivity(i);
-            finish();
-            return;
+            //判断登录情况
+            SharedPreferences sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
+            User user = MyApplication.getGson().fromJson(sharedPreferences.getString("user", ""),User.class);
+            if(user==null){
+                Intent i = new Intent(MainActivity.this,LoginActivity.class);
+                startActivity(i);
+                finish();
+                return;
+            }else{
+                UserInfo.setUser(user);
+            }
         }
+
+
         LogUtils.e("user==>",UserInfo.getInstance().toString());
         if(savedInstanceState==null){
             LogUtils.e("savedInstanceState","null");
@@ -57,13 +58,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         //初始化控件
         initViews();
         fragmentController.showFragment(0);
-        Bundle b = getIntent().getExtras();
-        if(b!=null){
-            if(b.getSerializable("user")!=null){
-                User user = (User)b.getSerializable("user");
-                UserInfo.setUser(user);
-            }
-        }
         shopFragment  =(ShopFragment)fragmentController.getFragment(0);
 
     }
