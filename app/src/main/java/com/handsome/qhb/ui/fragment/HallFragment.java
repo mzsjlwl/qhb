@@ -90,6 +90,7 @@ public class HallFragment extends Fragment  {
         MyApplication.setRoomHandler(handler);
         roomAdapter = new RoomAdapter(getActivity(),roomList,R.layout.room_list_items,MyApplication.getmQueue());
         lv_room.setAdapter(roomAdapter);
+
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/sendRoomPHP",
                 new Response.Listener<String>() {
                     @Override
@@ -118,8 +119,7 @@ public class HallFragment extends Fragment  {
 
                                         }
                                         if(j==roomList.size()) {
-                                            Room r = new Room();
-                                            r = roomLists.get(i);
+                                            Room r = roomLists.get(i);
                                             roomList.add(r);
                                             RoomDAO.insert(MyApplication.getSQLiteDatabase(),r.getRid(),UserInfo.getInstance().getUid(),
                                                     r.getRoomPhoto(),r.getRoomName(),r.getRoomCreater(),"","");

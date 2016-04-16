@@ -62,7 +62,7 @@
                 </LinearLayout>
 
 
-                <ImageView
+                <com.android.volley.toolbox.NetworkImageView
                     android:id="@+id/chat_icon"
                     android:layout_width="@dimen/x50"
                     android:layout_height="@dimen/x45"

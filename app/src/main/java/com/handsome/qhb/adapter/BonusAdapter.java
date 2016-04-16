@@ -30,6 +30,7 @@ public class BonusAdapter extends CommonAdapter<RandomBonus> {
     @Override
     public void convert(int position, ViewHolder holder, ListView listView, RandomBonus randomBonus) {
         user = randomBonus.getUser();
+
         holder.setImage(R.id.iv_user_photo, user.getPhoto());
         holder.setText(R.id.tv_user_nackname, user.getNackname());
         Format format = new SimpleDateFormat("HH:mm");

@@ -87,12 +87,12 @@ public class LoginActivity extends BaseActivity  {
                                         Toast.makeText(LoginActivity.this,jsonObject.getString("info"),Toast.LENGTH_LONG).show();
                                         return;
                                     }
-                                    JSONObject jsonData = new JSONObject(jsonObject.getString("data"));
-                                    User user =  MyApplication.getGson().fromJson(jsonData.getString("user"),User.class);
+
+                                    User user =  MyApplication.getGson().fromJson(jsonObject.getString("data"),User.class);
                                     Intent i =new Intent(LoginActivity.this,MainActivity.class);
                                     Bundle b = new Bundle();
                                     SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
-                                    editor.putString("user",jsonData.getString("user"));
+                                    editor.putString("user",jsonObject.getString("data"));
                                     editor.putLong("date", new Date().getTime());
                                     editor.commit();
                                     b.putSerializable("user", user);

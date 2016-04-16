@@ -183,6 +183,7 @@ public class ChatActivity extends BaseActivity {
                     }
                 };
                 MyApplication.getmQueue().add(stringRequest);
+
             }
         });
     }

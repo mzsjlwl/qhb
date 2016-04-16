@@ -148,9 +148,12 @@ public class ShopFragment extends Fragment {
 
                             LogUtils.e("response", response);
                             JSONObject jsonObject = new JSONObject(response);
+                            if(jsonObject.getString("status").equals("0")){
+                                return;
+                            }
                             msg1.what = Config.INIT_SLIDER_PICTURE;
                             msg1.obj = 1;
-                            sliderLists = MyApplication.getGson().fromJson(jsonObject.getString("slider"), new TypeToken<List<Slider>>() {
+                            sliderLists = MyApplication.getGson().fromJson(jsonObject.getString("data"), new TypeToken<List<Slider>>() {
                             }.getType());
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -178,20 +181,23 @@ public class ShopFragment extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            msg2.what = Config.INIT_PRODUCT;
-                            msg2.obj = 1;
                             LogUtils.e("response", response);
                             JSONObject jsonObject = new JSONObject(response);
-
+                            if(jsonObject.getString("status").equals("0")){
+                                return;
+                            }
+                            JSONObject jsonObjectdata = new JSONObject(jsonObject.getString("data"));
+                            msg2.what = Config.INIT_PRODUCT;
+                            msg2.obj = 1;
                             productLists = new ArrayList<Product>();
                             //服务器端获取的product
-                            productLists = MyApplication.getGson().fromJson(jsonObject.getString("products"), new TypeToken<List<Product>>() {
+                            productLists = MyApplication.getGson().fromJson(jsonObjectdata.getString("products"), new TypeToken<List<Product>>() {
                             }.getType());
                             addShopCar();
 
                             //存储到activity中
                             getActivity().getIntent().putExtra("products",MyApplication.getGson().toJson(productLists));
-                            pageJson = new JSONObject(jsonObject.getString("page"));
+                            pageJson = new JSONObject(jsonObjectdata.getString("page"));
                             nextpage = pageJson.getString("next");
                             //存储到activity中
                             getActivity().getIntent().putExtra("next",pageJson.getString("next"));
@@ -338,10 +344,14 @@ public class ShopFragment extends Fragment {
                                 try {
                                     LogUtils.e("response", response);
                                     JSONObject jsonObject = new JSONObject(response);
+                                    if(jsonObject.getString("status").equals("0")){
+                                        return;
+                                    }
+                                    JSONObject jsonObjectdata = new JSONObject(jsonObject.getString("data"));
                                     Message msg = new Message();
                                     msg.what = Config.REFERSH_PRODUCT;
-                                    msg.obj = jsonObject.getString("products");
-                                    pageJson = new JSONObject(jsonObject.getString("page"));
+                                    msg.obj = jsonObjectdata.getString("products");
+                                    pageJson = new JSONObject(jsonObjectdata.getString("page"));
                                     handler.handleMessage(msg);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -378,12 +388,16 @@ public class ShopFragment extends Fragment {
                                 try {
                                     LogUtils.e("response", response);
                                     JSONObject jsonObject = new JSONObject(response);
-
+                                    if(jsonObject.getString("status").equals("0")){
+                                        return;
+                                    }
                                     if(jsonObject.getString("products")==""){
                                         return;
                                     }
+
+                                    JSONObject jsonObjectdata  = new JSONObject(jsonObject.getString("data"));
                                     List<Product> nextProducts = new ArrayList<Product>();
-                                    nextProducts = MyApplication.getGson().fromJson(jsonObject.getString("products"), new TypeToken<List<Product>>() {
+                                    nextProducts = MyApplication.getGson().fromJson(jsonObjectdata.getString("products"), new TypeToken<List<Product>>() {
                                     }.getType());
                                     for(Product product:nextProducts){
                                         productLists.add(product);
@@ -391,7 +405,7 @@ public class ShopFragment extends Fragment {
                                     productAdapter.notifyDataSetChanged();
                                     rListView.setSelection(productLists.size() - nextProducts.size());
 
-                                    pageJson =new JSONObject(jsonObject.getString("page"));
+                                    pageJson =new JSONObject(jsonObjectdata.getString("page"));
                                     nextpage = pageJson.getString("next");
                                     rListView.hideFooterView();
                                 } catch (JSONException e) {

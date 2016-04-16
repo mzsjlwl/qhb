@@ -1,7 +1,7 @@
 package com.handsome.qhb.utils;
 
 import android.graphics.Bitmap;
-import android.util.LruCache;
+import android.support.v4.util.LruCache;
 import android.widget.ImageView;
 
 import com.android.volley.RequestQueue;
@@ -18,9 +18,11 @@ public class ImageUtils {
     public static ImageView imageLoader(RequestQueue mQueue,String url,ImageView imageView){
 
         ImageLoader imageLoader = new ImageLoader(mQueue, new BitmapCache());
+        imageLoader.setBatchedResponseDelay(1);
         ImageLoader.ImageListener listener = ImageLoader.getImageListener(imageView,
                 R.mipmap.ic_launcher, R.mipmap.ic_launcher);
         imageLoader.get(url, listener);
+
         return imageView;
     }
 

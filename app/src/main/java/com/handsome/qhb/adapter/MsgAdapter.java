@@ -19,6 +19,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -113,8 +114,7 @@ public class MsgAdapter extends BaseAdapter{
                         .findViewById(R.id.chat_from_content);
                 viewHolder.nackname = (TextView) convertView
                         .findViewById(R.id.chat_from_name);
-                viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_progressBar);
-                viewHolder.chat_icon = (ImageView)convertView.findViewById(R.id.chat_icon);
+                viewHolder.chat_icon = (NetworkImageView) convertView.findViewById(R.id.chat_icon);
                 convertView.setTag(viewHolder);
             }else if(chatMessage.getUid()==UserInfo.getInstance().getUid())
             {
@@ -126,13 +126,15 @@ public class MsgAdapter extends BaseAdapter{
                         .findViewById(R.id.chat_send_content);
                 viewHolder.nackname = (TextView) convertView
                         .findViewById(R.id.chat_send_name);
+                viewHolder.chat_icon = (NetworkImageView) convertView.findViewById(R.id.chat_icon);
                 viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_progressBar);
-                viewHolder.chat_icon = (ImageView)convertView.findViewById(R.id.chat_icon);
+
                 convertView.setTag(viewHolder);
             }
 
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
+
         }
 
         viewHolder.createDate.setText(chatMessage.getDate());
@@ -176,9 +178,15 @@ public class MsgAdapter extends BaseAdapter{
             }
             viewHolder.content.setText(chatMessage.getContent());
             viewHolder.nackname.setText(chatMessage.getNackname());
+            LogUtils.e("chatMessage"+position,String.valueOf(chatMessage.getStatus()));
             if(chatMessage.getStatus()==1) {
+
                 if(viewHolder.progressBar!=null){
-                    viewHolder.progressBar.setVisibility(View.INVISIBLE);
+                    viewHolder.progressBar.setVisibility(View.GONE);
+                }
+            }else{
+                if(viewHolder.progressBar!=null){
+                    viewHolder.progressBar.setVisibility(View.VISIBLE);
                 }
             }
         }
@@ -191,7 +199,7 @@ public class MsgAdapter extends BaseAdapter{
         public TextView nackname;
         public TextView content;
         public ProgressBar progressBar;
-        public ImageView chat_icon;
+        public NetworkImageView chat_icon;
 
     }
 
