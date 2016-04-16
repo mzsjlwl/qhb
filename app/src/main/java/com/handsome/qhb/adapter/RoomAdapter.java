@@ -75,7 +75,7 @@ public class RoomAdapter extends CommonAdapter<Room> {
             }
         }
 
-        holder.setImage(R.id.iv_roomPhoto,room.getRoomPhoto());
+        holder.setNetWorkImage(R.id.iv_roomPhoto,room.getRoomPhoto());
     }
 
     class RoomItemOnclick implements View.OnClickListener{

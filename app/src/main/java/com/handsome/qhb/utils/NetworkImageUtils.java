@@ -11,23 +11,21 @@ import com.android.volley.toolbox.NetworkImageView;
 import tab.com.handsome.handsome.R;
 
 /**
- * Created by zhang on 2016/3/3.
+ * Created by Administrator on 2016/4/16.
  */
-public class ImageUtils {
-
-
-    public static ImageView imageLoader(RequestQueue mQueue,String url,ImageView imageView){
+public class NetworkImageUtils {
+    public static ImageView imageLoader(RequestQueue mQueue,String url,NetworkImageView imageView){
 
         ImageLoader imageLoader = new ImageLoader(mQueue, new BitmapCache());
 
-        ImageLoader.ImageListener listener = ImageLoader.getImageListener(imageView,
-                R.mipmap.ic_launcher, R.mipmap.ic_launcher);
-        imageLoader.get(url, listener);
+//        ImageLoader.ImageListener listener = ImageLoader.getImageListener(imageView,
+//                R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+//        imageLoader.get(url, listener);
 
-//        imageView.setDefaultImageResId(R.mipmap.ic_launcher);
-//        imageView.setErrorImageResId(R.mipmap.ic_launcher);
-//        imageView.setImageUrl(url,
-//                imageLoader);
+        imageView.setDefaultImageResId(R.mipmap.ic_launcher);
+        imageView.setErrorImageResId(R.mipmap.ic_launcher);
+        imageView.setImageUrl(url,
+                imageLoader);
         return imageView;
     }
 
@@ -57,4 +55,3 @@ public class ImageUtils {
 
     }
 }
-

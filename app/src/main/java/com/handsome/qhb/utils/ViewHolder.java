@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.NetworkImageView;
 
 /**
  * Created by zhang on 2016/3/3.
@@ -69,8 +70,13 @@ public class ViewHolder  {
     }
     public ViewHolder setImage(int viewId,String url){
         ImageView iv = getView(viewId);
-        ImageUtils.imageLoader(mQueue,url,iv);
+        ImageUtils.imageLoader(mQueue, url, iv);
         return this;
 
+    }
+    public ViewHolder setNetWorkImage(int viewId,String url){
+        NetworkImageView iv = getView(viewId);
+        NetworkImageUtils.imageLoader(mQueue,url,iv);
+        return this;
     }
 }

@@ -33,6 +33,7 @@ import com.handsome.qhb.ui.activity.BonusActivity;
 import com.handsome.qhb.ui.activity.CDSActivity;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.NetworkImageUtils;
 import com.handsome.qhb.utils.UserInfo;
 
 import org.json.JSONException;
@@ -138,7 +139,7 @@ public class MsgAdapter extends BaseAdapter{
         }
 
         viewHolder.createDate.setText(chatMessage.getDate());
-        ImageUtils.imageLoader(MyApplication.getmQueue(), chatMessage.getPhoto(),viewHolder.chat_icon);
+        NetworkImageUtils.imageLoader(MyApplication.getmQueue(), chatMessage.getPhoto(), viewHolder.chat_icon);
         //随机红包
         if(chatMessage.getType()== Config.TYPE_RANDOMBONUS){
             if(chatMessage.getUid()==UserInfo.getInstance().getUid()){

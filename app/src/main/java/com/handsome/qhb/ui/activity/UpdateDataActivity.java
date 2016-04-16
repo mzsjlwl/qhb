@@ -14,6 +14,7 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -45,7 +46,7 @@ public class UpdateDataActivity extends BaseActivity {
     //makesure
     private TextView tv_makesure;
     //用户头像
-    private ImageView iv_user_photo;
+    private NetworkImageView iv_user_photo;
 
 
 
@@ -58,7 +59,7 @@ public class UpdateDataActivity extends BaseActivity {
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         et_nackname = (EditText)findViewById(R.id.et_nackname);
         tv_makesure = (TextView)findViewById(R.id.tv_makesure);
-        iv_user_photo = (ImageView)findViewById(R.id.iv_user_photo);
+        iv_user_photo = (NetworkImageView)findViewById(R.id.iv_user_photo);
         ImageUtils.imageLoader(MyApplication.getmQueue(),UserInfo.getInstance().getPhoto(),iv_user_photo);
         et_nackname.setText(UserInfo.getInstance().getNackname());
 
