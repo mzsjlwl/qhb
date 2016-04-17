@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.android.volley.toolbox.NetworkImageView;
+
 import java.util.List;
 
 /**
@@ -12,13 +14,13 @@ import java.util.List;
  */
 public class SliderAdapter extends PagerAdapter {
 
-    private List<ImageView> viewLists;
+    private List<NetworkImageView> viewLists;
 
     public SliderAdapter(){
 
     }
 
-    public SliderAdapter(List<ImageView> viewLists){
+    public SliderAdapter(List<NetworkImageView> viewLists){
         this.viewLists=viewLists;
     }
 

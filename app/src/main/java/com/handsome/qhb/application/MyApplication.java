@@ -5,30 +5,16 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Handler;
-import android.os.Message;
 import android.telephony.TelephonyManager;
-import android.util.Log;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.handsome.qhb.bean.Room;
-import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.UserDBOpenHelper;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.NetUtils;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushManager;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MyApplication extends Application {
 
@@ -44,6 +30,7 @@ public class MyApplication extends Application {
     private static NotificationManager nm;
     private static SQLiteDatabase db;
     private static Gson gson;
+    public static int mNetWorkState;
 
     @Override
     public void onCreate() {
@@ -64,6 +51,7 @@ public class MyApplication extends Application {
                 LogUtils.e("TPush","注册失败,错误码"+i+",错误信息："+s);
             }
         });
+        mNetWorkState = NetUtils.getNetworkState(this);
 
     }
 

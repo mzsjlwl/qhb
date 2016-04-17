@@ -263,7 +263,4 @@ public class MessageReceiver extends XGPushBaseReceiver {
 
     }
 
-    public interface Refresh{
-        void dealMessage(ChatMessage chatMessage);
-    }
 }

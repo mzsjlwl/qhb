@@ -17,36 +17,76 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/y40"
         >
-        <TextView
-            android:id="@+id/tv_shop"
-            android:layout_width="@dimen/x1"
+        <LinearLayout
+            android:id="@+id/ll_shop"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/tab_menu_shop"
-            android:gravity="center"
-            android:padding="@dimen/x3"
-            android:text="@string/tab_menu_shop"
-            android:textSize="@dimen/x13"/>
-        <TextView
-            android:id="@+id/tv_hall"
-            android:layout_width="@dimen/x1"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="@dimen/x26"
+                android:layout_height="@dimen/y15"
+                android:layout_marginTop="@dimen/y5"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/tab_menu_shop"
+                android:clickable="false"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/y3"
+                android:text="@string/tab_menu_shop"
+                android:textSize="@dimen/x13"
+                android:clickable="false"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_hall"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/tab_menu_hall"
-            android:gravity="center"
-            android:padding="@dimen/x3"
-            android:text="@string/tab_menu_hall"
-            android:textSize="@dimen/x13"/>
-        <TextView
-            android:id="@+id/tv_user"
-            android:layout_width="@dimen/x1"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="@dimen/x26"
+                android:layout_height="@dimen/y15"
+                android:layout_marginTop="@dimen/y5"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/tab_menu_hall"
+                android:clickable="false"/>
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/y3"
+                android:text="@string/tab_menu_hall"
+                android:textSize="@dimen/x13"
+                android:clickable="false"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_user"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/tab_menu_user"
-            android:gravity="center"
-            android:padding="@dimen/x3"
-            android:text="@string/tab_menu_user"
-            android:textSize="@dimen/x13"/>
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="@dimen/x26"
+                android:layout_height="@dimen/y15"
+                android:layout_marginTop="@dimen/y5"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/tab_menu_user"
+                android:clickable="false"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/y3"
+                android:text="@string/tab_menu_user"
+                android:textSize="@dimen/x13"
+                android:clickable="false"/>
+        </LinearLayout>
+
 
     </LinearLayout>
 </LinearLayout>

@@ -20,6 +20,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -37,6 +38,7 @@ import com.handsome.qhb.ui.activity.GwcActivity;
 import com.handsome.qhb.ui.activity.LoginActivity;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.NetworkImageUtils;
 import com.handsome.qhb.utils.UserInfo;
 import com.handsome.qhb.widget.RefreshListView;
 
@@ -64,7 +66,7 @@ public class ShopFragment extends Fragment {
     //实现轮播的viewPager
     private ViewPager viewPager;
     // 滑动的图片集合
-    private List<ImageView> imageViews;
+    private List<NetworkImageView> imageViews;
     //滑动图片
     private List<Slider> sliderLists;
     //商品listView
@@ -309,11 +311,11 @@ public class ShopFragment extends Fragment {
     }
 
     public void initSliderImage() {
-        imageViews = new ArrayList<ImageView>();
+        imageViews = new ArrayList<NetworkImageView>();
         for (Slider s : sliderLists) {
-            ImageView imageView = new ImageView(getActivity());
+            NetworkImageView imageView = new NetworkImageView(getActivity());
             //加载图片
-            imageView = ImageUtils.imageLoader(MyApplication.getmQueue(), s.getImage(), imageView);
+            imageView =  NetworkImageUtils.imageLoader(MyApplication.getmQueue(), s.getImage(), imageView);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageViews.add(imageView);
         }

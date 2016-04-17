@@ -43,7 +43,7 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/4/1.
  */
-public class CDSActivity extends BaseActivity implements MessageReceiver.Refresh {
+public class CDSActivity extends BaseActivity  {
 
 
     private TextView tv_Btime,tv_money,tv_person,tv_time,tv_guess,tv_single,tv_double,tv_result;
@@ -278,8 +278,5 @@ public class CDSActivity extends BaseActivity implements MessageReceiver.Refresh
         ll_result.setVisibility(View.VISIBLE);
     }
 
-    @Override
-    public void dealMessage(ChatMessage chatMessage) {
 
-    }
 }

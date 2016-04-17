@@ -14,7 +14,7 @@ import tab.com.handsome.handsome.R;
  * Created by Administrator on 2016/4/16.
  */
 public class NetworkImageUtils {
-    public static ImageView imageLoader(RequestQueue mQueue,String url,NetworkImageView imageView){
+    public static NetworkImageView imageLoader(RequestQueue mQueue,String url,NetworkImageView imageView){
 
         ImageLoader imageLoader = new ImageLoader(mQueue, new BitmapCache());
 

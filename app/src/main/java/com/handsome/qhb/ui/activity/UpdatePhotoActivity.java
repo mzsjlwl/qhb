@@ -60,7 +60,7 @@ public class UpdatePhotoActivity extends BaseActivity {
     // 结果
     private static final int PHOTO_REQUEST_CUT = 3;
     //ImageView
-    private NetworkImageView iv_user_photo;
+    private ImageView iv_user_photo;
     private File img;
     private String photo;
     private Gson gson = new Gson();
@@ -70,7 +70,7 @@ public class UpdatePhotoActivity extends BaseActivity {
         setContentView(R.layout.activity_update_photo);
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ib_photo_menu = (ImageButton)findViewById(R.id.ib_photo_menu);
-        iv_user_photo = (NetworkImageView)findViewById(R.id.iv_user_photo);
+        iv_user_photo = (ImageView)findViewById(R.id.iv_user_photo);
         ImageUtils.imageLoader(MyApplication.getmQueue(),UserInfo.getInstance().getPhoto(),iv_user_photo);
         ll_back.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -6,14 +6,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.User;
+import com.handsome.qhb.receiver.NetBroadcastReceiver;
 import com.handsome.qhb.ui.fragment.FragmentController;
 import com.handsome.qhb.ui.fragment.ShopFragment;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.NetUtils;
 import com.handsome.qhb.utils.UserInfo;
 
 import java.util.Date;
@@ -21,7 +24,7 @@ import java.util.Date;
 import tab.com.handsome.handsome.R;
 
 
-public class MainActivity extends BaseActivity implements View.OnClickListener{
+public class MainActivity extends BaseActivity implements View.OnClickListener,NetBroadcastReceiver.netEventHandler {
     TextView tv_shop,tv_hall,tv_user;
     FrameLayout ly_content;
     private FragmentController fragmentController;
@@ -32,6 +35,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        NetBroadcastReceiver.mListeners.add(this);
         if(UserInfo.getInstance()==null){
             //判断登录情况
             SharedPreferences sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
@@ -155,5 +159,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         editor.putString("user", MyApplication.getGson().toJson(UserInfo.getInstance()));
         editor.putLong("date", new Date().getTime());
         editor.commit();
+    }
+
+    @Override
+    public void onNetChange() {
+        if (NetUtils.getNetworkState(this) == NetUtils.NETWORN_NONE) {
+            Toast.makeText(MainActivity.this,"网络异常,请检查后再试",Toast.LENGTH_LONG);
+        }else {
+
+        }
     }
 }
