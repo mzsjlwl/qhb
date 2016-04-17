@@ -125,7 +125,9 @@ public class RoomAdapter extends CommonAdapter<Room> {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.e("TAG", error.getMessage(), error);
-                    Toast.makeText(mContext, error.getMessage(), Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
+
+                    Toast.makeText(mContext,"网络异常,请检查后重试", Toast.LENGTH_LONG).show();
                 }
             }){
                 @Override
