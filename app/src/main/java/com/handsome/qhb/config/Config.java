@@ -33,9 +33,6 @@ public class Config {
 
     public static final String XG_PUSH_URL = "http://openapi.xg.qq.com/v2/push/";
 
-    public static final int CHAT_FROM_MSG = 1;
-    public static final int CHAT_SEND_MSG = 0;
-
 
     public static final int TYPE_NOTIFICATION =1;
     public static final int TYPE_MESSAGE = 2;
@@ -48,5 +45,17 @@ public class Config {
     public static final int STATE_CDSBONUS_START = 1;
     public static final int STATE_CDSBONUS_GUESSED = 2;
     public static final int STATE_CDSBONUS_END = 3;
+
+    public static final String GETROOM_TAG = "getRoom";
+    public static final String GETSLIDER_TAG = "getSlider";
+    public static final String GETPRODUCT_TAG = "getProduct";
+    public static final String USERLOGIN_TAG = "userLogin";
+    public static final String USERNOTICE_TAG = "userNotice";
+    public static final String DSCDS_TAG = "dsCDS";
+    public static final String SENDMSG_TAG = "sendMsg";
+    public static final String INSERTORDER_TAG = "insertOrder";
+    public static final String GETORDER_TAG = "getOrder";
+    public static final String USERREGISTER_TAG="userRegister";
+    public static final String USERUPDATE_TAG= "userUpdate";
 
 }

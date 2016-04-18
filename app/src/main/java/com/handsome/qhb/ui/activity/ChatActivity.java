@@ -182,6 +182,7 @@ public class ChatActivity extends BaseActivity {
                         return map;
                     }
                 };
+                stringRequest.setTag(Config.SENDMSG_TAG);
                 MyApplication.getmQueue().add(stringRequest);
 
             }
@@ -240,6 +241,7 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MyApplication.getmQueue().cancelAll(Config.SENDMSG_TAG);
         MyApplication.setChatHandler(null, 0);
     }
 }

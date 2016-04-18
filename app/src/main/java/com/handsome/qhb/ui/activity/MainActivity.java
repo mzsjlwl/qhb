@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +26,7 @@ import tab.com.handsome.handsome.R;
 
 
 public class MainActivity extends BaseActivity implements View.OnClickListener,NetBroadcastReceiver.netEventHandler {
-    TextView tv_shop,tv_hall,tv_user;
+    LinearLayout ll_shop,ll_hall,ll_user;
     FrameLayout ly_content;
     private FragmentController fragmentController;
     private ShopFragment shopFragment;
@@ -71,12 +72,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
      */
     private void initViews(){
         ly_content = (FrameLayout) findViewById(R.id.ly_content);
-        tv_shop = (TextView) findViewById(R.id.tv_shop);
-        tv_hall = (TextView) findViewById(R.id.tv_hall);
-        tv_user = (TextView) findViewById(R.id.tv_user);
-        tv_shop.setOnClickListener(this);
-        tv_hall.setOnClickListener(this);
-        tv_user.setOnClickListener(this);
+        ll_shop = (LinearLayout) findViewById(R.id.ll_shop);
+        ll_hall = (LinearLayout) findViewById(R.id.ll_hall);
+        ll_user = (LinearLayout) findViewById(R.id.ll_user);
+        ll_shop.setOnClickListener(this);
+        ll_hall.setOnClickListener(this);
+        ll_user.setOnClickListener(this);
     }
 
     /**
@@ -86,14 +87,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
     public void onClick(View v) {
 //        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (v.getId()){
-            case R.id.tv_shop:
+            case R.id.ll_shop:
                 if(shopFragment!=null&&shopFragment.getScheduledExecutorService()!=null) {
                     shopFragment.getScheduledExecutorService().shutdown();
                     shopFragment.onStartSlider();
                     fragmentController.showFragment(0);
                 }
                 break;
-            case R.id.tv_hall:
+            case R.id.ll_hall:
                 if(UserInfo.getInstance()==null){
                     Intent i = new Intent(this, LoginActivity.class);
                     startActivity(i);
@@ -105,7 +106,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener,N
                     }
                 }
                 break;
-            case R.id.tv_user:
+            case R.id.ll_user:
                 if(UserInfo.getInstance()==null){
                     Intent i = new Intent(this, LoginActivity.class);
                     startActivity(i);

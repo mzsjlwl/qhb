@@ -196,6 +196,7 @@ public class GwcActivity extends BaseActivity {
                         return map;
                     }
                 };
+                stringRequest.setTag(Config.INSERTORDER_TAG);
                 MyApplication.getmQueue().add(stringRequest);
             }
         });
@@ -223,7 +224,15 @@ public class GwcActivity extends BaseActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        MyApplication.getmQueue().cancelAll(Config.INSERTORDER_TAG);
+    }
+
+    @Override
     protected void onDestroy() {
+
         super.onDestroy();
+
     }
 }

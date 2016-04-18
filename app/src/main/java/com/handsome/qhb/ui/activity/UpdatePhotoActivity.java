@@ -213,6 +213,7 @@ public class UpdatePhotoActivity extends BaseActivity {
                 return map;
             }
         };
+        stringRequest.setTag(Config.USERUPDATE_TAG);
         MyApplication.getmQueue().add(stringRequest);
     }
 
@@ -302,5 +303,11 @@ public class UpdatePhotoActivity extends BaseActivity {
     protected void onResume() {
         super.onResume();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MyApplication.getmQueue().cancelAll(Config.USERUPDATE_TAG);
     }
 }

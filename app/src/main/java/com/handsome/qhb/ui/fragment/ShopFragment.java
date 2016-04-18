@@ -176,6 +176,7 @@ public class ShopFragment extends Fragment {
                 return map;
             }
         };
+        stringRequest1.setTag(Config.GETSLIDER_TAG);
         mQueue.add(stringRequest1);
         //异步加载商品图片
         StringRequest stringRequest2 = new StringRequest(Request.Method.POST, Config.BASE_URL+"Product/getJson",
@@ -225,6 +226,7 @@ public class ShopFragment extends Fragment {
                 return map;
             }
         };
+        stringRequest2.setTag(Config.GETPRODUCT_TAG);
         mQueue.add(stringRequest2);
     }
 
@@ -373,6 +375,7 @@ public class ShopFragment extends Fragment {
                         return map;
                     }
                 };
+                stringRequest.setTag(Config.GETPRODUCT_TAG);
                 mQueue.add(stringRequest);
             }
             @Override
@@ -428,6 +431,7 @@ public class ShopFragment extends Fragment {
                         return map;
                     }
                 };
+                stringRequest.setTag(Config.GETPRODUCT_TAG);
                 mQueue.add(stringRequest);
             }
         });
@@ -443,6 +447,8 @@ public class ShopFragment extends Fragment {
     @Override
     public void onStop() {
         LogUtils.e("ShopFragment","onstop");
+        MyApplication.getmQueue().cancelAll(Config.GETPRODUCT_TAG);
+        MyApplication.getmQueue().cancelAll(Config.GETSLIDER_TAG);
         super.onStop();
     }
 

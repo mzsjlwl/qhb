@@ -144,6 +144,7 @@ public class RegisterActivity extends BaseActivity {
                         return map;
                     }
                 };
+                stringRequest.setTag(Config.USERREGISTER_TAG);
                 MyApplication.getmQueue().add(stringRequest);
             }
 
@@ -158,5 +159,11 @@ public class RegisterActivity extends BaseActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MyApplication.getmQueue().cancelAll(Config.USERREGISTER_TAG);
     }
 }

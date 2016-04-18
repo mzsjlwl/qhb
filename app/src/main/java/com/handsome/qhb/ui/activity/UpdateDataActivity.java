@@ -111,9 +111,16 @@ public class UpdateDataActivity extends BaseActivity {
                         return map;
                     }
                 };
+                stringRequest.setTag(Config.USERUPDATE_TAG);
                 MyApplication.getmQueue().add(stringRequest);
             }
         });
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MyApplication.getmQueue().cancelAll(Config.USERUPDATE_TAG);
     }
 }

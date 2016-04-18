@@ -7,7 +7,7 @@
     <ImageButton
         android:id="@+id/ib_shopcar"
         android:layout_height = "match_parent"
-        android:layout_width="@dimen/x25"
+        android:layout_width="@dimen/x20"
         android:layout_margin="@dimen/x5"
         android:scaleType="fitXY"
         android:layout_alignParentRight="true"

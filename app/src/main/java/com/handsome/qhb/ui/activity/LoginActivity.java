@@ -121,6 +121,7 @@ public class LoginActivity extends BaseActivity  {
                         return map;
                     }
                 };
+                stringRequest.setTag(Config.USERLOGIN_TAG);
                 MyApplication.getmQueue().add(stringRequest);
             }
         });
@@ -134,4 +135,9 @@ public class LoginActivity extends BaseActivity  {
         });
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MyApplication.getmQueue().cancelAll(Config.USERLOGIN_TAG);
+    }
 }

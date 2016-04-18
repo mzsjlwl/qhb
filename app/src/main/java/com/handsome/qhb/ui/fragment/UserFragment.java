@@ -279,6 +279,13 @@ public class UserFragment extends Fragment {
                 return map;
             }
         };
+        stringRequest1.setTag(Config.USERLOGIN_TAG);
         MyApplication.getmQueue().add(stringRequest1);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        MyApplication.getmQueue().cancelAll(Config.USERLOGIN_TAG);
     }
 }

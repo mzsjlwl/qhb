@@ -43,46 +43,46 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/4/1.
  */
-public class CDSActivity extends BaseActivity  {
+public class CDSActivity extends BaseActivity {
 
 
-    private TextView tv_Btime,tv_money,tv_person,tv_time,tv_guess,tv_single,tv_double,tv_result;
+    private TextView tv_Btime, tv_money, tv_person, tv_time, tv_guess, tv_single, tv_double, tv_result;
 
-    private LinearLayout ll_myguess,ll_guess,ll_result;
+    private LinearLayout ll_myguess, ll_guess, ll_result;
 
     private LinearLayout ll_back;
     private ChatMessage chatMessage;
     private DS ds;
     private TimerTask timerTask;
     private Timer timer;
-    private SimpleDateFormat simpleDateFormat =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private Date date;
-    private long hbtime,nowtime,subtime;
-    private int minute,seconds;
-    private String s_minute,s_seconds;
+    private long hbtime, nowtime, subtime;
+    private int minute, seconds;
+    private String s_minute, s_seconds;
 
 
     private Handler handler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if(msg.what==Config.DS_RESULT){
+            if (msg.what == Config.DS_RESULT) {
                 refreshResult((ChatMessage) msg.obj);
-            }else if(msg.what==Config.CDS_TIME){
-                if(subtime<0){
+            } else if (msg.what == Config.CDS_TIME) {
+                if (subtime < 0) {
                     timer.cancel();
                     return;
                 }
-                minute =(int)subtime/60;
-                seconds = (int)subtime%60;
-                if(minute<10){
-                    s_minute = "0"+minute;
-                }else{
-                    s_minute =""+minute;
+                minute = (int) subtime / 60;
+                seconds = (int) subtime % 60;
+                if (minute < 10) {
+                    s_minute = "0" + minute;
+                } else {
+                    s_minute = "" + minute;
                 }
-                if(seconds<10){
-                   s_seconds = "0"+seconds;
-                }else{
-                    s_seconds = ""+seconds;
+                if (seconds < 10) {
+                    s_seconds = "0" + seconds;
+                } else {
+                    s_seconds = "" + seconds;
                 }
                 tv_Btime.setText(s_minute + ":" + s_seconds);
             }
@@ -94,49 +94,49 @@ public class CDSActivity extends BaseActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cds);
 
-        tv_Btime = (TextView)findViewById(R.id.tv_Btime);
-        tv_money = (TextView)findViewById(R.id.tv_money);
-        tv_person = (TextView)findViewById(R.id.tv_person);
-        tv_time = (TextView)findViewById(R.id.tv_time);
-        tv_guess = (TextView)findViewById(R.id.tv_guess);
-        tv_single = (TextView)findViewById(R.id.tv_single);
-        tv_double= (TextView)findViewById(R.id.tv_double);
-        tv_result = (TextView)findViewById(R.id.tv_result);
-        ll_myguess = (LinearLayout)findViewById(R.id.ll_myguess);
-        ll_guess = (LinearLayout)findViewById(R.id.ll_guess);
-        ll_result = (LinearLayout)findViewById(R.id.ll_result);
-        ll_back = (LinearLayout)findViewById(R.id.ll_back);
+        tv_Btime = (TextView) findViewById(R.id.tv_Btime);
+        tv_money = (TextView) findViewById(R.id.tv_money);
+        tv_person = (TextView) findViewById(R.id.tv_person);
+        tv_time = (TextView) findViewById(R.id.tv_time);
+        tv_guess = (TextView) findViewById(R.id.tv_guess);
+        tv_single = (TextView) findViewById(R.id.tv_single);
+        tv_double = (TextView) findViewById(R.id.tv_double);
+        tv_result = (TextView) findViewById(R.id.tv_result);
+        ll_myguess = (LinearLayout) findViewById(R.id.ll_myguess);
+        ll_guess = (LinearLayout) findViewById(R.id.ll_guess);
+        ll_result = (LinearLayout) findViewById(R.id.ll_result);
+        ll_back = (LinearLayout) findViewById(R.id.ll_back);
 
-       chatMessage = (ChatMessage) getIntent().getSerializableExtra("cdsMessage");
-         ds = (DS) getIntent().getSerializableExtra("ds");
+        chatMessage = (ChatMessage) getIntent().getSerializableExtra("cdsMessage");
+        ds = (DS) getIntent().getSerializableExtra("ds");
 
 
-        MyApplication.setCdsHandler(handler,chatMessage.getId());
+        MyApplication.setCdsHandler(handler, chatMessage.getId());
         tv_money.setText(String.valueOf(chatMessage.getBonus_total()));
         tv_person.setText(String.valueOf(ds.getPersonNum()));
         tv_time.setText(chatMessage.getDate());
-        if(ds.getGuess()!=0){
-            if(ds.getGuess()==1){
+        if (ds.getGuess() != 0) {
+            if (ds.getGuess() == 1) {
                 tv_guess.setText("单");
 
-            }else if(ds.getGuess()==2){
+            } else if (ds.getGuess() == 2) {
                 tv_guess.setText("双");
             }
             ll_guess.setVisibility(View.INVISIBLE);
             ll_myguess.setVisibility(View.VISIBLE);
-            MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(),Config.STATE_CDSBONUS_GUESSED,chatMessage.getId());
+            MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_GUESSED, chatMessage.getId());
         }
 
-        if(ds.getResult()!=0){
-            if(ds.getResult()==1){
+        if (ds.getResult() != 0) {
+            if (ds.getResult() == 1) {
                 tv_result.setText("单");
-            }else if(ds.getResult()==2){
+            } else if (ds.getResult() == 2) {
                 tv_result.setText("双");
             }
             ll_guess.setVisibility(View.INVISIBLE);
             ll_result.setVisibility(View.VISIBLE);
 
-            MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(),Config.STATE_CDSBONUS_END,chatMessage.getId());
+            MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_END, chatMessage.getId());
         }
         tv_single.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -148,11 +148,11 @@ public class CDSActivity extends BaseActivity  {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            LogUtils.e("single==>response==>",response);
+                            LogUtils.e("single==>response==>", response);
                             JSONObject jsonObject = new JSONObject(response);
-                            if(jsonObject.getString("status").equals("0")){
-                                Toast toast = Toast.makeText(CDSActivity.this,jsonObject.getString("info"),Toast.LENGTH_SHORT);
-                                toast.setGravity(Gravity.CENTER,0,0);
+                            if (jsonObject.getString("status").equals("0")) {
+                                Toast toast = Toast.makeText(CDSActivity.this, jsonObject.getString("info"), Toast.LENGTH_SHORT);
+                                toast.setGravity(Gravity.CENTER, 0, 0);
                                 toast.show();
                                 return;
                             }
@@ -174,14 +174,15 @@ public class CDSActivity extends BaseActivity  {
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> map = new HashMap<String, String>();
-                        map.put("rid",String.valueOf(chatMessage.getRid()));
-                        map.put("dsId",String.valueOf(ds.getId()));
-                        map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                        map.put("token",UserInfo.getInstance().getToken());
-                        map.put("result",String.valueOf(1));
+                        map.put("rid", String.valueOf(chatMessage.getRid()));
+                        map.put("dsId", String.valueOf(ds.getId()));
+                        map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+                        map.put("token", UserInfo.getInstance().getToken());
+                        map.put("result", String.valueOf(1));
                         return map;
                     }
                 };
+                stringRequest.setTag(Config.DSCDS_TAG);
                 MyApplication.getmQueue().add(stringRequest);
             }
         });
@@ -198,11 +199,11 @@ public class CDSActivity extends BaseActivity  {
                             public void onResponse(String response) {
                                 try {
                                     tv_double.setClickable(true);
-                                    LogUtils.e("tv_double====response==>",response);
+                                    LogUtils.e("tv_double====response==>", response);
                                     JSONObject jsonObject = new JSONObject(response);
-                                    if(jsonObject.getString("status").equals("0")){
-                                        Toast toast = Toast.makeText(CDSActivity.this,jsonObject.getString("info"),Toast.LENGTH_SHORT);
-                                        toast.setGravity(Gravity.CENTER,0,0);
+                                    if (jsonObject.getString("status").equals("0")) {
+                                        Toast toast = Toast.makeText(CDSActivity.this, jsonObject.getString("info"), Toast.LENGTH_SHORT);
+                                        toast.setGravity(Gravity.CENTER, 0, 0);
                                         toast.show();
                                         return;
                                     }
@@ -223,14 +224,15 @@ public class CDSActivity extends BaseActivity  {
                     @Override
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> map = new HashMap<String, String>();
-                        map.put("rid",String.valueOf(chatMessage.getRid()));
-                        map.put("dsId",String.valueOf(ds.getId()));
-                        map.put("token",UserInfo.getInstance().getToken());
-                        map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                        map.put("result",String.valueOf(2));
+                        map.put("rid", String.valueOf(chatMessage.getRid()));
+                        map.put("dsId", String.valueOf(ds.getId()));
+                        map.put("token", UserInfo.getInstance().getToken());
+                        map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+                        map.put("result", String.valueOf(2));
                         return map;
                     }
                 };
+                stringRequest.setTag(Config.DSCDS_TAG);
                 MyApplication.getmQueue().add(stringRequest);
             }
         });
@@ -242,7 +244,7 @@ public class CDSActivity extends BaseActivity  {
         });
         try {
             date = simpleDateFormat.parse(chatMessage.getDate());
-            hbtime= date.getTime();
+            hbtime = date.getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -252,26 +254,27 @@ public class CDSActivity extends BaseActivity  {
                 Message msg = new Message();
                 msg.what = Config.CDS_TIME;
                 nowtime = System.currentTimeMillis();
-                subtime = chatMessage.getDsTime()*60-(nowtime-hbtime)/1000;
+                subtime = chatMessage.getDsTime() * 60 - (nowtime - hbtime) / 1000;
                 handler.sendMessage(msg);
             }
         };
         timer = new Timer();
-        timer.schedule(timerTask,0,1000);
+        timer.schedule(timerTask, 0, 1000);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        MyApplication.getmQueue().cancelAll(Config.DSCDS_TAG);
         MyApplication.setCdsHandler(null, 0);
         timer.cancel();
     }
 
-    public void refreshResult(ChatMessage msg){
-        LogUtils.e("result-msg",msg.toString());
-        if(msg.getContent().equals("1")){
+    public void refreshResult(ChatMessage msg) {
+        LogUtils.e("result-msg", msg.toString());
+        if (msg.getContent().equals("1")) {
             tv_result.setText("单");
-        }else if(msg.getContent().equals("2")){
+        } else if (msg.getContent().equals("2")) {
             tv_result.setText("双");
         }
         ll_guess.setVisibility(View.INVISIBLE);

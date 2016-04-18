@@ -53,7 +53,7 @@ public class UpdatePasswordActivity extends BaseActivity {
     //Gson
     private Gson gson = new Gson();
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_password);
         tv_title = (TextView) findViewById(R.id.tv_title);
@@ -117,11 +117,18 @@ public class UpdatePasswordActivity extends BaseActivity {
                             return map;
                         }
                     };
+                    stringRequest.setTag(Config.USERUPDATE_TAG);
                     MyApplication.getmQueue().add(stringRequest);
                 }
             }
         });
 
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MyApplication.getmQueue().cancelAll(Config.USERUPDATE_TAG);
     }
 }

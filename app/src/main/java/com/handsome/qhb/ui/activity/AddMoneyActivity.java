@@ -66,6 +66,13 @@ public class AddMoneyActivity extends BaseActivity{
                 Toast.makeText(AddMoneyActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+        stringRequest.setTag(Config.USERNOTICE_TAG);
         MyApplication.getmQueue().add(stringRequest);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MyApplication.getmQueue().cancelAll(Config.USERNOTICE_TAG);
     }
 }

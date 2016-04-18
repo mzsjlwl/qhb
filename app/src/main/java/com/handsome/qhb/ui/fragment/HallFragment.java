@@ -149,6 +149,7 @@ public class HallFragment extends Fragment  {
                 return map;
             }
         };
+        stringRequest.setTag(Config.GETROOM_TAG);
         MyApplication.getmQueue().add(stringRequest);
 
         tv_add.setOnClickListener(new View.OnClickListener() {
@@ -295,5 +296,11 @@ public class HallFragment extends Fragment  {
         });
         //更新数据
         roomAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        MyApplication.getmQueue().cancelAll(Config.GETROOM_TAG);
     }
 }
