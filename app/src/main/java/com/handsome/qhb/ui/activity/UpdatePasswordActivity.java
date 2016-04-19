@@ -110,9 +110,9 @@ public class UpdatePasswordActivity extends BaseActivity {
                         protected Map<String, String> getParams() throws AuthFailureError {
                             Map<String, String> map = new HashMap<String, String>();
                             map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
-                            map.put("oldPassword", MD5Utils.digest(et_oldPassword.getText().toString()));
-                            map.put("password",MD5Utils.digest(et_password.getText().toString()));
-                            map.put("repeatPassword",MD5Utils.digest(et_repeatPassword.getText().toString()));
+                            map.put("oldPassword", et_oldPassword.getText().toString());
+                            map.put("password",et_password.getText().toString());
+                            map.put("repeatPassword",et_repeatPassword.getText().toString());
                             map.put("token",UserInfo.getInstance().getToken());
                             return map;
                         }

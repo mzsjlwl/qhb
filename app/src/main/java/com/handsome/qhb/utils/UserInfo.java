@@ -9,13 +9,20 @@ import com.handsome.qhb.bean.User;
  * Created by zhang on 2016/3/14.
  */
 public class UserInfo {
-    private static User user;
+    private static User user = new User();
 
     public static User getInstance(){
         return user;
     }
     public static void setUser(User u){
-        user = u;
+
+
+        user.setUid(u.getUid());
+        user.setIntegral(u.getIntegral());
+        user.setNackname(u.getNackname());
+        user.setPhoto(u.getPhoto());
+        user.setToken(u.getToken());
+        user.setUsername(u.getUsername());
     }
     private UserInfo(){
 

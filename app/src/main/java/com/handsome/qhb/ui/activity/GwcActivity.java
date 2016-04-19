@@ -216,9 +216,9 @@ public class GwcActivity extends BaseActivity {
                     new TypeToken<List<Address>>() {
                     }.getType());
             if (addressList != null) {
-                tv_receAddr.setText(addressList.get(0).getReceAddr());
-                tv_recePhone.setText(addressList.get(0).getRecePhone());
-                tv_receName.setText(addressList.get(0).getReceName());
+                tv_receAddr.setText("收货地址 ："+addressList.get(0).getReceAddr());
+                tv_recePhone.setText("联系方式 ："+addressList.get(0).getRecePhone());
+                tv_receName.setText("收货人 ："+addressList.get(0).getReceName());
             }
         }
     }

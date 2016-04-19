@@ -192,6 +192,7 @@ public class UpdatePhotoActivity extends BaseActivity {
                             Toast toast = Toast.makeText(UpdatePhotoActivity.this,jsonObject.getString("info"),Toast.LENGTH_LONG);
                             toast.setGravity(Gravity.CENTER,0,0);
                             toast.show();
+                            finish();
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

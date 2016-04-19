@@ -8,6 +8,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -15,9 +16,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.LoginUtils;
+import com.handsome.qhb.utils.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import tab.com.handsome.handsome.R;
 
@@ -49,15 +55,17 @@ public class AddMoneyActivity extends BaseActivity{
                             LogUtils.e("response", response);
                             JSONObject jsonObject = new JSONObject(response);
                             String status = jsonObject.getString("status");
-                            if(status == "0"){
+                            if(status.equals("0")){
                                 Toast.makeText(AddMoneyActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
                                 return;
+                            }else if(status.equals("-1")){
+                                LogUtils.e("token====>","过期");
+                                LoginUtils.AutoLogin(AddMoneyActivity.this);
                             }
                             tv_notice.setText(jsonObject.getString("data"));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -65,7 +73,15 @@ public class AddMoneyActivity extends BaseActivity{
                 Log.e("TAG", error.getMessage(), error);
                 Toast.makeText(AddMoneyActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
             }
-        });
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+                map.put("token",UserInfo.getInstance().getToken());
+                return map;
+            }
+        };
         stringRequest.setTag(Config.USERNOTICE_TAG);
         MyApplication.getmQueue().add(stringRequest);
     }

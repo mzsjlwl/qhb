@@ -3,7 +3,6 @@ package com.handsome.qhb.config;
 public class Config {
 
     public static final String BASE_URL = "http://192.168.111.106/QHB/";
-    public static final String USER_TAG = "user";
     public static final String ORDER_TAG = "order";
     public static final long ACCESSID = 2100189658;
     public static final String ACCESSKEY = "AQV87R7CL46K";
@@ -28,7 +27,9 @@ public class Config {
     public static final int BONUSLIST = 14;
     public static final int CDS_TIME = 15;
     public static final int REFRESH_USER = 16;
-
+    public static final int ORDER_MESSAGE = 17;
+    public static final int REFRESH_ORDER = 18;
+    public static final int LOADMORE_ORDER = 19;
 
 
     public static final String XG_PUSH_URL = "http://openapi.xg.qq.com/v2/push/";
@@ -57,5 +58,6 @@ public class Config {
     public static final String GETORDER_TAG = "getOrder";
     public static final String USERREGISTER_TAG="userRegister";
     public static final String USERUPDATE_TAG= "userUpdate";
+    public static final String AUTOLOGIN_TAG = "autoLogin";
 
 }

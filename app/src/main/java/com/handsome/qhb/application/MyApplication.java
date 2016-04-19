@@ -3,7 +3,9 @@ package com.handsome.qhb.application;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
 
@@ -30,7 +32,6 @@ public class MyApplication extends Application {
     private static NotificationManager nm;
     private static SQLiteDatabase db;
     private static Gson gson;
-    public static int mNetWorkState;
 
     @Override
     public void onCreate() {
@@ -51,7 +52,7 @@ public class MyApplication extends Application {
                 LogUtils.e("TPush","注册失败,错误码"+i+",错误信息："+s);
             }
         });
-        mNetWorkState = NetUtils.getNetworkState(this);
+
 
     }
 

@@ -89,6 +89,7 @@ public class LoginActivity extends BaseActivity  {
                                     }
 
                                     User user =  MyApplication.getGson().fromJson(jsonObject.getString("data"),User.class);
+                                    user.setPassword(et_password.getText().toString());
                                     Intent i =new Intent(LoginActivity.this,MainActivity.class);
                                     Bundle b = new Bundle();
                                     SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
@@ -115,7 +116,7 @@ public class LoginActivity extends BaseActivity  {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> map = new HashMap<String, String>();
                         map.put("username",et_telphone.getText().toString());
-                        map.put("password", MD5Utils.digest(et_password.getText().toString()));
+                        map.put("password", et_password.getText().toString());
                         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                         map.put("lastLoginTime", dateFormat.format(new Date()));
                         return map;

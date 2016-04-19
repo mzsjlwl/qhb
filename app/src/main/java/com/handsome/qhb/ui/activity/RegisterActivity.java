@@ -139,7 +139,7 @@ public class RegisterActivity extends BaseActivity {
                     protected Map<String, String> getParams() throws AuthFailureError {
                         Map<String, String> map = new HashMap<String, String>();
                         map.put("username", et_telphone.getText().toString());
-                        map.put("password", MD5Utils.digest(et_password.getText().toString()));
+                        map.put("password", et_password.getText().toString());
                         map.put("nackname", et_name.getText().toString());
                         return map;
                     }

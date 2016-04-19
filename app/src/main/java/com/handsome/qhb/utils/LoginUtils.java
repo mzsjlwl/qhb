@@ -64,6 +64,7 @@ public class LoginUtils {
                 return map;
             }
         };
+        stringRequest.setTag(Config.AUTOLOGIN_TAG);
         MyApplication.getmQueue().add(stringRequest);
     }
 }

@@ -1,13 +1,11 @@
 package com.handsome.qhb.ui.activity;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,28 +14,22 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.OrderAdapter;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.Order;
-import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.listener.OnRefreshListener;
 import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.MD5Utils;
 import com.handsome.qhb.utils.UserInfo;
 import com.handsome.qhb.widget.RefreshListView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,14 +61,14 @@ public class OrderActivity extends BaseActivity {
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
-            if(msg.what==0x127){
+            if(msg.what==Config.ORDER_MESSAGE){
                 LogUtils.e("--->0x127", "orders");
                 initOrderListView();
-            }else if(msg.what == 0x128){
+            }else if(msg.what == Config.REFRESH_ORDER){
                 LogUtils.e("----->0x128","ordersrefresh");
                 initOrderListView();
                 refreshListView.hideHeaderView();
-            }else if(msg.what == 0x129){
+            }else if(msg.what == Config.LOADMORE_ORDER){
                 LogUtils.e("---->0x129","loadmore");
                 initOrderListView();
                 refreshListView.hideFooterView();
@@ -113,12 +105,12 @@ public class OrderActivity extends BaseActivity {
                         try {
                             JSONObject jsonObject = new JSONObject(response);
                             String status = jsonObject.getString("status");
-                            if(status == "0"){
+                            if(status.equals("0")){
                                 Toast.makeText(OrderActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
                                 return;
                             }
                             Message msg = new Message();
-                            msg.what = 0x127;
+                            msg.what = Config.ORDER_MESSAGE;
                             JSONObject jsonObjectdata = new JSONObject(jsonObject.getString("data"));
                             orderList= new ArrayList<Order>();
                             orderList = gson.fromJson(jsonObjectdata.getString("orders"), new TypeToken<List<Order>>() {
@@ -147,7 +139,7 @@ public class OrderActivity extends BaseActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                map.put("token",UserInfo.getInstance().getPassword());
+                map.put("token",UserInfo.getInstance().getToken());
                 return map;
             }
         };
@@ -169,12 +161,12 @@ public class OrderActivity extends BaseActivity {
                                     try {
                                         JSONObject jsonObject = new JSONObject(response);
                                         String status = jsonObject.getString("status");
-                                        if(status == "0"){
+                                        if(status.equals("0")){
                                             Toast.makeText(OrderActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
                                             return;
                                         }
                                         Message msg = new Message();
-                                        msg.what = 0x128;
+                                        msg.what = Config.REFRESH_ORDER;
                                         if(orderList!=null){
                                             orderList.clear();
                                         }
@@ -224,16 +216,16 @@ public class OrderActivity extends BaseActivity {
                                         try {
                                             JSONObject jsonObject = new JSONObject(response);
                                             String status = jsonObject.getString("status");
-                                            if(status == "0"){
+                                            if(status.equals("0")){
                                                 Toast.makeText(OrderActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
                                                 return;
                                             }
                                             JSONObject jsonObjectdata = new JSONObject(jsonObject.getString("data"));
-                                            if (jsonObjectdata.getString("orders") == "") {
+                                            if (jsonObjectdata.getString("orders").equals("")) {
                                                 return;
                                             }
                                             Message msg = new Message();
-                                            msg.what = 0x129;
+                                            msg.what = Config.LOADMORE_ORDER;
                                             List<Order> nextOrders = new ArrayList<Order>();
                                             nextOrders = gson.fromJson(jsonObjectdata.getString("orders"), new TypeToken<List<Order>>() {
                                             }.getType());

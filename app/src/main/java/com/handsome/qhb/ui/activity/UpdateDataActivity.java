@@ -1,5 +1,6 @@
 package com.handsome.qhb.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -115,7 +116,20 @@ public class UpdateDataActivity extends BaseActivity {
                 MyApplication.getmQueue().add(stringRequest);
             }
         });
+        iv_user_photo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(UpdateDataActivity.this, UpdatePhotoActivity.class);
+                startActivity(i);
+            }
+        });
 
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        ImageUtils.imageLoader(MyApplication.getmQueue(), UserInfo.getInstance().getPhoto(), iv_user_photo);
     }
 
     @Override

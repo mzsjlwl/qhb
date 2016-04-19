@@ -54,7 +54,7 @@
                             android:paddingTop="@dimen/y4"
                             android:paddingBottom="@dimen/y4"
                             android:text="fdsdsa"
-
+                            android:maxWidth="@dimen/x250"
                             android:textColor="#000"
                             android:textSize="@dimen/x15" />
                     </LinearLayout>

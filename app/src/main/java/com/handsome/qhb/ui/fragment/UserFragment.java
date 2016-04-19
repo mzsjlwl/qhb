@@ -36,6 +36,7 @@ import com.handsome.qhb.ui.activity.UpdatePasswordActivity;
 import com.handsome.qhb.ui.activity.UpdatePhotoActivity;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.LoginUtils;
 import com.handsome.qhb.utils.MD5Utils;
 import com.handsome.qhb.utils.UserInfo;
 
@@ -169,6 +170,7 @@ public class UserFragment extends Fragment {
                         UserInfo.setUser(null);
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(intent);
+
                         getActivity().finish();
                     }
                 });
@@ -201,7 +203,6 @@ public class UserFragment extends Fragment {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            LogUtils.e("response", response);
                             JSONObject jsonObject = new JSONObject(response);
                             String status = jsonObject.getString("status");
                             if(status.equals("0")){
@@ -211,10 +212,12 @@ public class UserFragment extends Fragment {
                                                 @Override
                                                 public void onResponse(String response) {
                                                     try {
-                                                        LogUtils.e("response-zidongdenglu",response);
                                                         JSONObject jsonObject = new JSONObject(response);
                                                         String status = jsonObject.getString("status");
                                                         if(status.equals("0")){
+                                                            return;
+                                                        }else if(status.equals("-1")){
+                                                            LoginUtils.AutoLogin(getActivity());
                                                             return;
                                                         }
                                                         User user =  MyApplication.getGson().fromJson(jsonObject.getString("data"),User.class);

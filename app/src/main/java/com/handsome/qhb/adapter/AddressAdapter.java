@@ -29,9 +29,9 @@ public class AddressAdapter extends CommonAdapter<Address> {
 
     @Override
     public void convert(int position, ViewHolder holder,ListView listView, Address address) {
-        holder.setText(R.id.tv_receName,address.getReceName());
-        holder.setText(R.id.tv_receAddr,address.getReceAddr());
-        holder.setText(R.id.tv_recePhone,address.getRecePhone());
+        holder.setText(R.id.tv_receName,"收货人:"+address.getReceName());
+        holder.setText(R.id.tv_receAddr,"收货地址:"+address.getReceAddr());
+        holder.setText(R.id.tv_recePhone,"联系方式:"+address.getRecePhone());
         holder.getView(R.id.ll_items).setOnClickListener(new ItemClickListener(position));
     }
 

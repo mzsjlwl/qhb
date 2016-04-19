@@ -1,8 +1,13 @@
 package com.handsome.qhb.ui.fragment;
 
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -38,6 +44,7 @@ import com.handsome.qhb.ui.activity.GwcActivity;
 import com.handsome.qhb.ui.activity.LoginActivity;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.LoginUtils;
 import com.handsome.qhb.utils.NetworkImageUtils;
 import com.handsome.qhb.utils.UserInfo;
 import com.handsome.qhb.widget.RefreshListView;
@@ -112,6 +119,7 @@ public class ShopFragment extends Fragment {
     //SQLiteDatabase
     private SQLiteDatabase db ;
 
+
     // 切换当前显示的图片
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
@@ -139,6 +147,8 @@ public class ShopFragment extends Fragment {
         super.onCreate(savedInstanceState);
         LogUtils.e("fragment", "oncreate");
         db = MyApplication.getSQLiteDatabase();
+        Toast.makeText(getActivity(), "shopFragment", Toast.LENGTH_LONG);
+
 
         LogUtils.e("shopFragment-user====>",UserInfo.getInstance().toString());
         //异步加载轮播图片
@@ -152,6 +162,8 @@ public class ShopFragment extends Fragment {
                             JSONObject jsonObject = new JSONObject(response);
                             if(jsonObject.getString("status").equals("0")){
                                 return;
+                            }else if(jsonObject.getString("status").equals("-1")){
+                                LoginUtils.AutoLogin(getActivity());
                             }
                             msg1.what = Config.INIT_SLIDER_PICTURE;
                             msg1.obj = 1;
@@ -188,6 +200,8 @@ public class ShopFragment extends Fragment {
                             JSONObject jsonObject = new JSONObject(response);
                             if(jsonObject.getString("status").equals("0")){
                                 return;
+                            }else if (jsonObject.get("status").equals("-1")){
+                                LoginUtils.AutoLogin(getActivity());
                             }
                             JSONObject jsonObjectdata = new JSONObject(jsonObject.getString("data"));
                             msg2.what = Config.INIT_PRODUCT;
@@ -349,7 +363,10 @@ public class ShopFragment extends Fragment {
                                     LogUtils.e("response", response);
                                     JSONObject jsonObject = new JSONObject(response);
                                     if(jsonObject.getString("status").equals("0")){
+                                        rListView.hideHeaderView();
                                         return;
+                                    }else if(jsonObject.getString("status").equals("-1")){
+                                        LoginUtils.AutoLogin(getActivity());
                                     }
                                     JSONObject jsonObjectdata = new JSONObject(jsonObject.getString("data"));
                                     Message msg = new Message();
@@ -386,6 +403,7 @@ public class ShopFragment extends Fragment {
                 }else{
                     page--;
                 }
+                LogUtils.e("nextpage",nextpage);
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, nextpage,
                         new Response.Listener<String>() {
                             @Override
@@ -394,13 +412,17 @@ public class ShopFragment extends Fragment {
                                     LogUtils.e("response", response);
                                     JSONObject jsonObject = new JSONObject(response);
                                     if(jsonObject.getString("status").equals("0")){
+                                        rListView.hideFooterView();
                                         return;
-                                    }
-                                    if(jsonObject.getString("products")==""){
-                                        return;
+                                    }else if(jsonObject.getString("status").equals("-1")){
+                                        LoginUtils.AutoLogin(getActivity());
                                     }
 
                                     JSONObject jsonObjectdata  = new JSONObject(jsonObject.getString("data"));
+                                    if(jsonObjectdata.getString("products")==""){
+                                        rListView.hideFooterView();
+                                        return;
+                                    }
                                     List<Product> nextProducts = new ArrayList<Product>();
                                     nextProducts = MyApplication.getGson().fromJson(jsonObjectdata.getString("products"), new TypeToken<List<Product>>() {
                                     }.getType());
@@ -557,4 +579,6 @@ public class ShopFragment extends Fragment {
     public ScheduledExecutorService getScheduledExecutorService(){
         return this.scheduledExecutorService;
     }
+
+
 }
