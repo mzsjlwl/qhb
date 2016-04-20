@@ -5,46 +5,32 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
+import com.handsome.qhb.listener.MyListener;
 import com.handsome.qhb.ui.activity.AddMoneyActivity;
 import com.handsome.qhb.ui.activity.AddressActivity;
 import com.handsome.qhb.ui.activity.LoginActivity;
-import com.handsome.qhb.ui.activity.MainActivity;
 import com.handsome.qhb.ui.activity.OrderActivity;
 import com.handsome.qhb.ui.activity.UpdateDataActivity;
 import com.handsome.qhb.ui.activity.UpdatePasswordActivity;
 import com.handsome.qhb.ui.activity.UpdatePhotoActivity;
+import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.LoginUtils;
-import com.handsome.qhb.utils.MD5Utils;
 import com.handsome.qhb.utils.UserInfo;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -56,7 +42,7 @@ import tab.com.handsome.handsome.R;
  * Created by zhang on 2016/2/20.
  */
 
-public class UserFragment extends Fragment {
+public class UserFragment extends Fragment implements MyListener{
     //用户名
     private TextView tv_name;
     //积分
@@ -198,97 +184,35 @@ public class UserFragment extends Fragment {
     public void onResume() {
         super.onResume();
         LogUtils.e("Userfragment", "onResume");
-        StringRequest stringRequest1= new StringRequest(Request.Method.POST, Config.BASE_URL+"User/getInfo",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            String status = jsonObject.getString("status");
-                            if(status.equals("0")){
-                                if(UserInfo.getInstance()!=null){
-                                    StringRequest stringRequest = new StringRequest(Request.Method.POST,Config.BASE_URL+"User/login",
-                                            new Response.Listener<String>() {
-                                                @Override
-                                                public void onResponse(String response) {
-                                                    try {
-                                                        JSONObject jsonObject = new JSONObject(response);
-                                                        String status = jsonObject.getString("status");
-                                                        if(status.equals("0")){
-                                                            return;
-                                                        }else if(status.equals("-1")){
-                                                            LoginUtils.AutoLogin(getActivity());
-                                                            return;
-                                                        }
-                                                        User user =  MyApplication.getGson().fromJson(jsonObject.getString("data"),User.class);
-                                                        UserInfo.setUser(user);
-                                                        SharedPreferences.Editor editor =getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE).edit();
-                                                        editor.clear();
-                                                        editor.putString("user", jsonObject.getString("data"));
-                                                        editor.putLong("date", new Date().getTime());
-                                                        editor.commit();
-                                                        Message message = new Message();
-                                                        message.what=Config.REFRESH_USER;
-                                                        handler.handleMessage(message);
-                                                    } catch (JSONException e) {
-                                                        e.printStackTrace();
-                                                    }
-
-                                                }
-                                            }, new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError error) {
-                                            Log.e("TAG", error.getMessage(), error);
-                                        }
-                                    }){
-                                        @Override
-                                        protected Map<String, String> getParams() throws AuthFailureError {
-                                            Map<String, String> map = new HashMap<String, String>();
-                                            map.put("username",UserInfo.getInstance().getUsername());
-                                            map.put("password",UserInfo.getInstance().getPassword());
-                                            return map;
-                                        }
-                                    };
-                                    MyApplication.getmQueue().add(stringRequest);
-                                }
-                                return;
-                            }
-                            User user =  MyApplication.getGson().fromJson(jsonObject.getString("data"),User.class);
-                            UserInfo.setUser(user);
-                            SharedPreferences.Editor editor =getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE).edit();
-                            editor.clear();
-                            editor.putString("user", jsonObject.getString("data"));
-                            editor.putLong("date", new Date().getTime());
-                            editor.commit();
-                            Message message = new Message();
-                            message.what=Config.REFRESH_USER;
-                            handler.handleMessage(message);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("TAG", error.getMessage(), error);
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                map.put("token",String.valueOf(UserInfo.getInstance().getToken()));
-                return map;
-            }
-        };
-        stringRequest1.setTag(Config.USERLOGIN_TAG);
-        MyApplication.getmQueue().add(stringRequest1);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+        map.put("token", String.valueOf(UserInfo.getInstance().getToken()));
+        HttpUtils.request(getActivity(), Config.USERINFO_URL, this, map, Config.USERINFO_TAG);
     }
 
     @Override
     public void onStop() {
         super.onStop();
         MyApplication.getmQueue().cancelAll(Config.USERLOGIN_TAG);
+    }
+
+    @Override
+    public void dataController(String response, int tag) {
+        switch(tag){
+            case Config.USERINFO_TAG:
+                LogUtils.e("userInfo_tag","==>");
+                User user =  MyApplication.getGson().fromJson(response,User.class);
+                UserInfo.setUser(user);
+                SharedPreferences.Editor editor =getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE).edit();
+                editor.clear();
+                editor.putString("user", response);
+                editor.putLong("date", new Date().getTime());
+                editor.commit();
+                Message message = new Message();
+                message.what=Config.REFRESH_USER;
+                handler.handleMessage(message);
+                break;
+        }
+
     }
 }

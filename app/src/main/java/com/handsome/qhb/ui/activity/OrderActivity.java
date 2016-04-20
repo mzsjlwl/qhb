@@ -21,7 +21,9 @@ import com.handsome.qhb.adapter.OrderAdapter;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.Order;
 import com.handsome.qhb.config.Config;
+import com.handsome.qhb.listener.MyListener;
 import com.handsome.qhb.listener.OnRefreshListener;
+import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 import com.handsome.qhb.widget.RefreshListView;
@@ -39,7 +41,7 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/3/14.
  */
-public class OrderActivity extends BaseActivity {
+public class OrderActivity extends BaseActivity implements MyListener{
 
 
     //refreshListView
@@ -58,6 +60,7 @@ public class OrderActivity extends BaseActivity {
     private TextView tv_title;
 
     private LinearLayout ll_back;
+    private Map<String,String> map;
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -97,54 +100,10 @@ public class OrderActivity extends BaseActivity {
                 finish();
             }
         });
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,Config.BASE_URL+"Order/getJson",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            String status = jsonObject.getString("status");
-                            if(status.equals("0")){
-                                Toast.makeText(OrderActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
-                                return;
-                            }
-                            Message msg = new Message();
-                            msg.what = Config.ORDER_MESSAGE;
-                            JSONObject jsonObjectdata = new JSONObject(jsonObject.getString("data"));
-                            orderList= new ArrayList<Order>();
-                            orderList = gson.fromJson(jsonObjectdata.getString("orders"), new TypeToken<List<Order>>() {
-                            }.getType());
-                            if(orderList!=null){
-                                for(Order order:orderList){
-                                    LogUtils.e("orderlist",order.toString());}
-                            }
-                            pageJson = new JSONObject(jsonObjectdata.getString("page"));
-                            page = Integer.valueOf(pageJson.getString("nums"));
-                            nextpage = pageJson.getString("next");
-                            handler.handleMessage(msg);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("TAG", error.getMessage(), error);
-                Toast.makeText(OrderActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                map.put("token",UserInfo.getInstance().getToken());
-                return map;
-            }
-        };
-        stringRequest.setTag(Config.GETORDER_TAG);
-        MyApplication.getmQueue().add(stringRequest);
+        map = new HashMap<String, String>();
+        map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+        map.put("token", UserInfo.getInstance().getToken());
+        HttpUtils.request(OrderActivity.this,Config.GETORDER_URL,this,map,Config.GETORDER_TAG);
     }
 
     public void initOrderListView(){
@@ -154,53 +113,7 @@ public class OrderActivity extends BaseActivity {
             refreshListView.setOnRefreshListener(new OnRefreshListener() {
                 @Override
                 public void onDownPullRefresh() {
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST,Config.BASE_URL+"Order/getJson",
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    try {
-                                        JSONObject jsonObject = new JSONObject(response);
-                                        String status = jsonObject.getString("status");
-                                        if(status.equals("0")){
-                                            Toast.makeText(OrderActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
-                                            return;
-                                        }
-                                        Message msg = new Message();
-                                        msg.what = Config.REFRESH_ORDER;
-                                        if(orderList!=null){
-                                            orderList.clear();
-                                        }
-                                        JSONObject jsonObjectdata = new JSONObject(jsonObject.getString("data"));
-                                        if(jsonObjectdata==null){
-                                            return;
-                                        }
-                                        orderList = gson.fromJson(jsonObjectdata.getString("orders"),new TypeToken<List<Order>>(){}.getType());
-                                        pageJson = new JSONObject(jsonObjectdata.getString("page"));
-                                        nextpage = pageJson.getString("next");
-                                        page = Integer.valueOf(pageJson.getString("nums"));
-                                        handler.handleMessage(msg);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-
-                                }
-                            }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.e("TAG", error.getMessage(), error);
-                            Toast.makeText(OrderActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }){
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            Map<String, String> map = new HashMap<String, String>();
-                            map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                            map.put("token",UserInfo.getInstance().getPassword());
-                            return map;
-                        }
-                    };
-                    stringRequest.setTag(Config.GETORDER_TAG);
-                    MyApplication.getmQueue().add(stringRequest);
+                    HttpUtils.request(OrderActivity.this,Config.GETORDER_URL,OrderActivity.this,map,Config.REFRESHORDER_TAG);
                 }
                 @Override
                 public void onLoadingMore() {
@@ -209,58 +122,73 @@ public class OrderActivity extends BaseActivity {
                         return;
                     } else {
                         page--;
-                        StringRequest stringRequest = new StringRequest(Request.Method.POST,Config.BASE_URL+"Order/getJson",
-                                new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
-                                        try {
-                                            JSONObject jsonObject = new JSONObject(response);
-                                            String status = jsonObject.getString("status");
-                                            if(status.equals("0")){
-                                                Toast.makeText(OrderActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
-                                                return;
-                                            }
-                                            JSONObject jsonObjectdata = new JSONObject(jsonObject.getString("data"));
-                                            if (jsonObjectdata.getString("orders").equals("")) {
-                                                return;
-                                            }
-                                            Message msg = new Message();
-                                            msg.what = Config.LOADMORE_ORDER;
-                                            List<Order> nextOrders = new ArrayList<Order>();
-                                            nextOrders = gson.fromJson(jsonObjectdata.getString("orders"), new TypeToken<List<Order>>() {
-                                            }.getType());
-                                            for (Order order : nextOrders) {
-                                                orderList.add(order);
-                                            }
-                                            pageJson = new JSONObject(jsonObjectdata.getString("page"));
-                                            nextpage = pageJson.getString("next");
-                                            handler.handleMessage(msg);
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.e("TAG", error.getMessage(), error);
-                                Toast.makeText(OrderActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-                            }
-                        }){
-                            @Override
-                            protected Map<String, String> getParams() throws AuthFailureError {
-                                Map<String, String> map = new HashMap<String, String>();
-                                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                                map.put("token",UserInfo.getInstance().getPassword());
-                                return map;
-                            }
-                        };
-                        stringRequest.setTag(Config.GETORDER_TAG);
-                        MyApplication.getmQueue().add(stringRequest);
+                        HttpUtils.request(OrderActivity.this,nextpage.substring(Config.BASE_URL.length()),
+                                OrderActivity.this,map,Config.LOADMOREORDER_TAG);
                     }
                     }
 
             });
+        }
+
+    }
+
+    @Override
+    public void dataController(String response, int tag) {
+        try {
+            switch (tag){
+                case Config.GETORDER_TAG:
+                    Message msg1 = new Message();
+                    msg1.what = Config.ORDER_MESSAGE;
+                    JSONObject jsonObjectdata1 = new JSONObject(response);
+                    orderList= new ArrayList<Order>();
+                    orderList = gson.fromJson(jsonObjectdata1.getString("orders"), new TypeToken<List<Order>>() {
+                    }.getType());
+                    if(orderList!=null){
+                        for(Order order:orderList){
+                            LogUtils.e("orderlist",order.toString());}
+                    }
+                    pageJson = new JSONObject(jsonObjectdata1.getString("page"));
+                    page = Integer.valueOf(pageJson.getString("nums"));
+                    nextpage = pageJson.getString("next");
+                    handler.handleMessage(msg1);
+                    break;
+                case Config.REFRESHORDER_TAG:
+                    Message msg2 = new Message();
+                    msg2.what = Config.REFRESH_ORDER;
+                    if(orderList!=null){
+                        orderList.clear();
+                    }
+                    JSONObject jsonObjectdata2 = new JSONObject(response);
+                    if(jsonObjectdata2==null){
+                        return;
+                    }
+                    orderList = gson.fromJson(jsonObjectdata2.getString("orders"),new TypeToken<List<Order>>(){}.getType());
+                    pageJson = new JSONObject(jsonObjectdata2.getString("page"));
+                    nextpage = pageJson.getString("next");
+                    page = Integer.valueOf(pageJson.getString("nums"));
+                    handler.handleMessage(msg2);
+                    break;
+                case Config.LOADMORE_ORDER:
+                    JSONObject jsonObjectdata3 = new JSONObject(response);
+                    if (jsonObjectdata3.getString("orders").equals("")) {
+                        return;
+                    }
+                    Message msg3 = new Message();
+                    msg3.what = Config.LOADMORE_ORDER;
+                    List<Order> nextOrders = new ArrayList<Order>();
+                    nextOrders = gson.fromJson(jsonObjectdata3.getString("orders"), new TypeToken<List<Order>>() {
+                    }.getType());
+                    for (Order order : nextOrders) {
+                        orderList.add(order);
+                    }
+                    pageJson = new JSONObject(jsonObjectdata3.getString("page"));
+                    nextpage = pageJson.getString("next");
+                    handler.handleMessage(msg3);
+                    break;
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
     }

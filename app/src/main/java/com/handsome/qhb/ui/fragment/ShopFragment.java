@@ -1,50 +1,34 @@
 package com.handsome.qhb.ui.fragment;
 
 import android.app.Fragment;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.ProductAdapter;
 import com.handsome.qhb.adapter.SliderAdapter;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.Product;
 import com.handsome.qhb.bean.Slider;
-import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.UserDAO;
-import com.handsome.qhb.db.UserDBOpenHelper;
+import com.handsome.qhb.listener.MyListener;
 import com.handsome.qhb.listener.OnRefreshListener;
 import com.handsome.qhb.ui.activity.GwcActivity;
 import com.handsome.qhb.ui.activity.LoginActivity;
-import com.handsome.qhb.utils.ImageUtils;
+import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.LoginUtils;
 import com.handsome.qhb.utils.NetworkImageUtils;
 import com.handsome.qhb.utils.UserInfo;
 import com.handsome.qhb.widget.RefreshListView;
@@ -53,10 +37,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +50,7 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/3/7.
  */
-public class ShopFragment extends Fragment {
+public class ShopFragment extends Fragment implements MyListener{
     //实现轮播的viewPager
     private ViewPager viewPager;
     // 滑动的图片集合
@@ -94,31 +75,24 @@ public class ShopFragment extends Fragment {
     private View dot3;
     //轮播时间
     public ScheduledExecutorService scheduledExecutorService;
-
     //商品分页Json
     private JSONObject pageJson;
     //商品页数
     private int page;
     //商品下一页
     private String nextpage;
-
-
     //加载轮播图片消息
     private Message msg1 = new Message();
     //加载商品信息消息
     private Message msg2 = new Message();
-
     private Intent i ;
-
     //购物车列表
     private List<Product> shopCarList = new ArrayList<Product>();
-
     //RequestQueue对象
     private RequestQueue mQueue = MyApplication.getmQueue();
-
     //SQLiteDatabase
     private SQLiteDatabase db ;
-
+    private Map<String, String> map;
 
     // 切换当前显示的图片
     private Handler handler = new Handler() {
@@ -147,101 +121,14 @@ public class ShopFragment extends Fragment {
         super.onCreate(savedInstanceState);
         LogUtils.e("fragment", "oncreate");
         db = MyApplication.getSQLiteDatabase();
-        Toast.makeText(getActivity(), "shopFragment", Toast.LENGTH_LONG);
-
-
-        LogUtils.e("shopFragment-user====>",UserInfo.getInstance().toString());
+        LogUtils.e("shopFragment-user====>", UserInfo.getInstance().toString());
+        map = new HashMap<String, String>();
+        map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+        map.put("token", String.valueOf(UserInfo.getInstance().getToken()));
         //异步加载轮播图片
-        StringRequest stringRequest1 = new StringRequest(Request.Method.POST, Config.BASE_URL+"Slider/getJson",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-
-                            LogUtils.e("response", response);
-                            JSONObject jsonObject = new JSONObject(response);
-                            if(jsonObject.getString("status").equals("0")){
-                                return;
-                            }else if(jsonObject.getString("status").equals("-1")){
-                                LoginUtils.AutoLogin(getActivity());
-                            }
-                            msg1.what = Config.INIT_SLIDER_PICTURE;
-                            msg1.obj = 1;
-                            sliderLists = MyApplication.getGson().fromJson(jsonObject.getString("data"), new TypeToken<List<Slider>>() {
-                            }.getType());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        handler.handleMessage(msg1);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("TAG", error.getMessage(), error);
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                map.put("token",String.valueOf(UserInfo.getInstance().getToken()));
-                return map;
-            }
-        };
-        stringRequest1.setTag(Config.GETSLIDER_TAG);
-        mQueue.add(stringRequest1);
+        HttpUtils.request(getActivity(), Config.GETSLIDER_URL, this, map,Config.GETSLIDER_TAG);
         //异步加载商品图片
-        StringRequest stringRequest2 = new StringRequest(Request.Method.POST, Config.BASE_URL+"Product/getJson",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            LogUtils.e("response", response);
-                            JSONObject jsonObject = new JSONObject(response);
-                            if(jsonObject.getString("status").equals("0")){
-                                return;
-                            }else if (jsonObject.get("status").equals("-1")){
-                                LoginUtils.AutoLogin(getActivity());
-                            }
-                            JSONObject jsonObjectdata = new JSONObject(jsonObject.getString("data"));
-                            msg2.what = Config.INIT_PRODUCT;
-                            msg2.obj = 1;
-                            productLists = new ArrayList<Product>();
-                            //服务器端获取的product
-                            productLists = MyApplication.getGson().fromJson(jsonObjectdata.getString("products"), new TypeToken<List<Product>>() {
-                            }.getType());
-                            addShopCar();
-
-                            //存储到activity中
-                            getActivity().getIntent().putExtra("products",MyApplication.getGson().toJson(productLists));
-                            pageJson = new JSONObject(jsonObjectdata.getString("page"));
-                            nextpage = pageJson.getString("next");
-                            //存储到activity中
-                            getActivity().getIntent().putExtra("next",pageJson.getString("next"));
-                            page =Integer.valueOf(pageJson.getString("nums"));
-                            getActivity().getIntent().putExtra("page", pageJson.getString("nums"));
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        handler.handleMessage(msg2);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("TAG", error.getMessage(), error);
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                map.put("token",String.valueOf(UserInfo.getInstance().getToken()));
-                return map;
-            }
-        };
-        stringRequest2.setTag(Config.GETPRODUCT_TAG);
-        mQueue.add(stringRequest2);
+        HttpUtils.request(getActivity(), Config.GETPRODUCT_URL, this, map, Config.GETPRODUCT_TAG);
     }
 
 
@@ -355,106 +242,18 @@ public class ShopFragment extends Fragment {
         rListView.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onDownPullRefresh() {
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Product/getJson",
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    LogUtils.e("response", response);
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    if(jsonObject.getString("status").equals("0")){
-                                        rListView.hideHeaderView();
-                                        return;
-                                    }else if(jsonObject.getString("status").equals("-1")){
-                                        LoginUtils.AutoLogin(getActivity());
-                                    }
-                                    JSONObject jsonObjectdata = new JSONObject(jsonObject.getString("data"));
-                                    Message msg = new Message();
-                                    msg.what = Config.REFERSH_PRODUCT;
-                                    msg.obj = jsonObjectdata.getString("products");
-                                    pageJson = new JSONObject(jsonObjectdata.getString("page"));
-                                    handler.handleMessage(msg);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("TAG", error.getMessage(), error);
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> map = new HashMap<String, String>();
-                        map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                        map.put("token",String.valueOf(UserInfo.getInstance().getToken()));
-                        return map;
-                    }
-                };
-                stringRequest.setTag(Config.GETPRODUCT_TAG);
-                mQueue.add(stringRequest);
+                HttpUtils.request(getActivity(), Config.GETPRODUCT_URL, ShopFragment.this, map, Config.REFRESHPRODUCT_TAG);
             }
+
             @Override
             public void onLoadingMore() {
-                if(page<=1){
+                if (page <= 1) {
                     rListView.hideFooterView();
                     return;
-                }else{
+                } else {
                     page--;
                 }
-                LogUtils.e("nextpage",nextpage);
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, nextpage,
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    LogUtils.e("response", response);
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    if(jsonObject.getString("status").equals("0")){
-                                        rListView.hideFooterView();
-                                        return;
-                                    }else if(jsonObject.getString("status").equals("-1")){
-                                        LoginUtils.AutoLogin(getActivity());
-                                    }
-
-                                    JSONObject jsonObjectdata  = new JSONObject(jsonObject.getString("data"));
-                                    if(jsonObjectdata.getString("products")==""){
-                                        rListView.hideFooterView();
-                                        return;
-                                    }
-                                    List<Product> nextProducts = new ArrayList<Product>();
-                                    nextProducts = MyApplication.getGson().fromJson(jsonObjectdata.getString("products"), new TypeToken<List<Product>>() {
-                                    }.getType());
-                                    for(Product product:nextProducts){
-                                        productLists.add(product);
-                                    }
-                                    productAdapter.notifyDataSetChanged();
-                                    rListView.setSelection(productLists.size() - nextProducts.size());
-
-                                    pageJson =new JSONObject(jsonObjectdata.getString("page"));
-                                    nextpage = pageJson.getString("next");
-                                    rListView.hideFooterView();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("TAG", error.getMessage(), error);
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> map = new HashMap<String, String>();
-                        map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                        map.put("token",String.valueOf(UserInfo.getInstance().getToken()));
-                        return map;
-                    }
-                };
-                stringRequest.setTag(Config.GETPRODUCT_TAG);
-                mQueue.add(stringRequest);
+                HttpUtils.request(getActivity(), nextpage.substring(Config.BASE_URL.length()), ShopFragment.this, map, Config.LOADMOREPRODUCT_TAG);
             }
         });
     }
@@ -468,10 +267,74 @@ public class ShopFragment extends Fragment {
 
     @Override
     public void onStop() {
-        LogUtils.e("ShopFragment","onstop");
         MyApplication.getmQueue().cancelAll(Config.GETPRODUCT_TAG);
         MyApplication.getmQueue().cancelAll(Config.GETSLIDER_TAG);
         super.onStop();
+    }
+
+    @Override
+    public void dataController(String response, int tag) {
+        try {
+
+            switch (tag) {
+                case Config.REFRESHPRODUCT_TAG:
+                    JSONObject jsonObjectdata1 = new JSONObject(response);
+                    Message msg = new Message();
+                    msg.what = Config.REFERSH_PRODUCT;
+                    msg.obj = jsonObjectdata1.getString("products");
+                    pageJson = new JSONObject(jsonObjectdata1.getString("page"));
+                    handler.handleMessage(msg);
+                    break;
+                case Config.GETSLIDER_TAG:
+                    msg1.what = Config.INIT_SLIDER_PICTURE;
+                    msg1.obj = 1;
+                    sliderLists = MyApplication.getGson().fromJson(response, new TypeToken<List<Slider>>() {
+                    }.getType());
+                    handler.handleMessage(msg1);
+                    break;
+                case Config.GETPRODUCT_TAG:
+                    JSONObject jsonObjectdata2 = new JSONObject(response);
+                    msg2.what = Config.INIT_PRODUCT;
+                    msg2.obj = 1;
+                    productLists = new ArrayList<Product>();
+                    //服务器端获取的product
+                    productLists = MyApplication.getGson().fromJson(jsonObjectdata2.getString("products"), new TypeToken<List<Product>>() {
+                    }.getType());
+                    addShopCar();
+
+                    //存储到activity中
+                    getActivity().getIntent().putExtra("products",MyApplication.getGson().toJson(productLists));
+                    pageJson = new JSONObject(jsonObjectdata2.getString("page"));
+                    nextpage = pageJson.getString("next");
+                    //存储到activity中
+                    getActivity().getIntent().putExtra("next", pageJson.getString("next"));
+                    page =Integer.valueOf(pageJson.getString("nums"));
+                    getActivity().getIntent().putExtra("page", pageJson.getString("nums"));
+                    handler.handleMessage(msg2);
+                case Config.LOADMOREPRODUCT_TAG:
+                    JSONObject jsonObjectdata3 = new JSONObject(response);
+
+                    if(jsonObjectdata3.getString("products")==""){
+                        rListView.hideFooterView();
+                        return;
+                    }
+                    List<Product> nextProducts = new ArrayList<Product>();
+                    nextProducts = MyApplication.getGson().fromJson(jsonObjectdata3.getString("products"), new TypeToken<List<Product>>() {
+                    }.getType());
+                    for(Product product:nextProducts){
+                        productLists.add(product);
+                    }
+                    productAdapter.notifyDataSetChanged();
+                    rListView.setSelection(productLists.size() - nextProducts.size());
+
+                    pageJson =new JSONObject(jsonObjectdata3.getString("page"));
+                    nextpage = pageJson.getString("next");
+                    rListView.hideFooterView();
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -576,9 +439,17 @@ public class ShopFragment extends Fragment {
         }
     }
 
-    public ScheduledExecutorService getScheduledExecutorService(){
-        return this.scheduledExecutorService;
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden){
+            if(scheduledExecutorService!=null){
+
+                scheduledExecutorService.shutdown();
+            }
+        }else {
+            onStartSlider();
+        }
     }
-
-
 }

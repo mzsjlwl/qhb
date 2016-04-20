@@ -34,6 +34,7 @@ import com.handsome.qhb.ui.activity.CDSActivity;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.NetworkImageUtils;
+import com.handsome.qhb.utils.TimeUtils;
 import com.handsome.qhb.utils.UserInfo;
 
 import org.json.JSONException;
@@ -110,7 +111,7 @@ public class MsgAdapter extends BaseAdapter{
                 convertView = mInflater.inflate(R.layout.chat_from_msg,
                         parent, false);
                 viewHolder.createDate = (TextView) convertView
-                        .findViewById(R.id.chat_from_createDate);
+                        .findViewById(R.id.chat_createDate);
                 viewHolder.content = (TextView) convertView
                         .findViewById(R.id.chat_from_content);
                 viewHolder.nackname = (TextView) convertView
@@ -122,7 +123,7 @@ public class MsgAdapter extends BaseAdapter{
                 convertView = mInflater.inflate(R.layout.chat_send_msg,
                         null);
                 viewHolder.createDate = (TextView) convertView
-                        .findViewById(R.id.chat_send_createDate);
+                        .findViewById(R.id.chat_createDate);
                 viewHolder.content = (TextView) convertView
                         .findViewById(R.id.chat_send_content);
                 viewHolder.nackname = (TextView) convertView
@@ -137,8 +138,18 @@ public class MsgAdapter extends BaseAdapter{
             viewHolder = (ViewHolder) convertView.getTag();
 
         }
+        if(position-1>=0){
+            String data = TimeUtils.compareLast(chatMessage.getDate(), mDatas.get(position - 1).getDate());
+            if(data.equals("")){
+                viewHolder.createDate.setVisibility(View.INVISIBLE);
+            }else{
+                viewHolder.createDate.setVisibility(View.VISIBLE);
+                viewHolder.createDate.setText(data);
+            }
+        }else{
+            viewHolder.createDate.setText(TimeUtils.getInterval(chatMessage.getDate()));
+        }
 
-        viewHolder.createDate.setText(chatMessage.getDate());
         NetworkImageUtils.imageLoader(MyApplication.getmQueue(), chatMessage.getPhoto(), viewHolder.chat_icon);
         //随机红包
         if(chatMessage.getType()== Config.TYPE_RANDOMBONUS){

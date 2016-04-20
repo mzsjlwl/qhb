@@ -10,31 +10,19 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.NetworkImageView;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
+import com.handsome.qhb.listener.MyListener;
+import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.ImageUtils;
-import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.LoginUtils;
 import com.handsome.qhb.utils.UserInfo;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -50,7 +38,7 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/3/19.
  */
-public class UpdatePhotoActivity extends BaseActivity {
+public class UpdatePhotoActivity extends BaseActivity implements MyListener{
     private LinearLayout ll_back;
     private ImageButton ib_photo_menu;
     // 拍照
@@ -167,55 +155,15 @@ public class UpdatePhotoActivity extends BaseActivity {
      */
     private void sendImage(Bitmap bm){
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG,60,stream);
+        bm.compress(Bitmap.CompressFormat.PNG, 60, stream);
         byte[] bytes = stream.toByteArray();
         photo = new String (Base64.encodeToString(bytes,Base64.DEFAULT));
-        StringRequest stringRequest = new StringRequest(Request.Method.POST,Config.BASE_URL+"User/updatePhoto",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            LogUtils.e("response", response);
-                            JSONObject jsonObject = new JSONObject(response);
-                            String status = jsonObject.getString("status");
-                            if(status.equals("0")){
-                               Toast toast = Toast.makeText(UpdatePhotoActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG);
-                                toast.setGravity(Gravity.CENTER,0,0);
-                                toast.show();
-                                return;
-                            }else if(status.equals("-1")){
-                                LoginUtils.AutoLogin(UpdatePhotoActivity.this);
-                            }
-                            img.delete();
-                            User user =  gson.fromJson(jsonObject.getString("data"),User.class);
-                            UserInfo.setUser(user);
-                            Toast toast = Toast.makeText(UpdatePhotoActivity.this,jsonObject.getString("info"),Toast.LENGTH_LONG);
-                            toast.setGravity(Gravity.CENTER,0,0);
-                            toast.show();
-                            finish();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+        map.put("token", UserInfo.getInstance().getToken());
+        map.put("photo", photo);
+        HttpUtils.request(UpdatePhotoActivity.this, Config.USERUPDATEPHOTO_URL, UpdatePhotoActivity.this, map, Config.UPDATEPHOTO_TAG);
 
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("TAG", error.getMessage(), error);
-                Toast.makeText(UpdatePhotoActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                map.put("token",UserInfo.getInstance().getToken());
-                map.put("photo",photo);
-                return map;
-            }
-        };
-        stringRequest.setTag(Config.USERUPDATE_TAG);
-        MyApplication.getmQueue().add(stringRequest);
     }
 
     /**
@@ -310,5 +258,17 @@ public class UpdatePhotoActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         MyApplication.getmQueue().cancelAll(Config.USERUPDATE_TAG);
+    }
+
+    @Override
+    public void dataController(String response, int tag) {
+        switch(tag){
+            case Config.UPDATEPHOTO_TAG:
+                img.delete();
+                User user =  gson.fromJson(response,User.class);
+                UserInfo.setUser(user);
+                finish();
+                break;
+        }
     }
 }

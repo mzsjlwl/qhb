@@ -22,6 +22,7 @@ import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.MD5Utils;
+import com.handsome.qhb.utils.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -89,7 +90,7 @@ public class LoginActivity extends BaseActivity  {
                                     }
 
                                     User user =  MyApplication.getGson().fromJson(jsonObject.getString("data"),User.class);
-                                    user.setPassword(et_password.getText().toString());
+                                    UserInfo.getInstance().setPassword(et_password.getText().toString());
                                     Intent i =new Intent(LoginActivity.this,MainActivity.class);
                                     Bundle b = new Bundle();
                                     SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();

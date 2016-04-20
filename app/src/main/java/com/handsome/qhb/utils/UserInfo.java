@@ -16,7 +16,15 @@ public class UserInfo {
     }
     public static void setUser(User u){
 
-
+        if(u==null){
+            user.setUid(0);
+            user.setIntegral(0);
+            user.setNackname("");
+            user.setPhoto("");
+            user.setToken("");
+            user.setUsername("");
+            return;
+        }
         user.setUid(u.getUid());
         user.setIntegral(u.getIntegral());
         user.setNackname(u.getNackname());

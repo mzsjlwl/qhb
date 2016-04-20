@@ -22,7 +22,10 @@ import com.handsome.qhb.bean.DS;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.MessageDAO;
+import com.handsome.qhb.listener.CDSListener;
+import com.handsome.qhb.listener.MyListener;
 import com.handsome.qhb.receiver.MessageReceiver;
+import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 
@@ -43,7 +46,7 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/4/1.
  */
-public class CDSActivity extends BaseActivity {
+public class CDSActivity extends BaseActivity implements MyListener{
 
 
     private TextView tv_Btime, tv_money, tv_person, tv_time, tv_guess, tv_single, tv_double, tv_result;
@@ -141,99 +144,30 @@ public class CDSActivity extends BaseActivity {
         tv_single.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-
                 MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_GUESSED, chatMessage.getId());
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL + "DS/cds", new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            LogUtils.e("single==>response==>", response);
-                            JSONObject jsonObject = new JSONObject(response);
-                            if (jsonObject.getString("status").equals("0")) {
-                                Toast toast = Toast.makeText(CDSActivity.this, jsonObject.getString("info"), Toast.LENGTH_SHORT);
-                                toast.setGravity(Gravity.CENTER, 0, 0);
-                                toast.show();
-                                return;
-                            }
-                            ll_guess.setVisibility(View.INVISIBLE);
-                            tv_guess.setText("单");
-                            ll_myguess.setVisibility(View.VISIBLE);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("rid", String.valueOf(chatMessage.getRid()));
+                map.put("dsId", String.valueOf(ds.getId()));
+                map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+                map.put("token", UserInfo.getInstance().getToken());
+                map.put("result", String.valueOf(1));
+                HttpUtils.request(CDSActivity.this,Config.DSCDS_URL,CDSActivity.this,map,Config.DSCDS_TAG);
 
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("TAG", error.getMessage(), error);
-                        Toast.makeText(CDSActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> map = new HashMap<String, String>();
-                        map.put("rid", String.valueOf(chatMessage.getRid()));
-                        map.put("dsId", String.valueOf(ds.getId()));
-                        map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
-                        map.put("token", UserInfo.getInstance().getToken());
-                        map.put("result", String.valueOf(1));
-                        return map;
-                    }
-                };
-                stringRequest.setTag(Config.DSCDS_TAG);
-                MyApplication.getmQueue().add(stringRequest);
             }
         });
 
         tv_double.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 tv_double.setClickable(false);
                 MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_GUESSED, chatMessage.getId());
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL + "DS/cds",
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    tv_double.setClickable(true);
-                                    LogUtils.e("tv_double====response==>", response);
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    if (jsonObject.getString("status").equals("0")) {
-                                        Toast toast = Toast.makeText(CDSActivity.this, jsonObject.getString("info"), Toast.LENGTH_SHORT);
-                                        toast.setGravity(Gravity.CENTER, 0, 0);
-                                        toast.show();
-                                        return;
-                                    }
-                                    ll_guess.setVisibility(View.INVISIBLE);
-                                    tv_guess.setText("双");
-                                    ll_myguess.setVisibility(View.VISIBLE);
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("TAG", error.getMessage(), error);
-                        Toast.makeText(CDSActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> map = new HashMap<String, String>();
-                        map.put("rid", String.valueOf(chatMessage.getRid()));
-                        map.put("dsId", String.valueOf(ds.getId()));
-                        map.put("token", UserInfo.getInstance().getToken());
-                        map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
-                        map.put("result", String.valueOf(2));
-                        return map;
-                    }
-                };
-                stringRequest.setTag(Config.DSCDS_TAG);
-                MyApplication.getmQueue().add(stringRequest);
+                Map<String, String> map = new HashMap<String, String>();
+                map.put("rid", String.valueOf(chatMessage.getRid()));
+                map.put("dsId", String.valueOf(ds.getId()));
+                map.put("token", UserInfo.getInstance().getToken());
+                map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+                map.put("result", String.valueOf(2));
+                HttpUtils.request(CDSActivity.this, Config.DSCDS_URL, CDSActivity.this, map,Config.DSCDS_TAG);
             }
         });
         ll_back.setOnClickListener(new View.OnClickListener() {
@@ -279,6 +213,21 @@ public class CDSActivity extends BaseActivity {
         }
         ll_guess.setVisibility(View.INVISIBLE);
         ll_result.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void dataController(String response, int tag) {
+        switch(tag){
+            case Config.DSCDS_TAG:
+                ll_guess.setVisibility(View.INVISIBLE);
+                if(response.equals("1")){
+                    tv_guess.setText("单");
+                }else if(response.equals("2")){
+                    tv_guess.setText("双");
+                }
+                ll_myguess.setVisibility(View.VISIBLE);
+                break;
+        }
     }
 
 

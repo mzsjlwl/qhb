@@ -3,9 +3,7 @@ package com.handsome.qhb.application;
 import android.app.Application;
 import android.app.NotificationManager;
 import android.content.Context;
-import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.ConnectivityManager;
 import android.os.Handler;
 import android.telephony.TelephonyManager;
 
@@ -14,7 +12,6 @@ import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 import com.handsome.qhb.db.UserDBOpenHelper;
 import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.NetUtils;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushManager;
 

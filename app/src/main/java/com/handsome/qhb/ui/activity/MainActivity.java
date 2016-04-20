@@ -1,6 +1,5 @@
 package com.handsome.qhb.ui.activity;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -14,18 +13,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.User;
-import com.handsome.qhb.receiver.NetBroadcastReceiver;
 import com.handsome.qhb.ui.fragment.FragmentController;
-import com.handsome.qhb.ui.fragment.ShopFragment;
 import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.NetUtils;
 import com.handsome.qhb.utils.UserInfo;
 
 import java.util.Date;
@@ -37,12 +30,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     LinearLayout ll_shop,ll_hall,ll_user;
     FrameLayout ly_content;
     private FragmentController fragmentController;
-    private ShopFragment shopFragment;
     private NetworkBroadcastReceiver myReceiver;
     private int networkstate = 1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        LogUtils.e("mainactivity", "oncreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         registerReceiver();
@@ -50,14 +41,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             //判断登录情况
             SharedPreferences sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
             User user = MyApplication.getGson().fromJson(sharedPreferences.getString("user", ""),User.class);
-//            LogUtils.e("userbefore==>",user.toString());
             if(user==null||user.getUid()==0){
                 Intent i = new Intent(MainActivity.this,LoginActivity.class);
                 startActivity(i);
                 finish();
                 return;
             }else{
-                LogUtils.e("userelse==>",user.toString());
                 UserInfo.setUser(user);
             }
         }
@@ -71,7 +60,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         //初始化控件
         initViews();
         fragmentController.showFragment(0);
-        shopFragment  =(ShopFragment)fragmentController.getFragment(0);
     }
 
     /**
@@ -92,27 +80,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-//        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (v.getId()){
             case R.id.ll_shop:
-                if(shopFragment!=null&&shopFragment.getScheduledExecutorService()!=null) {
-                    shopFragment.getScheduledExecutorService().shutdown();
-                    shopFragment.onStartSlider();
                     fragmentController.showFragment(0);
-                }
                 break;
             case R.id.ll_hall:
-
-                    if(shopFragment!=null&&shopFragment.getScheduledExecutorService()!=null) {
-                        shopFragment.getScheduledExecutorService().shutdown();
-                        fragmentController.showFragment(1);
-                    }
+                    fragmentController.showFragment(1);
                 break;
             case R.id.ll_user:
-                    if(shopFragment!=null&&shopFragment.getScheduledExecutorService()!=null) {
-                        shopFragment.getScheduledExecutorService().shutdown();
-                        fragmentController.showFragment(2);
-                    }
+                    fragmentController.showFragment(2);
                 break;
         }
     }
@@ -187,16 +163,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     ComponentName componentName = activityManager.getRunningTasks(Integer.MAX_VALUE).get(0).topActivity;
                     Intent i;
                     switch (componentName.getClassName()){
-                        case "MainActivity":
+                        case "com.handsome.qhb.ui.activity.MainActivity":
                             i= new Intent(MainActivity.this,MainActivity.class);
                             i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
                             startActivity(i);
                             break;
                     }
                 }
-//                Toast.makeText(MainActivity.this,"网络可用",Toast.LENGTH_LONG).show();
                 networkstate=1;
-                LogUtils.e("BroadcastReceiver","网络可用");
             }
         }
 

@@ -4,22 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.ShopCarAdapter;
@@ -31,12 +24,10 @@ import com.handsome.qhb.bean.Product;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.UserDAO;
 import com.handsome.qhb.db.UserDBOpenHelper;
+import com.handsome.qhb.listener.MyListener;
+import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.LogUtils;
-import com.handsome.qhb.utils.LoginUtils;
 import com.handsome.qhb.utils.UserInfo;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -48,7 +39,7 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/3/13.
  */
-public class GwcActivity extends BaseActivity {
+public class GwcActivity extends BaseActivity implements MyListener {
 
     private SQLiteDatabase db;
     private List<Product> shopCarList;
@@ -140,64 +131,23 @@ public class GwcActivity extends BaseActivity {
                 progressDialog.setMessage("提交中");
                 progressDialog.setCancelable(true);
                 progressDialog.show();
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Order/insert",
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    progressDialog.dismiss();
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    String status = jsonObject.getString("status");
-                                    if(status == "0"){
-                                        Toast.makeText(GwcActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
-                                        return;
-                                    }else if(status.equals("-1")){
-                                        LoginUtils.AutoLogin(GwcActivity.this);
-                                    }
-                                    LogUtils.e("data", jsonObject.getString("data"));
-                                    UserDAO.update(db, UserInfo.getInstance().getUid(), "");
-                                    Toast toast = Toast.makeText(GwcActivity.this,"提交成功",Toast.LENGTH_LONG);
-                                    toast.setGravity(Gravity.CENTER,0,0);
-                                    toast.show();
-                                    Intent i = new Intent(GwcActivity.this,MainActivity.class);
-                                    i.putExtra("TAG", "ClearGWC");
-                                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    startActivity(i);
-                                    finish();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("TAG", error.getMessage(), error);
-                        Toast.makeText(GwcActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> map = new HashMap<String, String>();
-                        List<IdNum> idNumList = new ArrayList<IdNum>();
-                        for(Product p:shopCarList){
-                            IdNum idNum = new IdNum();
-                            idNum.setId(p.getPid());
-                            idNum.setNum(p.getNum());
-                            idNumList.add(idNum);
-                        }
-                        OrderJson orderJson = new OrderJson(UserInfo.getInstance().getUid(),tv_receName.getText().toString()+";"
-                                +tv_recePhone.getText().toString()+";"
-                                +tv_receAddr.getText().toString(),et_liuyan.getText().toString(),idNumList);
-                        LogUtils.e("orderJson",gson.toJson(orderJson));
-                        map.put("order", gson.toJson(orderJson));
-                        map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                        map.put("token",UserInfo.getInstance().getToken());
-                        return map;
-                    }
-                };
-                stringRequest.setTag(Config.INSERTORDER_TAG);
-                MyApplication.getmQueue().add(stringRequest);
+                Map<String, String> map = new HashMap<String, String>();
+                List<IdNum> idNumList = new ArrayList<IdNum>();
+                for(Product p:shopCarList){
+                    IdNum idNum = new IdNum();
+                    idNum.setId(p.getPid());
+                    idNum.setNum(p.getNum());
+                    idNumList.add(idNum);
+                }
+                OrderJson orderJson = new OrderJson(UserInfo.getInstance().getUid(),tv_receName.getText().toString()+";"
+                        +tv_recePhone.getText().toString()+";"
+                        +tv_receAddr.getText().toString(),et_liuyan.getText().toString(),idNumList);
+                LogUtils.e("orderJson", gson.toJson(orderJson));
+                map.put("order", gson.toJson(orderJson));
+                map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+                map.put("token", UserInfo.getInstance().getToken());
+                HttpUtils.request(GwcActivity.this, Config.INSERTORDER_URL, GwcActivity.this, map, Config.INSERTORDER_TAG);
+                progressDialog.dismiss();
             }
         });
 
@@ -234,5 +184,23 @@ public class GwcActivity extends BaseActivity {
 
         super.onDestroy();
 
+    }
+
+    @Override
+    public void dataController(String response, int tag) {
+        switch (tag){
+            case Config.INSERTORDER_TAG:
+                LogUtils.e("data", response);
+                UserDAO.update(db, UserInfo.getInstance().getUid(), "");
+                Toast toast = Toast.makeText(GwcActivity.this,"提交成功",Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER,0,0);
+                toast.show();
+                Intent i = new Intent(GwcActivity.this,MainActivity.class);
+                i.putExtra("TAG", "ClearGWC");
+                i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(i);
+                finish();
+                break;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.handsome.qhb.adapter;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -24,10 +25,13 @@ import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.MessageDAO;
 import com.handsome.qhb.db.RoomDAO;
+import com.handsome.qhb.listener.MyListener;
 import com.handsome.qhb.ui.activity.ChatActivity;
 import com.handsome.qhb.ui.activity.MainActivity;
 import com.handsome.qhb.ui.activity.OrderDetailActivity;
+import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.LogUtils;
+import com.handsome.qhb.utils.TimeUtils;
 import com.handsome.qhb.utils.UserInfo;
 import com.handsome.qhb.utils.ViewHolder;
 
@@ -48,7 +52,7 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/2/22.
  */
-public class RoomAdapter extends CommonAdapter<Room> {
+public class RoomAdapter extends CommonAdapter<Room> implements MyListener{
 
     public ChatMessage chatMessage;
     public List<ChatMessage> chatMessageList = new ArrayList<ChatMessage>();
@@ -61,7 +65,7 @@ public class RoomAdapter extends CommonAdapter<Room> {
         holder.setText(R.id.id_tv_roomName, room.getRoomName());
         holder.getView(R.id.room_list_items).setOnClickListener(new RoomItemOnclick(position));
         if(room.getLastMessage()!=null){
-            holder.setText(R.id.id_tv_time, room.getLastMessage().getDate());
+            holder.setText(R.id.id_tv_time, TimeUtils.getInterval(room.getLastMessage().getDate()));
             if(room.getChatMessageList()==null||room.getChatMessageList().size()==0){
                 holder.setText(R.id.id_tv_num,"");
                 holder.setText(R.id.id_tv_content,
@@ -71,11 +75,16 @@ public class RoomAdapter extends CommonAdapter<Room> {
                 chatMessage = room.getChatMessageList().get(room.getChatMessageList().size()-1);
                 holder.setText(R.id.id_tv_num,"[ "+room.getChatMessageList().size()+"条 ]");
                 holder.setText(R.id.id_tv_content,chatMessage.getNackname()+" : "+chatMessage.getContent());
-                holder.setText(R.id.id_tv_time,chatMessage.getDate());
+                holder.setText(R.id.id_tv_time, TimeUtils.getInterval(chatMessage.getDate()));
             }
         }
 
         holder.setNetWorkImage(R.id.iv_roomPhoto,room.getRoomPhoto());
+    }
+
+    @Override
+    public void dataController(String response, int tag) {
+
     }
 
     class RoomItemOnclick implements View.OnClickListener{
@@ -85,7 +94,7 @@ public class RoomAdapter extends CommonAdapter<Room> {
         }
         @Override
         public void onClick(View view) {
-            if(mDatas.get(position).getChatMessageList()!=null){
+            if (mDatas.get(position).getChatMessageList() != null) {
                 mDatas.get(position).getChatMessageList().clear();
             }
             final ProgressDialog progressDialog = new ProgressDialog(mContext);
@@ -93,53 +102,18 @@ public class RoomAdapter extends CommonAdapter<Room> {
             progressDialog.setCancelable(true);
             progressDialog.show();
             //数据库更新
-            RoomDAO.updateMessage(MyApplication.getSQLiteDatabase(),"",mDatas.get(position).getRid());
+            RoomDAO.updateMessage(MyApplication.getSQLiteDatabase(), "", mDatas.get(position).getRid());
             Intent i = new Intent(mContext, ChatActivity.class);
             Bundle b = new Bundle();
             b.putSerializable("room", mDatas.get(position));
             i.putExtras(b);
             mContext.startActivity(i);
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/enterRoom",
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                progressDialog.dismiss();
-                                LogUtils.e("response", response);
-                                if(response.contains("CURL ERROR")){
-                                    response = response.substring(error.length());
-                                }
-                                LogUtils.e("response===>",response);
-                                JSONObject jsonObject = new JSONObject(response);
-                                String status = jsonObject.getString("status");
-                                if(status == "0"){
-                                    Toast.makeText(mContext, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
-                                    return;
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.e("TAG", error.getMessage(), error);
-                    progressDialog.dismiss();
-
-                    Toast.makeText(mContext,"网络异常,请检查后重试", Toast.LENGTH_LONG).show();
-                }
-            }){
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String> map = new HashMap<String, String>();
-                    map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
-                    map.put("token",UserInfo.getInstance().getToken());
-                    map.put("rid",String.valueOf(mDatas.get(position).getRid()));
-                    return map;
-                }
-            };
-            MyApplication.getmQueue().add(stringRequest);
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+            map.put("token", UserInfo.getInstance().getToken());
+            map.put("rid", String.valueOf(mDatas.get(position).getRid()));
+            HttpUtils.request((Activity) mContext, Config.ENTERROOM_URL, RoomAdapter.this, map, Config.ENTERROOM_TAG);
+            progressDialog.dismiss();
         }
     }
 

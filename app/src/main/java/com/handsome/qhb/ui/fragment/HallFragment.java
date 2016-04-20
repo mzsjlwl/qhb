@@ -30,6 +30,9 @@ import com.handsome.qhb.db.MessageDAO;
 import com.handsome.qhb.db.RoomDAO;
 import com.handsome.qhb.db.UserDAO;
 import com.handsome.qhb.db.UserDBOpenHelper;
+import com.handsome.qhb.listener.GetRoomListener;
+import com.handsome.qhb.listener.MyListener;
+import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 import com.tencent.android.tpush.XGPushManager;
@@ -54,7 +57,7 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/3/7.
  */
-public class HallFragment extends Fragment  {
+public class HallFragment extends Fragment implements MyListener {
 
     private ListView lv_room;
     private static List<Room> roomList = new ArrayList<Room>();
@@ -91,66 +94,10 @@ public class HallFragment extends Fragment  {
         roomAdapter = new RoomAdapter(getActivity(),roomList,R.layout.room_list_items,MyApplication.getmQueue());
         lv_room.setAdapter(roomAdapter);
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL+"Room/sendRoomPHP",
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            LogUtils.e("room",response);
-                            JSONObject jsonObject = new JSONObject(response);
-                            String status = jsonObject.getString("status");
-                            if(status.equals("0")){
-                                LogUtils.e("room","服务器发送失败");
-                            }else{
-                                List<Room> roomLists =MyApplication.getGson().fromJson(jsonObject.getString("data"), new TypeToken<List<Room>>() {
-                                }.getType());
-                                if(roomList!=null&&roomLists!=null){
-                                    for(int i = 0;i<roomLists.size();i++){
-                                        int j = 0;
-                                        for(;j<roomList.size();j++){
-                                            if(roomList.get(j).getRid()==roomLists.get(i).getRid()){
-                                                roomList.get(j).setRoomPhoto(roomLists.get(i).getRoomPhoto());
-                                                roomList.get(j).setRoomName(roomLists.get(i).getRoomName());
-                                                RoomDAO.updateRoom(MyApplication.getSQLiteDatabase(), roomLists.get(i).getRoomPhoto(),
-                                                        roomLists.get(i).getRoomName(), roomLists.get(i).getRoomCreater(), roomLists.get(i).getRid(),
-                                                        roomLists.get(i).getRid());
-                                                break;
-                                            }
-
-                                        }
-                                        if(j==roomList.size()) {
-                                            Room r = roomLists.get(i);
-                                            roomList.add(r);
-                                            RoomDAO.insert(MyApplication.getSQLiteDatabase(),r.getRid(),UserInfo.getInstance().getUid(),
-                                                    r.getRoomPhoto(),r.getRoomName(),r.getRoomCreater(),"","");
-                                        }
-                                    }
-                                }
-
-                                Message message = new Message();
-                                message.what = Config.INITROOM_MESSAGE;
-                                handler.handleMessage(message);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("TAG", error.getMessage(), error);
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> map = new HashMap<String, String>();
-                map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-                map.put("token",String.valueOf(UserInfo.getInstance().getToken()));
-                return map;
-            }
-        };
-        stringRequest.setTag(Config.GETROOM_TAG);
-        MyApplication.getmQueue().add(stringRequest);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
+        map.put("token", String.valueOf(UserInfo.getInstance().getToken()));
+        HttpUtils.request(getActivity(),Config.GETROOM_URL,HallFragment.this,map,Config.GETROOM_TAG);
 
         tv_add.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -302,5 +249,49 @@ public class HallFragment extends Fragment  {
     public void onStop() {
         super.onStop();
         MyApplication.getmQueue().cancelAll(Config.GETROOM_TAG);
+    }
+
+
+    @Override
+    public void dataController(String response, int tag) {
+        switch (tag){
+            case Config.GETROOM_TAG:
+                List<Room> roomLists =MyApplication.getGson().fromJson(response, new TypeToken<List<Room>>() {
+                }.getType());
+                if(roomList!=null&&roomLists!=null){
+                    for(int i = 0;i<roomLists.size();i++){
+                        int j = 0;
+                        for(;j<roomList.size();j++){
+                            if(roomList.get(j).getRid()==roomLists.get(i).getRid()){
+                                roomList.get(j).setRoomPhoto(roomLists.get(i).getRoomPhoto());
+                                roomList.get(j).setRoomName(roomLists.get(i).getRoomName());
+                                RoomDAO.updateRoom(MyApplication.getSQLiteDatabase(), roomLists.get(i).getRoomPhoto(),
+                                        roomLists.get(i).getRoomName(), roomLists.get(i).getRoomCreater(), roomLists.get(i).getRid(),
+                                        roomLists.get(i).getRid());
+                                break;
+                            }
+
+                        }
+                        if(j==roomList.size()) {
+                            Room r = roomLists.get(i);
+                            roomList.add(r);
+                            RoomDAO.insert(MyApplication.getSQLiteDatabase(),r.getRid(),UserInfo.getInstance().getUid(),
+                                    r.getRoomPhoto(),r.getRoomName(),r.getRoomCreater(),"","");
+                        }
+                    }
+                }
+
+                Message message = new Message();
+                message.what = Config.INITROOM_MESSAGE;
+                handler.handleMessage(message);
+                break;
+        }
+
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+
+        super.onHiddenChanged(hidden);
     }
 }

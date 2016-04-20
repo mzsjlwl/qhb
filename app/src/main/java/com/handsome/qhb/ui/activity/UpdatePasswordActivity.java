@@ -2,28 +2,18 @@ package com.handsome.qhb.ui.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.google.gson.Gson;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.config.Config;
-import com.handsome.qhb.utils.LoginUtils;
-import com.handsome.qhb.utils.MD5Utils;
+import com.handsome.qhb.listener.MyListener;
+import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.UserInfo;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -34,7 +24,7 @@ import tab.com.handsome.handsome.R;
  * Created by zhang on 2016/3/14.
  */
 
-public class UpdatePasswordActivity extends BaseActivity {
+public class UpdatePasswordActivity extends BaseActivity implements MyListener{
 
     //标题
     private TextView tv_title;
@@ -78,47 +68,13 @@ public class UpdatePasswordActivity extends BaseActivity {
             @Override
             public void onClick(View view) {
                 if(et_password.getText().toString().equals(et_repeatPassword.getText().toString())){
-                    StringRequest stringRequest = new StringRequest(Request.Method.POST,Config.BASE_URL+"User/update",
-                            new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
-                                    try {
-                                        JSONObject jsonObject = new JSONObject(response);
-                                        String status = jsonObject.getString("status");
-                                        if(status == "0"){
-                                            Toast.makeText(UpdatePasswordActivity.this, jsonObject.getString("info"), Toast.LENGTH_LONG).show();
-                                            return;
-                                        }else if(status.equals("-1")){
-                                            LoginUtils.AutoLogin(UpdatePasswordActivity.this);
-                                        }
-                                        Toast.makeText(UpdatePasswordActivity.this,"修改成功,请重新登录",Toast.LENGTH_LONG).show();
-                                        Intent i =new Intent(UpdatePasswordActivity.this,LoginActivity.class);
-                                        startActivity(i);
-                                        finish();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Log.e("TAG", error.getMessage(), error);
-                            Toast.makeText(UpdatePasswordActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-                        }
-                    }){
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            Map<String, String> map = new HashMap<String, String>();
-                            map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
-                            map.put("oldPassword", et_oldPassword.getText().toString());
-                            map.put("password",et_password.getText().toString());
-                            map.put("repeatPassword",et_repeatPassword.getText().toString());
-                            map.put("token",UserInfo.getInstance().getToken());
-                            return map;
-                        }
-                    };
-                    stringRequest.setTag(Config.USERUPDATE_TAG);
-                    MyApplication.getmQueue().add(stringRequest);
+                    Map<String, String> map = new HashMap<String, String>();
+                    map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+                    map.put("oldPassword", et_oldPassword.getText().toString());
+                    map.put("password",et_password.getText().toString());
+                    map.put("repeatPassword",et_repeatPassword.getText().toString());
+                    map.put("token", UserInfo.getInstance().getToken());
+                    HttpUtils.request(UpdatePasswordActivity.this,Config.USERUPDATE_URL,UpdatePasswordActivity.this,map,Config.UPDATEPASSWORD_TAG);
                 }
             }
         });
@@ -130,5 +86,17 @@ public class UpdatePasswordActivity extends BaseActivity {
     protected void onStop() {
         super.onStop();
         MyApplication.getmQueue().cancelAll(Config.USERUPDATE_TAG);
+    }
+
+    @Override
+    public void dataController(String response, int tag) {
+        switch (tag){
+            case Config.UPDATEPASSWORD_TAG:
+                Toast.makeText(UpdatePasswordActivity.this,"修改成功,请重新登录",Toast.LENGTH_LONG).show();
+                Intent i =new Intent(UpdatePasswordActivity.this,LoginActivity.class);
+                startActivity(i);
+                finish();
+                break;
+        }
     }
 }

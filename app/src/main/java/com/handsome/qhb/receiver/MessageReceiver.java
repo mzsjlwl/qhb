@@ -1,22 +1,22 @@
 package com.handsome.qhb.receiver;
 
+import android.app.ActivityManager;
 import android.app.Notification;
+import android.content.ComponentName;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Message;
+import android.text.TextUtils;
 
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.ChatMessage;
-import com.handsome.qhb.bean.RandomBonus;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.MessageDAO;
 import com.handsome.qhb.db.RoomDAO;
-import com.handsome.qhb.ui.activity.AddressActivity;
-import com.handsome.qhb.ui.activity.CDSActivity;
+import com.handsome.qhb.ui.activity.MainActivity;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 import com.tencent.android.tpush.XGPushBaseReceiver;
@@ -240,7 +240,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
             }
 
             //判断是不是自己的消息，若是自己的消息，不提醒
-            if(chatMessage.getUid()!=UserInfo.getInstance().getUid()){
+            if(chatMessage.getUid()!=UserInfo.getInstance().getUid()&&!isForeground(MyApplication.getContext(),"com.handsome.qhb")){
                 mBuilder.setWhen(System.currentTimeMillis())
                         .setSmallIcon(R.mipmap.test_icon)
                         .setLargeIcon(LargeBitmap)
@@ -261,6 +261,22 @@ public class MessageReceiver extends XGPushBaseReceiver {
     @Override
     public void onNotifactionShowedResult(Context context, XGPushShowedResult xgPushShowedResult) {
 
+    }
+
+    private boolean isForeground(Context context,String className){
+        if(context==null|| TextUtils.isEmpty(className)){
+            return false;
+        }
+        ActivityManager am = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
+        List<ActivityManager.RunningTaskInfo> list = am.getRunningTasks(1);
+        if(list!=null&&list.size()>0){
+            ComponentName cpn = list.get(0).topActivity;
+            LogUtils.e("cpn.name",cpn.getClassName());
+            if(cpn.getClassName().contains(className)){
+                return true;
+            }
+        }
+        return  false;
     }
 
 }
