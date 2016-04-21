@@ -445,6 +445,7 @@ public class ShopFragment extends Fragment implements MyListener{
         super.onHiddenChanged(hidden);
         if(scheduledExecutorService!=null){
             scheduledExecutorService.shutdown();
+            LogUtils.e("scheduledExecutorService","====>shutdown");
         }
         if(hidden){
             LogUtils.e("hidden","shopfragment");

@@ -46,7 +46,7 @@ public class TimeUtils  {
             if((d1.getTime()-d2.getTime())/60000<3){
                 LogUtils.e("3分钟","===>");
                 interval = "";
-            }else if(time/3600000<24&&time/3600000>=1){
+            }else if(time/3600000<24&&time/3600000>=0){
                 SimpleDateFormat sd1 = new SimpleDateFormat("HH");
                 int now_h = Integer.valueOf(sd1.format(now));
                 int create_h = Integer.valueOf(sd1.format(d1));

@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.MsgAdapter;
 import com.handsome.qhb.application.MyApplication;
+import com.handsome.qhb.bean.APS;
 import com.handsome.qhb.bean.ChatMessage;
 import com.handsome.qhb.bean.RandomBonus;
 import com.handsome.qhb.bean.Room;
@@ -129,6 +130,7 @@ public class ChatActivity extends BaseActivity {
                 msgAdapter.notifyDataSetChanged();
                 lv_chat.setSelection(messageList.size() - 1);
                 et_chat_msg.setText("");
+                //Android
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.XG_PUSH_URL+"all_device",
                         new Response.Listener<String>() {
                             @Override
@@ -136,6 +138,64 @@ public class ChatActivity extends BaseActivity {
                                 try {
                                     JSONObject jsonObject = new JSONObject(response);
                                     String ret_code = jsonObject.getString("ret_code");
+                                    LogUtils.e("ret_code===>",ret_code);
+                                    if(!ret_code.equals("0")){
+                                        Toast.makeText(ChatActivity.this, jsonObject.getString("err_msg"), Toast.LENGTH_LONG).show();
+                                        return;
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Toast.makeText(ChatActivity.this,"网络异常,请检查后再试", Toast.LENGTH_LONG).show();
+                    }
+                }){
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> map = new HashMap<String, String>();
+                        Map<String,String> params = new TreeMap<String, String>();
+                        String timestamp = String.valueOf((long)(System.currentTimeMillis()/1000));
+
+                        XGMessage xgMessage = new XGMessage();
+                        xgMessage.setContent(message);
+                        xgMessage.setTitle("chat");
+                        map.put("message_type", String.valueOf(Config.TYPE_MESSAGE));
+                        map.put("message", MyApplication.getGson().toJson(xgMessage));
+                        map.put("access_id", String.valueOf(Config.ACCESSID));
+                        map.put("timestamp", timestamp);
+                        map.put("expire_time",String.valueOf(259200));
+
+
+                        params.put("message",MyApplication.getGson().toJson(xgMessage));
+                        params.put("message_type",String.valueOf(Config.TYPE_MESSAGE));
+                        params.put("access_id", String.valueOf(Config.ACCESSID));
+                        params.put("timestamp",timestamp);
+                        params.put("expire_time", String.valueOf(259200));
+                        try {
+                            map.put("sign", SignUtil.getSign("post", Config.XG_PUSH_URL + "all_device", params));
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        } catch (NoSuchAlgorithmException e) {
+                            e.printStackTrace();
+                        }
+                        return map;
+                    }
+                };
+                stringRequest.setTag(Config.SENDMSG_TAG);
+                MyApplication.getmQueue().add(stringRequest);
+                //IOS
+                StringRequest stringRequest1 = new StringRequest(Request.Method.POST, Config.XG_PUSH_URL+"all_device",
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    String ret_code = jsonObject.getString("ret_code");
+                                    LogUtils.e("ret_code===>",ret_code);
                                     if(!ret_code.equals("0")){
                                         Toast.makeText(ChatActivity.this, jsonObject.getString("err_msg"), Toast.LENGTH_LONG).show();
                                         return;
@@ -158,20 +218,21 @@ public class ChatActivity extends BaseActivity {
                         Map<String,String> params = new TreeMap<String, String>();
                         String timestamp = String.valueOf((long)(System.currentTimeMillis()/1000));
 
-                        XGMessage xgMessage = new XGMessage();
-                        xgMessage.setContent(message);
-                        xgMessage.setTitle("chat");
+                        APS aps = new APS();
+                        aps.setAlert(message);
                         map.put("message_type", String.valueOf(Config.TYPE_MESSAGE));
-                        map.put("message", MyApplication.getGson().toJson(xgMessage));
+                        map.put("message", MyApplication.getGson().toJson(aps));
                         map.put("access_id", String.valueOf(Config.ACCESSID));
                         map.put("timestamp", timestamp);
+                        map.put("environment","1");
+                        map.put("expire_time",String.valueOf(259200));
 
-
-                        params.put("message",MyApplication.getGson().toJson(xgMessage));
-                        params.put("message_type",String.valueOf(Config.TYPE_MESSAGE));
+                        params.put("message",MyApplication.getGson().toJson(aps));
+                        params.put("message_type","0");
                         params.put("access_id", String.valueOf(Config.ACCESSID));
                         params.put("timestamp",timestamp);
-
+                        params.put("environment","1");
+                        params.put("expire_time", String.valueOf(259200));
                         try {
                             map.put("sign", SignUtil.getSign("post", Config.XG_PUSH_URL + "all_device", params));
                         } catch (MalformedURLException e) {
@@ -183,7 +244,7 @@ public class ChatActivity extends BaseActivity {
                     }
                 };
                 stringRequest.setTag(Config.SENDMSG_TAG);
-                MyApplication.getmQueue().add(stringRequest);
+               // MyApplication.getmQueue().add(stringRequest1);
 
             }
         });

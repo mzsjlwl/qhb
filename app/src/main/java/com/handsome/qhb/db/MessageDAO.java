@@ -14,6 +14,7 @@ import java.util.List;
 public class MessageDAO  {
     public static List<ChatMessage> query (SQLiteDatabase db,Integer rid){
         Cursor cursor = db.rawQuery("select * from message where rid = ?",new String[]{String.valueOf(rid),
+
        });
 
         List<ChatMessage> messageList = new ArrayList<ChatMessage>();
