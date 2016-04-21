@@ -3,8 +3,6 @@ package com.handsome.qhb.utils;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.widget.Toast;
@@ -17,17 +15,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.config.Config;
-import com.handsome.qhb.listener.AutoLoginListener;
-import com.handsome.qhb.listener.CDSListener;
 import com.handsome.qhb.listener.MyListener;
 import com.handsome.qhb.ui.activity.LoginActivity;
-import com.handsome.qhb.ui.activity.MainActivity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;

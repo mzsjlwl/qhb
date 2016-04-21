@@ -1,53 +1,30 @@
 package com.handsome.qhb.ui.fragment;
 
 import android.app.Fragment;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.RoomAdapter;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.ChatMessage;
-import com.handsome.qhb.bean.Product;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.config.Config;
-import com.handsome.qhb.db.MessageDAO;
 import com.handsome.qhb.db.RoomDAO;
-import com.handsome.qhb.db.UserDAO;
-import com.handsome.qhb.db.UserDBOpenHelper;
-import com.handsome.qhb.listener.GetRoomListener;
 import com.handsome.qhb.listener.MyListener;
 import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
-import com.tencent.android.tpush.XGPushManager;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.text.DecimalFormat;
-import java.text.Format;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

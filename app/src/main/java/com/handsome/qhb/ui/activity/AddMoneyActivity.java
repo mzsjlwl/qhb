@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.config.Config;
-import com.handsome.qhb.listener.AddMoneyListener;
 import com.handsome.qhb.listener.MyListener;
 import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.UserInfo;
