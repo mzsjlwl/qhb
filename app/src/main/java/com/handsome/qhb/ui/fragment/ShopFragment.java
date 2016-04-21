@@ -443,12 +443,13 @@ public class ShopFragment extends Fragment implements MyListener{
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
+        if(scheduledExecutorService!=null){
+            scheduledExecutorService.shutdown();
+        }
         if(hidden){
-            if(scheduledExecutorService!=null){
-
-                scheduledExecutorService.shutdown();
-            }
+            LogUtils.e("hidden","shopfragment");
         }else {
+            LogUtils.e("show","shopfragment");
             onStartSlider();
         }
     }
