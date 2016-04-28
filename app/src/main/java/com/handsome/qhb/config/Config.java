@@ -4,9 +4,11 @@ public class Config {
 
     public static final String BASE_URL = "http://192.168.111.106/QHB/";
     public static final String ORDER_TAG = "order";
-    public static final long ACCESSID = 2100189658;
+    public static final String ACCESSID = "2100189658";
+    public static final String ACCESSIDIOS = "2200195440";
     public static final String ACCESSKEY = "AQV87R7CL46K";
     public static final String SECRETKEY = "92319602671d73ebab46ff60537e3754";
+    public static final String SECRETKEYIOS = "0e8d5682dc81ab5a2dbd2b211895a389";
 
     public static final int SLIDER_PICTURE = 1;
     public static final int INIT_SLIDER_PICTURE = 2;
@@ -38,10 +40,11 @@ public class Config {
     public static final int TYPE_NOTIFICATION =1;
     public static final int TYPE_MESSAGE = 2;
 
-    public static final int TYPE_RANDOMBONUS=1;
-    public static final int TYPE_CDSBONUS=2;
-    public static final int TYPE_RANDOMBONUS_OPENED = 3;
-    public static final int TYPE_CDSBONUS_OPENED = 4;
+    public static final int TYPE_TEXT=1;
+    public static final int TYPE_RANDOMBONUS=2;
+    public static final int TYPE_CDSBONUS=3;
+    public static final int TYPE_CANCELBONUS=4;
+    public static final int TYPE_DSRESULT = 5;
 
     public static final int STATE_CDSBONUS_START = 1;
     public static final int STATE_CDSBONUS_GUESSED = 2;
@@ -90,5 +93,6 @@ public class Config {
     public static final int DSGETMYGUESS_TAG = 23;
     public static final int DSGETPERSONNUM_TAG = 24;
     public static final int HBGETRANDOMBONUS_TAG = 25;
+
 
 }

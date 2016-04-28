@@ -29,7 +29,7 @@ import java.util.Map;
  * Created by zhang on 2016/4/19.
  */
 public class HttpUtils {
-    public static String error = "CURL ERROR: Problem (2) in the Chunked-Encoded data";
+
     public static void request(final Activity activity,final String url, final MyListener listener, final Map<String, String> map, final int tag){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.BASE_URL + url,
                 new Response.Listener<String>() {
@@ -37,9 +37,6 @@ public class HttpUtils {
                     public void onResponse(String response) {
                         try {
                             LogUtils.e("response",response);
-                            if(response.contains("CURL ERROR")){
-                                response = response.substring(error.length());
-                            }
                             JSONObject jsonObject = new JSONObject(response);
                             String status = jsonObject.getString("status");
                             if(status.equals("0")){
@@ -71,7 +68,7 @@ public class HttpUtils {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("TAG", error.getMessage(), error);
-
+                Toast.makeText(activity,"网络异常,请检查后再试", Toast.LENGTH_LONG).show();
             }
         }){
             @Override
@@ -113,7 +110,7 @@ public class HttpUtils {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("TAG", error.getMessage(), error);
+                Toast.makeText(activity,"网络异常,请检查后再试", Toast.LENGTH_LONG).show();
 
             }
         }){
@@ -123,6 +120,39 @@ public class HttpUtils {
                 loginMap.put("username",UserInfo.getInstance().getUsername());
                 loginMap.put("password", UserInfo.getInstance().getPassword());
                 return loginMap;
+            }
+        };
+        stringRequest.setTag(tag);
+        MyApplication.getmQueue().add(stringRequest);
+    }
+
+    public static void sendMessage(final Activity activity,final String url, final Map<String, String> map, final int tag){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.XG_PUSH_URL + url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            String ret_code = jsonObject.getString("ret_code");
+                            LogUtils.e("ret_code===>",ret_code);
+                            if(!ret_code.equals("0")){
+                                Toast.makeText(activity, jsonObject.getString("err_msg"), Toast.LENGTH_LONG).show();
+                                return;
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(activity,"网络异常,请检查后再试", Toast.LENGTH_LONG).show();
+
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return map;
             }
         };
         stringRequest.setTag(tag);

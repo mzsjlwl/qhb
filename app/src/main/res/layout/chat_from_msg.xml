@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:clickable="false">
 
     <TextView
         android:id="@+id/chat_createDate"
@@ -42,22 +43,27 @@
                     android:text="张上鑫"
                     android:textColor="#444"
                     android:textSize="@dimen/x12" />
-                <TextView
-                    android:id="@+id/chat_from_content"
+                <RelativeLayout
+                    android:id="@+id/rl_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
                     android:background="@drawable/balloon_l2"
-                    android:clickable="true"
-                    android:focusable="true"
+                    >
+                    <TextView
+                        android:id="@+id/chat_from_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:lineSpacingExtra="@dimen/y2"
+                        android:layout_centerVertical="true"
+                        android:paddingTop="2dp"
+                        android:text="dsa"
+                        android:textColor="#000"
+                        android:clickable="false"
+                        android:textSize="@dimen/x14"
+                        />
+                </RelativeLayout>
 
-                    android:paddingLeft="@dimen/x20"
-                    android:paddingRight="@dimen/x15"
-                    android:paddingTop="@dimen/y4"
-                    android:paddingBottom="@dimen/y4"
-                    android:text="dsa"
-                    android:textColor="#000"
-                    android:textSize="@dimen/x15"
-                    />
             </LinearLayout>
         </LinearLayout>
 

@@ -12,6 +12,7 @@ import com.handsome.qhb.bean.ChatMessage;
 import com.handsome.qhb.bean.DS;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.MessageDAO;
+import com.handsome.qhb.listener.MessageListener;
 import com.handsome.qhb.listener.MyListener;
 import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.LogUtils;
@@ -31,8 +32,7 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/4/1.
  */
-public class CDSActivity extends BaseActivity implements MyListener{
-
+public class CDSActivity extends BaseActivity implements MyListener,MessageListener{
 
     private TextView tv_Btime, tv_money, tv_person, tv_time, tv_guess, tv_single, tv_double, tv_result;
 
@@ -81,6 +81,7 @@ public class CDSActivity extends BaseActivity implements MyListener{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cds);
+        LogUtils.e("cdsActivity====>","oncreate");
 
         tv_Btime = (TextView) findViewById(R.id.tv_Btime);
         tv_money = (TextView) findViewById(R.id.tv_money);
@@ -99,7 +100,7 @@ public class CDSActivity extends BaseActivity implements MyListener{
         ds = (DS) getIntent().getSerializableExtra("ds");
 
 
-        MyApplication.setCdsHandler(handler, chatMessage.getId());
+
         tv_money.setText(String.valueOf(chatMessage.getBonus_total()));
         tv_person.setText(String.valueOf(ds.getPersonNum()));
         tv_time.setText(chatMessage.getDate());
@@ -126,6 +127,7 @@ public class CDSActivity extends BaseActivity implements MyListener{
 
             MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_END, chatMessage.getId());
         }
+
         tv_single.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -181,23 +183,37 @@ public class CDSActivity extends BaseActivity implements MyListener{
         timer.schedule(timerTask, 0, 1000);
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.messageListenersList.add(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MyApplication.messageListenersList.remove(this);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         MyApplication.getmQueue().cancelAll(Config.DSCDS_TAG);
-        MyApplication.setCdsHandler(null, 0);
         timer.cancel();
     }
 
     public void refreshResult(ChatMessage msg) {
         LogUtils.e("result-msg", msg.toString());
-        if (msg.getContent().equals("1")) {
-            tv_result.setText("单");
-        } else if (msg.getContent().equals("2")) {
-            tv_result.setText("双");
+        if(msg.getId()==ds.getId()) {
+            if (msg.getContent().equals("1")) {
+                tv_result.setText("单");
+            } else if (msg.getContent().equals("2")) {
+                tv_result.setText("双");
+            }
+            ll_guess.setVisibility(View.INVISIBLE);
+            ll_result.setVisibility(View.VISIBLE);
         }
-        ll_guess.setVisibility(View.INVISIBLE);
-        ll_result.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -213,7 +229,12 @@ public class CDSActivity extends BaseActivity implements MyListener{
                 ll_myguess.setVisibility(View.VISIBLE);
                 break;
         }
+
     }
 
 
+    @Override
+    public void handleMsg(Message message) {
+        handler.handleMessage(message);
+    }
 }

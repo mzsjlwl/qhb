@@ -24,11 +24,14 @@ import com.handsome.qhb.adapter.MsgAdapter;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.APS;
 import com.handsome.qhb.bean.ChatMessage;
+import com.handsome.qhb.bean.IOSMessage;
 import com.handsome.qhb.bean.RandomBonus;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.bean.XGMessage;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.MessageDAO;
+import com.handsome.qhb.listener.MessageListener;
+import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.SignUtil;
 import com.handsome.qhb.utils.UserInfo;
@@ -52,8 +55,7 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/3/23.
  */
-public class ChatActivity extends BaseActivity {
-
+public class ChatActivity extends BaseActivity implements MessageListener {
     private TextView tv_room_title;
     private EditText et_chat_msg;
     private ImageButton ib_chat_send;
@@ -64,6 +66,17 @@ public class ChatActivity extends BaseActivity {
     private MsgAdapter msgAdapter;
     private ChatMessage message;
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
 
     public Handler handler = new Handler(){
         @Override
@@ -85,6 +98,7 @@ public class ChatActivity extends BaseActivity {
             return;
         }
         setContentView(R.layout.activity_chat);
+        MyApplication.messageListenersList.add(this);
 
         tv_room_title = (TextView) findViewById(R.id.tv_room_title);
         et_chat_msg = (EditText)findViewById(R.id.et_chat_msg);
@@ -92,7 +106,6 @@ public class ChatActivity extends BaseActivity {
         ll_back = (LinearLayout)findViewById(R.id.ll_back);
         lv_chat = (ListView)findViewById(R.id.lv_chat);
         room = (Room) getIntent().getSerializableExtra("room");
-        MyApplication.setChatHandler(handler,room.getRid());
         messageList = MessageDAO.query(MyApplication.getSQLiteDatabase(),room.getRid());
         for(int i = 0;i<messageList.size();i++){
             if(messageList.get(i).getStatus()==0){
@@ -112,16 +125,19 @@ public class ChatActivity extends BaseActivity {
             }
         });
 
+
         ib_chat_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(et_chat_msg.getText().toString().trim().equals("")) {
                     return;
                 }
-                message = new ChatMessage();
+                message= new ChatMessage();
                 message.setUid(UserInfo.getInstance().getUid());
                 message.setPhoto(UserInfo.getInstance().getPhoto());
                 message.setContent(et_chat_msg.getText().toString());
+                message.setId(messageList.size());
+                message.setType(1);
                 Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 message.setDate(format.format(new Date()));
                 message.setRid(room.getRid());
@@ -130,121 +146,67 @@ public class ChatActivity extends BaseActivity {
                 msgAdapter.notifyDataSetChanged();
                 lv_chat.setSelection(messageList.size() - 1);
                 et_chat_msg.setText("");
+
                 //Android
-                StringRequest stringRequest = new StringRequest(Request.Method.POST, Config.XG_PUSH_URL+"all_device",
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    String ret_code = jsonObject.getString("ret_code");
-                                    LogUtils.e("ret_code===>",ret_code);
-                                    if(!ret_code.equals("0")){
-                                        Toast.makeText(ChatActivity.this, jsonObject.getString("err_msg"), Toast.LENGTH_LONG).show();
-                                        return;
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                Map<String, String> mapA = new HashMap<String, String>();
+                Map<String,String> paramsA = new TreeMap<String, String>();
+                String timestampA = String.valueOf((long)(System.currentTimeMillis()/1000));
 
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(ChatActivity.this,"网络异常,请检查后再试", Toast.LENGTH_LONG).show();
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> map = new HashMap<String, String>();
-                        Map<String,String> params = new TreeMap<String, String>();
-                        String timestamp = String.valueOf((long)(System.currentTimeMillis()/1000));
-
-                        XGMessage xgMessage = new XGMessage();
-                        xgMessage.setContent(message);
-                        xgMessage.setTitle("chat");
-                        map.put("message_type", String.valueOf(Config.TYPE_MESSAGE));
-                        map.put("message", MyApplication.getGson().toJson(xgMessage));
-                        map.put("access_id", String.valueOf(Config.ACCESSID));
-                        map.put("timestamp", timestamp);
-                        map.put("expire_time",String.valueOf(259200));
+                XGMessage xgMessage = new XGMessage();
+                xgMessage.setContent(message);
+                LogUtils.e("message===========>",message.getContent());
+                xgMessage.setTitle("1");
+                mapA.put("message_type", String.valueOf(Config.TYPE_MESSAGE));
+                mapA.put("message", MyApplication.getGson().toJson(xgMessage));
+                mapA.put("access_id", String.valueOf(Config.ACCESSID));
+                mapA.put("timestamp", timestampA);
+                mapA.put("expire_time",String.valueOf(259200));
 
 
-                        params.put("message",MyApplication.getGson().toJson(xgMessage));
-                        params.put("message_type",String.valueOf(Config.TYPE_MESSAGE));
-                        params.put("access_id", String.valueOf(Config.ACCESSID));
-                        params.put("timestamp",timestamp);
-                        params.put("expire_time", String.valueOf(259200));
-                        try {
-                            map.put("sign", SignUtil.getSign("post", Config.XG_PUSH_URL + "all_device", params));
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (NoSuchAlgorithmException e) {
-                            e.printStackTrace();
-                        }
-                        return map;
-                    }
-                };
-                stringRequest.setTag(Config.SENDMSG_TAG);
-                MyApplication.getmQueue().add(stringRequest);
+                paramsA.put("message",MyApplication.getGson().toJson(xgMessage));
+                paramsA.put("message_type",String.valueOf(Config.TYPE_MESSAGE));
+                paramsA.put("access_id", String.valueOf(Config.ACCESSID));
+                paramsA.put("timestamp",timestampA);
+                paramsA.put("expire_time", String.valueOf(259200));
+                try {
+                    mapA.put("sign", SignUtil.getSign("post", Config.XG_PUSH_URL + "all_device", paramsA));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+                HttpUtils.sendMessage(ChatActivity.this, "all_device", mapA, Config.SENDMSG_TAG);
+
                 //IOS
-                StringRequest stringRequest1 = new StringRequest(Request.Method.POST, Config.XG_PUSH_URL+"all_device",
-                        new Response.Listener<String>() {
-                            @Override
-                            public void onResponse(String response) {
-                                try {
-                                    JSONObject jsonObject = new JSONObject(response);
-                                    String ret_code = jsonObject.getString("ret_code");
-                                    LogUtils.e("ret_code===>",ret_code);
-                                    if(!ret_code.equals("0")){
-                                        Toast.makeText(ChatActivity.this, jsonObject.getString("err_msg"), Toast.LENGTH_LONG).show();
-                                        return;
-                                    }
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                }
+                Map<String, String> mapI = new HashMap<String, String>();
+                Map<String,String> paramsI = new TreeMap<String, String>();
+                String timestampI = String.valueOf((long)(System.currentTimeMillis()/1000));
 
-                            }
-                        }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("TAG", error.getMessage(), error);
-                        Toast.makeText(ChatActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }){
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> map = new HashMap<String, String>();
-                        Map<String,String> params = new TreeMap<String, String>();
-                        String timestamp = String.valueOf((long)(System.currentTimeMillis()/1000));
+                APS aps = new APS();
+                aps.setAlert(message);
+                IOSMessage iosMessage = new IOSMessage();
+                iosMessage.setAps(aps);
+                mapI.put("message_type","0");
+                mapI.put("message", MyApplication.getGson().toJson(iosMessage));
+                mapI.put("access_id", Config.ACCESSIDIOS);
+                mapI.put("timestamp", timestampI);
+                mapI.put("environment","1");
+                mapI.put("expire_time",String.valueOf(259200));
 
-                        APS aps = new APS();
-                        aps.setAlert(message);
-                        map.put("message_type", String.valueOf(Config.TYPE_MESSAGE));
-                        map.put("message", MyApplication.getGson().toJson(aps));
-                        map.put("access_id", String.valueOf(Config.ACCESSID));
-                        map.put("timestamp", timestamp);
-                        map.put("environment","1");
-                        map.put("expire_time",String.valueOf(259200));
-
-                        params.put("message",MyApplication.getGson().toJson(aps));
-                        params.put("message_type","0");
-                        params.put("access_id", String.valueOf(Config.ACCESSID));
-                        params.put("timestamp",timestamp);
-                        params.put("environment","1");
-                        params.put("expire_time", String.valueOf(259200));
-                        try {
-                            map.put("sign", SignUtil.getSign("post", Config.XG_PUSH_URL + "all_device", params));
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        } catch (NoSuchAlgorithmException e) {
-                            e.printStackTrace();
-                        }
-                        return map;
-                    }
-                };
-                stringRequest.setTag(Config.SENDMSG_TAG);
-               // MyApplication.getmQueue().add(stringRequest1);
+                paramsI.put("message",MyApplication.getGson().toJson(iosMessage));
+                paramsI.put("message_type","0");
+                paramsI.put("access_id", Config.ACCESSIDIOS);
+                paramsI.put("timestamp", timestampI);
+                paramsI.put("environment", "1");
+                paramsI.put("expire_time", String.valueOf(259200));
+                try {
+                    mapI.put("sign", SignUtil.getIosSign("post", Config.XG_PUSH_URL + "all_device", paramsI));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                    e.printStackTrace();
+                }
+                HttpUtils.sendMessage(ChatActivity.this,"all_device",mapI,Config.SENDMSG_TAG);
 
             }
         });
@@ -253,9 +215,6 @@ public class ChatActivity extends BaseActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        if(MyApplication.getChatHandler()==null){
-            MyApplication.setChatHandler(handler,room.getRid());
-        }
     }
 
     @Override
@@ -264,14 +223,21 @@ public class ChatActivity extends BaseActivity {
     }
 
     public void ReceiverMessage(ChatMessage message) {
-        LogUtils.e("message.before.status==>",String.valueOf(message.getStatus()));
         if (message.getRid() == room.getRid()) {
             if (message.getUid() == UserInfo.getInstance().getUid()) {
-                messageList.get(messageList.size() - 1).setStatus(1);
-                msgAdapter.notifyDataSetChanged();
-                lv_chat.setSelection(messageList.size() - 1);
-                LogUtils.e("message.status==>", "1");
-                return;
+                if(message.getType()==1){
+                    for(int i = messageList.size()-1;i>=0;i--){
+                        if(message.getId()==messageList.get(i).getId()){
+                            messageList.get(i).setStatus(1);
+                            LogUtils.e("message.status==>", String.valueOf(messageList.get(messageList.size() - 1).getStatus()));
+                            msgAdapter.notifyDataSetChanged();
+                            lv_chat.setSelection(messageList.size() - 1);
+                            return;
+                        }
+                    }
+                }else {
+                    message.setStatus(1);
+                }
             }
             messageList.add(message);
             msgAdapter.notifyDataSetChanged();
@@ -303,6 +269,12 @@ public class ChatActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         MyApplication.getmQueue().cancelAll(Config.SENDMSG_TAG);
-        MyApplication.setChatHandler(null, 0);
+        MyApplication.messageListenersList.remove(this);
+    }
+
+
+    @Override
+    public void handleMsg(Message message) {
+        handler.handleMessage(message);
     }
 }

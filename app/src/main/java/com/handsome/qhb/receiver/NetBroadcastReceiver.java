@@ -7,6 +7,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
+import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.utils.LogUtils;
 
 /**
@@ -21,9 +22,11 @@ public class NetBroadcastReceiver extends BroadcastReceiver {
         NetworkInfo wifiNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
         if(!mobNetInfo.isConnected()&&!wifiNetInfo.isConnected()){
             Toast.makeText(context,"网络不可用",Toast.LENGTH_LONG);
+            MyApplication.setNetstate(0);
             LogUtils.e("BroadcastReceiver","网络不可用");
         }else{
             Toast.makeText(context,"网络可用",Toast.LENGTH_LONG);
+            MyApplication.setNetstate(1);
             LogUtils.e("BroadcastReceiver","网络可用");
         }
     }

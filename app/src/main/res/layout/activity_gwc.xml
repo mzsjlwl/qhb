@@ -61,8 +61,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tx_receName"
-                android:textSize="@dimen/x16"
-                android:layout_marginLeft="@dimen/x20"
+                android:textSize="@dimen/x14"
+                android:layout_marginLeft="@dimen/x8"
 
                 />
             <TextView
@@ -70,8 +70,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tx_recePhone"
-                android:textSize="@dimen/x16"
-                android:layout_marginLeft="@dimen/x20"
+                android:textSize="@dimen/x14"
+                android:layout_marginLeft="@dimen/x8"
 
                 />
         </LinearLayout>
@@ -88,8 +88,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/tx_address"
-            android:textSize="@dimen/x16"
-            android:layout_marginLeft="@dimen/x20"
+            android:textSize="@dimen/x14"
+            android:layout_marginLeft="@dimen/x8"
             />
     </LinearLayout>
 <ScrollView
@@ -119,7 +119,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x25"
-            android:textSize="@dimen/x16"
+            android:textSize="@dimen/x14"
             android:textStyle="bold"
             android:text="@string/tx_totalPrice"/>
         <TextView
@@ -128,7 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_marginLeft="@dimen/x80"
             android:text="￥99.9"
-            android:textSize="@dimen/x16"/>
+            android:textSize="@dimen/x14"/>
     </LinearLayout>
     <TextView
         android:id="@+id/tv_liuyan"
@@ -137,7 +137,7 @@
         android:paddingTop="@dimen/y15"
         android:paddingLeft="@dimen/x25"
         android:text="@string/tx_liuyan"
-        android:textSize="@dimen/x16"
+        android:textSize="@dimen/x14"
         android:textStyle="bold"
         android:background="#ffffff"/>
     <EditText

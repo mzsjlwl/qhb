@@ -94,8 +94,8 @@ public class LoginActivity extends BaseActivity  {
                                     Intent i =new Intent(LoginActivity.this,MainActivity.class);
                                     Bundle b = new Bundle();
                                     SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
+                                    editor.clear();
                                     editor.putString("user",jsonObject.getString("data"));
-                                    editor.putLong("date", new Date().getTime());
                                     editor.commit();
                                     b.putSerializable("user", user);
                                     i.putExtras(b);

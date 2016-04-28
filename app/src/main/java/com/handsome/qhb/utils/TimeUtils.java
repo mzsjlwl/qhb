@@ -34,8 +34,6 @@ public class TimeUtils  {
     }
 
     public static String compareLast(String createtime,String lasttime) {
-        LogUtils.e("createtime",createtime);
-        LogUtils.e("lasttime",lasttime);
         String interval = null;
         try{
             SimpleDateFormat sd = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -44,7 +42,6 @@ public class TimeUtils  {
             Date now = new Date();
             long time = now.getTime()-d1.getTime();
             if((d1.getTime()-d2.getTime())/60000<3){
-                LogUtils.e("3分钟","===>");
                 interval = "";
             }else if(time/3600000<24&&time/3600000>=0){
                 SimpleDateFormat sd1 = new SimpleDateFormat("HH");

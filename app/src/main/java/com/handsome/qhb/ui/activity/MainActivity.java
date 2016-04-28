@@ -35,6 +35,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(MyApplication.welcome==0){
+            Intent i = new Intent(this,WelcomeActivity.class);
+            startActivity(i);
+            LogUtils.e("WELECOME", String.valueOf(MyApplication.welcome));
+            MyApplication.welcome=1;
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_main);
         registerReceiver();
         if(UserInfo.getInstance().getUid()==0){
@@ -114,7 +122,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onRestart() {
         super.onRestart();
-        LogUtils.e("activity", "onRestart");
+        LogUtils.e("Mainactivity", "onRestart");
     }
 
     @Override
@@ -126,13 +134,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        LogUtils.e("activity", "onDestroy");
-        SharedPreferences.Editor editor = getSharedPreferences("data",MODE_PRIVATE).edit();
-        editor.clear();
-        editor.putString("user", MyApplication.getGson().toJson(UserInfo.getInstance()));
-        editor.putLong("date", new Date().getTime());
-        editor.commit();
-        unregisterReceiver();
+        LogUtils.e("Mainactivity", "onDestroy");
+//        MyApplication.welcome = 0;
+        if(myReceiver!=null){
+            unregisterReceiver();
+        }
     }
 
 

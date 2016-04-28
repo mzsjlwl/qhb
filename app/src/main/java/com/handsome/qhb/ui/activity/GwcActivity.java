@@ -158,17 +158,17 @@ public class GwcActivity extends BaseActivity implements MyListener {
         super.onStart();
         if (getIntent().getSerializableExtra("address") != null) {
             Address address = (Address) getIntent().getSerializableExtra("address");
-            tv_receAddr.setText(address.getReceAddr());
-            tv_recePhone.setText(address.getRecePhone());
-            tv_receName.setText(address.getReceName());
+            tv_receAddr.setText("收货地址："+address.getReceAddr());
+            tv_recePhone.setText("联系方式："+address.getRecePhone());
+            tv_receName.setText("收货人："+address.getReceName());
         } else {
             addressList = gson.fromJson(UserDAO.findAddress(db, UserInfo.getInstance().getUid()),
                     new TypeToken<List<Address>>() {
                     }.getType());
             if (addressList != null) {
-                tv_receAddr.setText("收货地址 ："+addressList.get(0).getReceAddr());
-                tv_recePhone.setText("联系方式 ："+addressList.get(0).getRecePhone());
-                tv_receName.setText("收货人 ："+addressList.get(0).getReceName());
+                tv_receAddr.setText("收货地址："+addressList.get(0).getReceAddr());
+                tv_recePhone.setText("联系方式："+addressList.get(0).getRecePhone());
+                tv_receName.setText("收货人："+addressList.get(0).getReceName());
             }
         }
     }

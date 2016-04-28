@@ -40,8 +40,6 @@ public class UpdatePasswordActivity extends BaseActivity implements MyListener{
     private TextView tv_makesure;
     //back
     private TextView tv_back;
-    //Gson
-    private Gson gson = new Gson();
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,15 +65,26 @@ public class UpdatePasswordActivity extends BaseActivity implements MyListener{
         tv_makesure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(et_password.getText().toString().equals(et_repeatPassword.getText().toString())){
+
+                if(et_password.getText().toString().equals("")){
+                    Toast.makeText(UpdatePasswordActivity.this,"新密码不能为空",Toast.LENGTH_LONG).show();
+                    return ;
+                }else if(et_repeatPassword.getText().toString().equals("")){
+                    Toast.makeText(UpdatePasswordActivity.this,"两次密码不一致",Toast.LENGTH_LONG).show();
+                    return ;
+                }else if(et_repeatPassword.getText().toString().equals(et_password.getText().toString())){
+                    Toast.makeText(UpdatePasswordActivity.this,"两次密码不一致",Toast.LENGTH_LONG).show();
+                    return ;
+                }
+
                     Map<String, String> map = new HashMap<String, String>();
                     map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
                     map.put("oldPassword", et_oldPassword.getText().toString());
                     map.put("password",et_password.getText().toString());
                     map.put("repeatPassword",et_repeatPassword.getText().toString());
                     map.put("token", UserInfo.getInstance().getToken());
-                    HttpUtils.request(UpdatePasswordActivity.this,Config.USERUPDATE_URL,UpdatePasswordActivity.this,map,Config.UPDATEPASSWORD_TAG);
-                }
+                    HttpUtils.request(UpdatePasswordActivity.this, Config.USERUPDATE_URL, UpdatePasswordActivity.this, map, Config.UPDATEPASSWORD_TAG);
+
             }
         });
 

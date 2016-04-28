@@ -56,7 +56,6 @@ public class RoomAdapter extends CommonAdapter<Room> implements MyListener{
 
     public ChatMessage chatMessage;
     public List<ChatMessage> chatMessageList = new ArrayList<ChatMessage>();
-    public String error = "CURL ERROR: Problem (2) in the Chunked-Encoded data";
     public RoomAdapter(Context context, List<Room> datas, int layoutId, RequestQueue mQueue){
         super(context,datas,layoutId,mQueue);
     }

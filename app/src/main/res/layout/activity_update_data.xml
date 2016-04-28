@@ -22,7 +22,7 @@
             android:layout_width="@dimen/x80"
             android:layout_height="@dimen/y70"
             android:scaleType="fitXY"
-            android:background="@mipmap/test_icon"
+
             android:layout_gravity="center_vertical|center"
 
             android:clickable="true"/>

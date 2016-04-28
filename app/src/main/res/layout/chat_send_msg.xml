@@ -2,73 +2,78 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:clickable="false">
 
     <TextView
         android:id="@+id/chat_createDate"
         style="@style/chat_date_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
         android:text="" />
-
-
-            <LinearLayout
-                android:id="@+id/ly_chat_icon"
-                android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/ly_chat_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x50"
+        android:gravity="right|center_vertical"
+        android:orientation="horizontal" >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x50"
+            android:layout_gravity="right|center_vertical"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/chat_send_name"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="right"
-                android:layout_marginLeft="@dimen/x50"
-                android:orientation="horizontal" >
-                <LinearLayout
-                    android:layout_width="match_parent"
+                android:layout_gravity="right"
+                android:text="fs"
+                android:textColor="#444"
+                android:textSize="@dimen/x12" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:orientation="horizontal">
+                <ProgressBar
+                    android:id="@+id/id_progressBar"
+                    android:layout_width="@dimen/x16"
+                    android:layout_height="match_parent"
+                    />
+                <RelativeLayout
+                    android:id="@+id/rl_content"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/x50"
-                    android:gravity="right"
-                    android:orientation="vertical">
+                    android:layout_gravity="right"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/balloon_r2">
                     <TextView
-                        android:id="@+id/chat_send_name"
+                        android:id="@+id/chat_send_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:text="fs"
-                        android:textColor="#444"
-                        android:textSize="@dimen/x12" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-                        <ProgressBar
-                            android:id="@+id/id_progressBar"
-                            android:layout_width="@dimen/x16"
-                            android:layout_height="match_parent" />
-                        <TextView
-                            android:id="@+id/chat_send_content"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-
-                            android:background="@drawable/balloon_r2"
-                            android:gravity="center_vertical"
-                            android:lineSpacingExtra="@dimen/x2"
-                            android:paddingLeft="@dimen/x10"
-                            android:paddingRight="@dimen/x10"
-                            android:paddingTop="@dimen/y4"
-                            android:paddingBottom="@dimen/y4"
-                            android:text="fdsdsa"
-                            android:maxWidth="@dimen/x250"
-                            android:textColor="#000"
-                            android:textSize="@dimen/x15" />
-                    </LinearLayout>
-                </LinearLayout>
-
-
-                <com.android.volley.toolbox.NetworkImageView
-                    android:id="@+id/chat_icon"
-                    android:layout_width="@dimen/x50"
-                    android:layout_height="@dimen/x45"
-                    android:layout_marginRight="@dimen/x5"
-                    android:src="@mipmap/test_icon" />
+                        android:layout_centerVertical="true"
+                        android:maxWidth="@dimen/x180"
+                        android:textSize="@dimen/x14"
+                        android:paddingTop="2dp"
+                        android:clickable="false"
+                        android:text=""/>
+                </RelativeLayout>
             </LinearLayout>
+        </LinearLayout>
+
+
+        <com.android.volley.toolbox.NetworkImageView
+            android:id="@+id/chat_icon"
+            android:layout_width="@dimen/x50"
+            android:layout_height="@dimen/x45"
+            android:layout_gravity="top"
+            android:layout_marginRight="@dimen/x5"
+            android:src="@mipmap/test_icon" />
+    </LinearLayout>
+
+
 
 
 </LinearLayout>

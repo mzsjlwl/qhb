@@ -35,8 +35,9 @@
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name="com.handsome.qhb.ui.activity.MainActivity"
-            android:screenOrientation="portrait">
-            <!--android:launchMode="singleTask">-->
+            android:screenOrientation="portrait"
+            >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -60,6 +61,11 @@
         <activity android:name="com.handsome.qhb.ui.activity.ChatActivity"/>
         <activity android:name="com.handsome.qhb.ui.activity.BonusActivity"/>
         <activity android:name="com.handsome.qhb.ui.activity.AddMoneyActivity"/>
+        <activity android:name="com.handsome.qhb.ui.activity.IndexActivity">
+        </activity>
+        <activity android:name="com.handsome.qhb.ui.activity.WelcomeActivity">
+
+        </activity>
         <!-- 【必须】 信鸽receiver广播接收 -->
         <receiver
             android:name="com.tencent.android.tpush.XGPushReceiver"

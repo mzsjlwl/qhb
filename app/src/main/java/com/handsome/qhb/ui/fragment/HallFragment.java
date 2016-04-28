@@ -17,6 +17,7 @@ import com.handsome.qhb.bean.ChatMessage;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.db.RoomDAO;
+import com.handsome.qhb.listener.MessageListener;
 import com.handsome.qhb.listener.MyListener;
 import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.LogUtils;
@@ -34,7 +35,7 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/3/7.
  */
-public class HallFragment extends Fragment implements MyListener {
+public class HallFragment extends Fragment implements MyListener ,MessageListener{
 
     private ListView lv_room;
     private static List<Room> roomList = new ArrayList<Room>();
@@ -57,6 +58,7 @@ public class HallFragment extends Fragment implements MyListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MyApplication.messageListenersList.add(this);
         if(UserInfo.getInstance()!=null){
             roomList = RoomDAO.query(MyApplication.getSQLiteDatabase(),UserInfo.getInstance().getUid());
         }
@@ -67,7 +69,6 @@ public class HallFragment extends Fragment implements MyListener {
         lv_room = (ListView) view.findViewById(R.id.lv_room);
         tv_add = (TextView)view.findViewById(R.id.tv_add);
 
-        MyApplication.setRoomHandler(handler);
         roomAdapter = new RoomAdapter(getActivity(),roomList,R.layout.room_list_items,MyApplication.getmQueue());
         lv_room.setAdapter(roomAdapter);
 
@@ -131,6 +132,7 @@ public class HallFragment extends Fragment implements MyListener {
     @Override
     public void onResume() {
         super.onResume();
+
         if(roomAdapter!=null){
             roomAdapter.notifyDataSetChanged();
         }
@@ -151,18 +153,18 @@ public class HallFragment extends Fragment implements MyListener {
         Collections.sort(roomList, new Comparator<Room>() {
             @Override
             public int compare(Room room, Room t1) {
-                        if(room.getLastMessage()==null||t1.getLastMessage()==null){
-                            return t1.getLastMessage()==null?-1:1;
-                        }
-                        String s1 = room.getLastMessage().getDate();
-                        String s2 = t1.getLastMessage().getDate();
-                        if(s2.compareTo(s1)==0){
-                            return Integer.valueOf(t1.getRid()).compareTo(Integer.valueOf(
-                                    room.getRid()
-                            ));
-                        }else{
-                            return s2.compareTo(s1);
-                        }
+                if (room.getLastMessage() == null || t1.getLastMessage() == null) {
+                    return t1.getLastMessage() == null ? -1 : 1;
+                }
+                String s1 = room.getLastMessage().getDate();
+                String s2 = t1.getLastMessage().getDate();
+                if (s2.compareTo(s1) == 0) {
+                    return Integer.valueOf(t1.getRid()).compareTo(Integer.valueOf(
+                            room.getRid()
+                    ));
+                } else {
+                    return s2.compareTo(s1);
+                }
             }
         });
         roomAdapter.notifyDataSetChanged();
@@ -226,6 +228,7 @@ public class HallFragment extends Fragment implements MyListener {
     public void onStop() {
         super.onStop();
         MyApplication.getmQueue().cancelAll(Config.GETROOM_TAG);
+
     }
 
 
@@ -270,5 +273,18 @@ public class HallFragment extends Fragment implements MyListener {
     public void onHiddenChanged(boolean hidden) {
 
         super.onHiddenChanged(hidden);
+    }
+
+
+    @Override
+    public void handleMsg(Message message) {
+        handler.handleMessage(message);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        LogUtils.e("hallFragment====================", "remove");
+        MyApplication.messageListenersList.remove(this);
     }
 }

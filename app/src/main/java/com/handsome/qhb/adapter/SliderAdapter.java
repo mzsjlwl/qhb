@@ -14,13 +14,13 @@ import java.util.List;
  */
 public class SliderAdapter extends PagerAdapter {
 
-    private List<NetworkImageView> viewLists;
+    private List<ImageView> viewLists;
 
     public SliderAdapter(){
 
     }
 
-    public SliderAdapter(List<NetworkImageView> viewLists){
+    public SliderAdapter(List<ImageView> viewLists){
         this.viewLists=viewLists;
     }
 

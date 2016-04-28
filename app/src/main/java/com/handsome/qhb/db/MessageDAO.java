@@ -60,9 +60,22 @@ public class MessageDAO  {
         }
         return null;
     }
-//    public static void delete(SQLiteDatabase db,Integer rid,Integer uid ){
-//        db.execSQL("delete from room  where uid = ? and rid = ?",new String[]{
-//                "",String.valueOf(uid)
-//        } );
-//    }
+
+    public static String getDBPhoto(SQLiteDatabase db,int uid){
+        Cursor cursor = db.rawQuery("select * from message where uid = ? order by mid desc limit 1",new String[]{String.valueOf(uid),
+        });
+
+        if(cursor.moveToFirst()){
+            String photo = cursor.getString(cursor.getColumnIndex("photo"));
+            return photo;
+        }
+        return "";
+    }
+
+    public static void updateDBPhoto(SQLiteDatabase db,int uid,String photo){
+        db.execSQL("update message set photo = ? where uid = ?", new String[]{photo,String.valueOf(uid)});
+    }
+
+
+
 }

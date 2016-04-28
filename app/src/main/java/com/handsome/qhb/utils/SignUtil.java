@@ -28,4 +28,21 @@ public class SignUtil {
         stringBuffer.append(Config.SECRETKEY);
         return MD5Utils.digest(stringBuffer.toString());
     }
+
+    public static String getIosSign(String method,String url,Map<String,String> map) throws MalformedURLException, NoSuchAlgorithmException {
+        StringBuffer stringBuffer = new StringBuffer();
+        stringBuffer.append(method.toUpperCase());
+        URL parse_url = new URL(url);
+        if (parse_url.getHost() != null && parse_url.getPath() != null) {
+            stringBuffer.append(parse_url.getHost()).append(parse_url.getPath());
+        }
+        if (map != null) {
+
+            for (Map.Entry<String, String> entry : map.entrySet()) {
+                stringBuffer.append(entry.getKey()).append("=").append(entry.getValue());
+            }
+        }
+        stringBuffer.append(Config.SECRETKEYIOS);
+        return MD5Utils.digest(stringBuffer.toString());
+    }
 }

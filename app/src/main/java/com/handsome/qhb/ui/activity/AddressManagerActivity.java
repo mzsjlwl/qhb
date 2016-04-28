@@ -11,6 +11,9 @@ import android.widget.Toast;
 
 import com.handsome.qhb.bean.Address;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import tab.com.handsome.handsome.R;
 
 /**
@@ -34,6 +37,10 @@ public class AddressManagerActivity extends BaseActivity {
     private TextView tv_back;
     //删除
     private ImageButton ib_delete;
+
+    private Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+    private Matcher m;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,6 +67,22 @@ public class AddressManagerActivity extends BaseActivity {
         tv_makesure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                m = p.matcher(recePhone.getText().toString());
+
+                if(receName.getText().toString().equals("")){
+                    Toast.makeText(AddressManagerActivity.this,"请输入收货人姓名",Toast.LENGTH_LONG).show();
+                    return;
+                }else if(recePhone.getText().toString().equals("")){
+                    Toast.makeText(AddressManagerActivity.this,"请输入手机号码",Toast.LENGTH_LONG).show();
+                    return;
+                }else if(receAddr.getText().toString().equals("")){
+                    Toast.makeText(AddressManagerActivity.this,"请输入收货地址",Toast.LENGTH_LONG).show();
+                    return;
+                }else if(!m.matches()){
+                    Toast.makeText(AddressManagerActivity.this,"请输入正确的手机号码",Toast.LENGTH_LONG).show();
+                    return;
+                }
                 Address address = new Address(aid,recePhone.getText().toString(),
                         receName.getText().toString(),receAddr.getText().toString());
                 Intent i = new Intent(AddressManagerActivity.this,AddressActivity.class);
@@ -97,10 +120,10 @@ public class AddressManagerActivity extends BaseActivity {
                     finish();
                 }else{
                     Intent i= new Intent(AddressManagerActivity.this,AddressActivity.class);
-                    if(getIntent().getStringExtra("TAG").equals("GWC")){
+                    if(getIntent().getStringExtra("TAG")!=null&&getIntent().getStringExtra("TAG").equals("GWC")){
                         i.putExtra("TAG","GWC");
                     }
-                    i.putExtra("delete",String.valueOf(aid));
+                    i.putExtra("delete", String.valueOf(aid));
                     startActivity(i);
                     finish();
                 }

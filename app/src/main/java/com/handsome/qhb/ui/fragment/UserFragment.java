@@ -200,14 +200,8 @@ public class UserFragment extends Fragment implements MyListener{
     public void dataController(String response, int tag) {
         switch(tag){
             case Config.USERINFO_TAG:
-                LogUtils.e("userInfo_tag","==>");
                 User user =  MyApplication.getGson().fromJson(response,User.class);
                 UserInfo.setUser(user);
-                SharedPreferences.Editor editor =getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE).edit();
-                editor.clear();
-                editor.putString("user", response);
-                editor.putLong("date", new Date().getTime());
-                editor.commit();
                 Message message = new Message();
                 message.what=Config.REFRESH_USER;
                 handler.handleMessage(message);

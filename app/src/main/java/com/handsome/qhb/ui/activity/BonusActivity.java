@@ -2,7 +2,6 @@ package com.handsome.qhb.ui.activity;
 
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -12,6 +11,7 @@ import com.handsome.qhb.adapter.BonusAdapter;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.ChatMessage;
 import com.handsome.qhb.bean.RandomBonus;
+import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
 
 import java.util.ArrayList;
@@ -44,6 +44,7 @@ public class BonusActivity extends BaseActivity {
 
             chatMessage = (ChatMessage) getIntent().getSerializableExtra("ChatMessage");
             tv_user_nackname.setText(chatMessage.getNackname()+"的红包");
+            ImageUtils.imageLoader(MyApplication.getmQueue(), chatMessage.getPhoto(), iv_user_photo);
 
             LogUtils.e("chatMessage",chatMessage.toString());
 
