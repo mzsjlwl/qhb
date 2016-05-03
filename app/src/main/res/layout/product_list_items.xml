@@ -16,7 +16,7 @@
             android:layout_width="@dimen/y48"
             android:layout_height="@dimen/y48"
             android:padding="@dimen/y3">
-            <com.android.volley.toolbox.NetworkImageView
+            <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/iv_product"

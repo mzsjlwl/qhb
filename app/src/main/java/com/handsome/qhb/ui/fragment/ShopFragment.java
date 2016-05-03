@@ -35,6 +35,7 @@ import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.NetworkImageUtils;
 import com.handsome.qhb.utils.UserInfo;
 import com.handsome.qhb.widget.RefreshListView;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -237,7 +238,8 @@ public class ShopFragment extends Fragment implements MyListener{
         for (Slider s : sliderLists) {
             ImageView imageView = new ImageView(getActivity());
             //加载图片
-            imageView =  ImageUtils.imageLoader(MyApplication.getmQueue(), s.getImage(), imageView);
+//            imageView =  ImageUtils.imageLoader(MyApplication.getmQueue(), s.getImage(), imageView);
+            Picasso.with(getActivity()).load(s.getImage()).into(imageView);
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageViews.add(imageView);
         }
@@ -255,9 +257,6 @@ public class ShopFragment extends Fragment implements MyListener{
     }
 
     public void initProductList() {
-        for(Product p :productLists){
-            LogUtils.e("product=======>",p.toString());
-        }
         productAdapter = new ProductAdapter(getActivity(), productLists, R.layout.product_list_items,MyApplication.getmQueue());
 
         rListView.setAdapter(productAdapter);
@@ -437,12 +436,10 @@ public class ShopFragment extends Fragment implements MyListener{
 
         super.onDestroy();
         SharedPreferences.Editor editor =getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE).edit();
-        editor.clear();
         editor.putString("user", MyApplication.getGson().toJson(UserInfo.getInstance()));
         editor.putString("slider",MyApplication.getGson().toJson(sliderLists));
         editor.putString("product", MyApplication.getGson().toJson(productLists));
         editor.commit();
-        LogUtils.e("shopFragment============>","destroy");
     }
 
     //获取本地购物车信息后填充商品数量
@@ -474,12 +471,10 @@ public class ShopFragment extends Fragment implements MyListener{
     @Override
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
-        LogUtils.e("hiddenchanger=============================","======");
         if(scheduledExecutorService!=null){
             scheduledExecutorService.shutdown();
         }
         if(hidden){
-            LogUtils.e("hidden","=============================");
         }else{
             onStartSlider();
         }

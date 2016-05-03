@@ -9,6 +9,7 @@ import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.listener.MyListener;
 import com.handsome.qhb.utils.HttpUtils;
+import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 
 import java.util.HashMap;
@@ -52,7 +53,8 @@ public class AddMoneyActivity extends BaseActivity implements MyListener{
     public void dataController(String response, int tag) {
         switch (tag){
             case Config.USERNOTICE_TAG:
-                tv_notice.setText(response);
+                String notice = response.replaceAll("<p>","").replaceAll("</p>","");
+                tv_notice.setText(notice);
                 break;
         }
     }

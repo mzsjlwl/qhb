@@ -18,9 +18,9 @@ public class NetworkImageUtils {
 
         ImageLoader imageLoader = new ImageLoader(mQueue, new BitmapCache());
 
-//        ImageLoader.ImageListener listener = ImageLoader.getImageListener(imageView,
-//                R.mipmap.ic_launcher, R.mipmap.ic_launcher);
-//        imageLoader.get(url, listener);
+        ImageLoader.ImageListener listener = ImageLoader.getImageListener(imageView,
+                R.mipmap.ic_launcher, R.mipmap.ic_launcher);
+        imageLoader.get(url, listener);
 
         imageView.setDefaultImageResId(R.mipmap.ic_launcher);
         imageView.setErrorImageResId(R.mipmap.ic_launcher);
@@ -34,7 +34,7 @@ public class NetworkImageUtils {
         private LruCache<String, Bitmap> mCache;
 
         public BitmapCache() {
-            int maxSize = 100 * 1024 * 1024;
+            int maxSize = 10 * 1024 * 1024;
             mCache = new LruCache<String, Bitmap>(maxSize) {
                 @Override
                 protected int sizeOf(String key, Bitmap bitmap) {

@@ -102,6 +102,7 @@ public class ChatActivity extends BaseActivity implements MessageListener {
 
         tv_room_title = (TextView) findViewById(R.id.tv_room_title);
         et_chat_msg = (EditText)findViewById(R.id.et_chat_msg);
+
         ib_chat_send = (ImageButton)findViewById(R.id.ib_chat_send);
         ll_back = (LinearLayout)findViewById(R.id.ll_back);
         lv_chat = (ListView)findViewById(R.id.lv_chat);

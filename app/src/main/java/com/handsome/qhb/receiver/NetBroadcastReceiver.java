@@ -23,7 +23,8 @@ public class NetBroadcastReceiver extends BroadcastReceiver {
         if(!mobNetInfo.isConnected()&&!wifiNetInfo.isConnected()){
             Toast.makeText(context,"网络不可用",Toast.LENGTH_LONG);
             MyApplication.setNetstate(0);
-            LogUtils.e("BroadcastReceiver","网络不可用");
+            LogUtils.e("BroadcastReceiver", "网络不可用");
+
         }else{
             Toast.makeText(context,"网络可用",Toast.LENGTH_LONG);
             MyApplication.setNetstate(1);

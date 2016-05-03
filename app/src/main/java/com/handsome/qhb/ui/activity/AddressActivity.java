@@ -80,7 +80,6 @@ public class AddressActivity extends BaseActivity{
 
         //删除
         if(getIntent().getStringExtra("delete")!=null){
-            LogUtils.e("==>","delete");
             int aid = Integer.valueOf(getIntent().getStringExtra("delete"));
             if(addressList!=null){
                 for(int i = 0;i<addressList.size();i++){
@@ -116,7 +115,7 @@ public class AddressActivity extends BaseActivity{
         }
 
         //装载到ListView
-        if(addressList!=null){
+        if(addressList!=null&&addressList.size()!=0){
             //获取list中最后一条的aid再加一
             size = addressList.get(addressList.size()-1).getAid()+1;
             AddressAdapter addressAdapter = new AddressAdapter(this,addressList,R.layout.address_list_items, MyApplication.getmQueue());
@@ -130,6 +129,5 @@ public class AddressActivity extends BaseActivity{
     protected void onStop() {
         super.onStop();
         UserDAO.updateAddress(db, UserInfo.getInstance().getUid(),MyApplication.getGson().toJson(addressList));
-        LogUtils.e("addressActivity","onStop");
     }
 }

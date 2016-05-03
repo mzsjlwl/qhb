@@ -13,6 +13,7 @@ import com.handsome.qhb.bean.ChatMessage;
 import com.handsome.qhb.bean.RandomBonus;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +44,8 @@ public class BonusActivity extends BaseActivity {
         if(getIntent().getSerializableExtra("ChatMessage")!=null&&getIntent().getSerializableExtra("bonusList")!=null){
 
             chatMessage = (ChatMessage) getIntent().getSerializableExtra("ChatMessage");
-            tv_user_nackname.setText(chatMessage.getNackname()+"的红包");
-            ImageUtils.imageLoader(MyApplication.getmQueue(), chatMessage.getPhoto(), iv_user_photo);
-
+            tv_user_nackname.setText(chatMessage.getNackname() + "的红包");
+            Picasso.with(this).load(chatMessage.getPhoto()).into(iv_user_photo);
             LogUtils.e("chatMessage",chatMessage.toString());
 
 

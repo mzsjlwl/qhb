@@ -65,14 +65,11 @@ public class OrderActivity extends BaseActivity implements MyListener{
         @Override
         public void handleMessage(Message msg) {
             if(msg.what==Config.ORDER_MESSAGE){
-                LogUtils.e("--->0x127", "orders");
                 initOrderListView();
             }else if(msg.what == Config.REFRESH_ORDER){
-                LogUtils.e("----->0x128","ordersrefresh");
                 initOrderListView();
                 refreshListView.hideHeaderView();
             }else if(msg.what == Config.LOADMORE_ORDER){
-                LogUtils.e("---->0x129","loadmore");
                 initOrderListView();
                 refreshListView.hideFooterView();
             }
@@ -143,10 +140,6 @@ public class OrderActivity extends BaseActivity implements MyListener{
                     orderList= new ArrayList<Order>();
                     orderList = gson.fromJson(jsonObjectdata1.getString("orders"), new TypeToken<List<Order>>() {
                     }.getType());
-                    if(orderList!=null){
-                        for(Order order:orderList){
-                            LogUtils.e("orderlist",order.toString());}
-                    }
                     pageJson = new JSONObject(jsonObjectdata1.getString("page"));
                     page = Integer.valueOf(pageJson.getString("nums"));
                     nextpage = pageJson.getString("next");

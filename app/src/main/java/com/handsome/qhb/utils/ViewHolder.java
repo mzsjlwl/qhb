@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.NetworkImageView;
+import com.squareup.picasso.Picasso;
 
 /**
  * Created by zhang on 2016/3/3.
@@ -19,6 +20,7 @@ public class ViewHolder  {
     private int mPosition;
     private View mConvertView;
     private RequestQueue mQueue;
+    private Context context;
 
     public View getConvertView()
     {
@@ -28,6 +30,7 @@ public class ViewHolder  {
     public ViewHolder(Context context, ViewGroup parent, int layoutId, int position,RequestQueue mQueue)
     {
         this.mViews = new SparseArray<View>();
+        this.context = context;
         this.mPosition = position;
         this.mQueue = mQueue;
         this.mConvertView = LayoutInflater.from(context).inflate(layoutId, parent, false);
@@ -70,13 +73,8 @@ public class ViewHolder  {
     }
     public ViewHolder setImage(int viewId,String url){
         ImageView iv = getView(viewId);
-        ImageUtils.imageLoader(mQueue, url, iv);
+        Picasso.with(context).load(url).into(iv);
         return this;
+    }
 
-    }
-    public ViewHolder setNetWorkImage(int viewId,String url){
-        NetworkImageView iv = getView(viewId);
-        NetworkImageUtils.imageLoader(mQueue,url,iv);
-        return this;
-    }
 }

@@ -81,7 +81,6 @@ public class MessageReceiver extends XGPushBaseReceiver {
             return;
         }
         if(xgPushTextMessage.getTitle().equals("Room")) {
-            LogUtils.e("room","===>xg");
             roomList = MyApplication.getGson().fromJson(xgPushTextMessage.getContent(), new TypeToken<List<Room>>() {
             }.getType());
             if (roomList != null) {
@@ -105,7 +104,8 @@ public class MessageReceiver extends XGPushBaseReceiver {
                 if(rooms.get(i).getRid()==chatMessage.getRid()){
                     RoomDAO.update(MyApplication.getSQLiteDatabase(),MyApplication.getGson().toJson(chatMessage),chatMessage.getRid());
                     String dbPhoto = MessageDAO.getDBPhoto(MyApplication.getSQLiteDatabase(),chatMessage.getUid());
-                    if(!dbPhoto.equals(chatMessage.getPhoto())){
+
+                    if(dbPhoto!=null&&!dbPhoto.equals(chatMessage.getPhoto())){
                        MessageDAO.updateDBPhoto(MyApplication.getSQLiteDatabase(),chatMessage.getUid(),chatMessage.getPhoto());
                     }
                     break;
@@ -125,7 +125,6 @@ public class MessageReceiver extends XGPushBaseReceiver {
             chatMessage.setDate(format.format(new Date()));
             //普通消息
             if(xgPushTextMessage.getTitle().equals(String.valueOf(Config.TYPE_TEXT))){
-                LogUtils.e("chat===========", "=====================");
                 chatMessage.setType(Config.TYPE_TEXT);
                 mBuilder.setContentText(chatMessage.getNackname()+" : "+chatMessage.getContent())
                         .setTicker("收到" + chatMessage.getNackname() + "发送过来的信息");
@@ -147,7 +146,6 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     message1.obj = chatMessage;
 
                     for (MessageListener ml:MyApplication.messageListenersList) {
-                        LogUtils.e("===============Handler","===================");
                         ml.handleMsg(message);
                         ml.handleMsg(message1);
                     }
@@ -324,6 +322,5 @@ public class MessageReceiver extends XGPushBaseReceiver {
         }
         return  false;
     }
-
 
 }

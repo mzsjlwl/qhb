@@ -41,6 +41,7 @@ import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.NetworkImageUtils;
 import com.handsome.qhb.utils.TimeUtils;
 import com.handsome.qhb.utils.UserInfo;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -121,7 +122,7 @@ public class MsgAdapter extends BaseAdapter{
                         .findViewById(R.id.chat_from_content);
                 viewHolder.nackname = (TextView) convertView
                         .findViewById(R.id.chat_from_name);
-                viewHolder.chat_icon = (NetworkImageView) convertView.findViewById(R.id.chat_icon);
+                viewHolder.chat_icon = (ImageView) convertView.findViewById(R.id.chat_icon);
                 viewHolder.rl_content = (RelativeLayout) convertView.findViewById(R.id.rl_content);
                 convertView.setTag(viewHolder);
             }else if(chatMessage.getUid()==UserInfo.getInstance().getUid())
@@ -134,7 +135,7 @@ public class MsgAdapter extends BaseAdapter{
                         .findViewById(R.id.chat_send_content);
                 viewHolder.nackname = (TextView) convertView
                         .findViewById(R.id.chat_send_name);
-                viewHolder.chat_icon = (NetworkImageView) convertView.findViewById(R.id.chat_icon);
+                viewHolder.chat_icon = (ImageView) convertView.findViewById(R.id.chat_icon);
                 viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_progressBar);
                 viewHolder.rl_content = (RelativeLayout) convertView.findViewById(R.id.rl_content);
                 convertView.setTag(viewHolder);
@@ -156,7 +157,7 @@ public class MsgAdapter extends BaseAdapter{
             viewHolder.createDate.setText(TimeUtils.getInterval(chatMessage.getDate()));
         }
 
-        NetworkImageUtils.imageLoader(MyApplication.getmQueue(), chatMessage.getPhoto(), viewHolder.chat_icon);
+        Picasso.with(context).load(chatMessage.getPhoto()).into(viewHolder.chat_icon);
         //随机红包
         if(chatMessage.getType()== Config.TYPE_RANDOMBONUS){
             if(chatMessage.getUid()==UserInfo.getInstance().getUid()){
@@ -216,7 +217,7 @@ public class MsgAdapter extends BaseAdapter{
         public TextView nackname;
         public TextView content;
         public ProgressBar progressBar;
-        public NetworkImageView chat_icon;
+        public ImageView chat_icon;
         public RelativeLayout rl_content;
 
     }
@@ -294,20 +295,16 @@ public class MsgAdapter extends BaseAdapter{
             int statuts = Integer.valueOf(MessageDAO.getStatus(MyApplication.getSQLiteDatabase(), mDatas.get(position).getId(), mDatas.get(
                     position).getType()));
             if(statuts==Config.STATE_CDSBONUS_START){
-
-                LogUtils.e("DSONCLICK=====>", "1");
                 getPersonNum(mDatas.get(position).getId(), mDatas.get(position).getRid(),
                         mDatas.get(position));
                 progressDialog.dismiss();
 
             }else if(statuts==Config.STATE_CDSBONUS_GUESSED){
                 progressDialog.dismiss();
-                LogUtils.e("DSONCLICK=====>", "2");
                 getMyguess(mDatas.get(position).getId(),mDatas.get(position).getRid(),
                         UserInfo.getInstance().getUid(),mDatas.get(position));
             }else if(statuts==Config.STATE_CDSBONUS_END){
                 progressDialog.dismiss();
-                LogUtils.e("DSONCLICK=====>", "3");
                 getResult(mDatas.get(position).getId(),mDatas.get(position).getRid(),
                         UserInfo.getInstance().getUid(),mDatas.get(position));
             }
@@ -333,10 +330,8 @@ public class MsgAdapter extends BaseAdapter{
                 new MyListener() {
                     @Override
                     public void dataController(String response, int tag) {
-
                         DS ds = new DS();
                         ds = MyApplication.getGson().fromJson(response, DS.class);
-                        LogUtils.e("getPersonNum-ds", ds.toString());
                         Intent i = new Intent(context, CDSActivity.class);
                         Bundle b = new Bundle();
                         b.putSerializable("ds", ds);
@@ -360,10 +355,8 @@ public class MsgAdapter extends BaseAdapter{
                 new MyListener() {
                     @Override
                     public void dataController(String response, int tag) {
-
                         DS ds = new DS();
                         ds = MyApplication.getGson().fromJson(response, DS.class);
-                        LogUtils.e("getMyguess-ds", ds.toString());
                         Intent i = new Intent(context, CDSActivity.class);
                         Bundle b = new Bundle();
                         b.putSerializable("ds", ds);
@@ -385,10 +378,8 @@ public class MsgAdapter extends BaseAdapter{
                 new MyListener() {
                     @Override
                     public void dataController(String response, int tag) {
-
                         DS ds = new DS();
                         ds = MyApplication.getGson().fromJson(response, DS.class);
-                        LogUtils.e("getMyguess-ds", ds.toString());
                         Intent i = new Intent(context, CDSActivity.class);
                         Bundle b = new Bundle();
                         b.putSerializable("ds", ds);

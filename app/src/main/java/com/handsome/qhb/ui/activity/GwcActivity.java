@@ -119,9 +119,9 @@ public class GwcActivity extends BaseActivity implements MyListener {
                     toast.setGravity(Gravity.CENTER,0,0);
                     toast.show();
                     return ;
-                }else if(tv_receAddr.getText().toString().equals("收货地址")
-                        ||tv_recePhone.getText().toString().equals("手机号码")
-                        ||tv_receName.getText().toString().equals("收货地址")){
+                }else if(tv_receAddr.getText().toString().equals("")
+                        ||tv_recePhone.getText().toString().equals("")
+                        ||tv_receName.getText().toString().equals("")){
                     Toast toast = Toast.makeText(GwcActivity.this,"请填写收货信息",Toast.LENGTH_LONG);
                     toast.setGravity(Gravity.CENTER, 0, 0);
                     toast.show();
@@ -158,17 +158,17 @@ public class GwcActivity extends BaseActivity implements MyListener {
         super.onStart();
         if (getIntent().getSerializableExtra("address") != null) {
             Address address = (Address) getIntent().getSerializableExtra("address");
-            tv_receAddr.setText("收货地址："+address.getReceAddr());
-            tv_recePhone.setText("联系方式："+address.getRecePhone());
-            tv_receName.setText("收货人："+address.getReceName());
+            tv_receAddr.setText(address.getReceAddr());
+            tv_recePhone.setText(address.getRecePhone());
+            tv_receName.setText(address.getReceName());
         } else {
             addressList = gson.fromJson(UserDAO.findAddress(db, UserInfo.getInstance().getUid()),
                     new TypeToken<List<Address>>() {
                     }.getType());
-            if (addressList != null) {
-                tv_receAddr.setText("收货地址："+addressList.get(0).getReceAddr());
-                tv_recePhone.setText("联系方式："+addressList.get(0).getRecePhone());
-                tv_receName.setText("收货人："+addressList.get(0).getReceName());
+            if (addressList != null&&addressList.size()!=0) {
+                tv_receAddr.setText(addressList.get(0).getReceAddr());
+                tv_recePhone.setText(addressList.get(0).getRecePhone());
+                tv_receName.setText(addressList.get(0).getReceName());
             }
         }
     }

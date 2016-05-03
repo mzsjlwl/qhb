@@ -48,20 +48,34 @@
             android:label="@string/title_activity_login" >
 
         </activity>
-        <activity android:name="com.handsome.qhb.ui.activity.RegisterActivity"></activity>
-        <activity android:name="com.handsome.qhb.ui.activity.GwcActivity"></activity>
-        <activity android:name="com.handsome.qhb.ui.activity.OrderActivity"></activity>
-        <activity android:name="com.handsome.qhb.ui.activity.AddressActivity"></activity>
-        <activity android:name="com.handsome.qhb.ui.activity.AddressManagerActivity"></activity>
-        <activity android:name="com.handsome.qhb.ui.activity.UpdateDataActivity"></activity>
-        <activity android:name="com.handsome.qhb.ui.activity.OrderDetailActivity"></activity>
-        <activity android:name="com.handsome.qhb.ui.activity.UpdatePasswordActivity"></activity>
-        <activity android:name="com.handsome.qhb.ui.activity.UpdatePhotoActivity"></activity>
-        <activity android:name="com.handsome.qhb.ui.activity.CDSActivity"/>
-        <activity android:name="com.handsome.qhb.ui.activity.ChatActivity"/>
-        <activity android:name="com.handsome.qhb.ui.activity.BonusActivity"/>
-        <activity android:name="com.handsome.qhb.ui.activity.AddMoneyActivity"/>
-        <activity android:name="com.handsome.qhb.ui.activity.IndexActivity">
+        <activity android:name="com.handsome.qhb.ui.activity.RegisterActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.GwcActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.OrderActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.AddressActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.AddressManagerActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.UpdateDataActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.OrderDetailActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.UpdatePasswordActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.UpdatePhotoActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.CDSActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.ChatActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.BonusActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.AddMoneyActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity android:name="com.handsome.qhb.ui.activity.IndexActivity"
+            android:screenOrientation="portrait">
         </activity>
         <activity android:name="com.handsome.qhb.ui.activity.WelcomeActivity">
 

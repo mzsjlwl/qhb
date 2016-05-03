@@ -13,6 +13,7 @@ import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.config.Config;
 import com.handsome.qhb.listener.MyListener;
 import com.handsome.qhb.utils.HttpUtils;
+import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 
 import java.util.HashMap;
@@ -65,16 +66,18 @@ public class UpdatePasswordActivity extends BaseActivity implements MyListener{
         tv_makesure.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 if(et_password.getText().toString().equals("")){
-                    Toast.makeText(UpdatePasswordActivity.this,"新密码不能为空",Toast.LENGTH_LONG).show();
+                    Toast.makeText(UpdatePasswordActivity.this,"新密码不能为空",Toast.LENGTH_SHORT).show();
                     return ;
                 }else if(et_repeatPassword.getText().toString().equals("")){
-                    Toast.makeText(UpdatePasswordActivity.this,"两次密码不一致",Toast.LENGTH_LONG).show();
+                    Toast.makeText(UpdatePasswordActivity.this,"重复密码不能为空",Toast.LENGTH_SHORT).show();
                     return ;
-                }else if(et_repeatPassword.getText().toString().equals(et_password.getText().toString())){
-                    Toast.makeText(UpdatePasswordActivity.this,"两次密码不一致",Toast.LENGTH_LONG).show();
+                }else if(!et_repeatPassword.getText().toString().equals(et_password.getText().toString())){
+                    Toast.makeText(UpdatePasswordActivity.this,"两次密码不一致",Toast.LENGTH_SHORT).show();
                     return ;
+                }else if(et_password.getText().toString().length()<6){
+                    Toast.makeText(UpdatePasswordActivity.this,"密码长度不能小于6",Toast.LENGTH_SHORT).show();
+                    return;
                 }
 
                     Map<String, String> map = new HashMap<String, String>();

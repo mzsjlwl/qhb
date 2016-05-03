@@ -18,6 +18,9 @@ import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-
 
 import tab.com.handsome.handsome.R;
 
@@ -169,6 +171,13 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         timerTask = new TimerTask() {
             @Override
             public void run() {
@@ -181,13 +190,13 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
         };
         timer = new Timer();
         timer.schedule(timerTask, 0, 1000);
+        MyApplication.messageListenersList.add(this);
     }
 
-
     @Override
-    protected void onResume() {
-        super.onResume();
-        MyApplication.messageListenersList.add(this);
+    protected void onRestart() {
+        super.onRestart();
+
     }
 
     @Override
@@ -204,7 +213,6 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
     }
 
     public void refreshResult(ChatMessage msg) {
-        LogUtils.e("result-msg", msg.toString());
         if(msg.getId()==ds.getId()) {
             if (msg.getContent().equals("1")) {
                 tv_result.setText("单");
@@ -217,18 +225,26 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
     }
 
     @Override
-    public void dataController(String response, int tag) {
-        switch(tag){
-            case Config.DSCDS_TAG:
-                ll_guess.setVisibility(View.INVISIBLE);
-                if(response.equals("1")){
-                    tv_guess.setText("单");
-                }else if(response.equals("2")){
-                    tv_guess.setText("双");
-                }
-                ll_myguess.setVisibility(View.VISIBLE);
-                break;
+    public void dataController(String response, int tag)  {
+
+        try {
+            switch(tag){
+                case Config.DSCDS_TAG:
+                    JSONObject data = new JSONObject(response);
+                    tv_person.setText(data.getString("personNum"));
+                    ll_guess.setVisibility(View.INVISIBLE);
+                    if(data.getString("guess").equals("1")){
+                        tv_guess.setText("单");
+                    }else if(data.getString("guess").equals("2")){
+                        tv_guess.setText("双");
+                    }
+                    ll_myguess.setVisibility(View.VISIBLE);
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
 
     }
 

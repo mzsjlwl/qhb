@@ -17,6 +17,7 @@ import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
+import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +46,7 @@ public class UpdateDataActivity extends BaseActivity implements MyListener{
         et_nackname = (EditText)findViewById(R.id.et_nackname);
         tv_makesure = (TextView)findViewById(R.id.tv_makesure);
         iv_user_photo = (ImageView)findViewById(R.id.iv_user_photo);
-        ImageUtils.imageLoader(MyApplication.getmQueue(),UserInfo.getInstance().getPhoto(),iv_user_photo);
+        Picasso.with(this).load(UserInfo.getInstance().getPhoto()).into(iv_user_photo);
         et_nackname.setText(UserInfo.getInstance().getNackname());
 
         ll_back.setOnClickListener(new View.OnClickListener() {
@@ -77,7 +78,7 @@ public class UpdateDataActivity extends BaseActivity implements MyListener{
     @Override
     protected void onRestart() {
         super.onRestart();
-        ImageUtils.imageLoader(MyApplication.getmQueue(), UserInfo.getInstance().getPhoto(), iv_user_photo);
+            Picasso.with(this).load(UserInfo.getInstance().getPhoto()).into(iv_user_photo);
     }
 
     @Override

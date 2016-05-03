@@ -27,8 +27,6 @@ public class WelcomeActivity extends  BaseActivity {
             switch(msg.what){
                 case GOTO_MAIN_ACTIVITY:
                     Intent i = new Intent(WelcomeActivity.this,MainActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startActivity(i);
                     finish();
                     break;
@@ -42,12 +40,10 @@ public class WelcomeActivity extends  BaseActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        LogUtils.e("WelcomeActivity","onrestart");
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        LogUtils.e("WELCOMEActivity","onstart");
     }
 }

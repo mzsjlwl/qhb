@@ -78,12 +78,12 @@ public class RoomAdapter extends CommonAdapter<Room> implements MyListener{
             }
         }
 
-        holder.setNetWorkImage(R.id.iv_roomPhoto,room.getRoomPhoto());
+        holder.setImage(R.id.iv_roomPhoto,room.getRoomPhoto());
     }
 
     @Override
     public void dataController(String response, int tag) {
-
+        LogUtils.e("enterroom.response===",response);
     }
 
     class RoomItemOnclick implements View.OnClickListener{
@@ -93,6 +93,7 @@ public class RoomAdapter extends CommonAdapter<Room> implements MyListener{
         }
         @Override
         public void onClick(View view) {
+            LogUtils.e("room=====","onclick");
             if (mDatas.get(position).getChatMessageList() != null) {
                 mDatas.get(position).getChatMessageList().clear();
             }

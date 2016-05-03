@@ -30,6 +30,7 @@ import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
+import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public class UserFragment extends Fragment implements MyListener{
         @Override
         public void handleMessage(Message msg) {
             if(msg.what==Config.REFRESH_USER){
-                ImageUtils.imageLoader(MyApplication.getmQueue(), UserInfo.getInstance().getPhoto(), iv_user_photo);
+                Picasso.with(getActivity()).load(UserInfo.getInstance().getPhoto()).into(iv_user_photo);
                 tv_name.setText(UserInfo.getInstance().getNackname().toString());
                 tv_integral.setText(String.valueOf(UserInfo.getInstance().getIntegral()));
             }
@@ -93,7 +94,7 @@ public class UserFragment extends Fragment implements MyListener{
         ll_logout = (LinearLayout)view.findViewById(R.id.ll_logout);
         iv_user_photo = (ImageView)view.findViewById(R.id.iv_user_photo);
         if(UserInfo.getInstance()!=null) {
-            ImageUtils.imageLoader(MyApplication.getmQueue(), UserInfo.getInstance().getPhoto(), iv_user_photo);
+                Picasso.with(getActivity()).load(UserInfo.getInstance().getPhoto()).into(iv_user_photo);
         }
             iv_user_photo.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,7 +157,9 @@ public class UserFragment extends Fragment implements MyListener{
                         UserInfo.setUser(null);
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(intent);
-
+                        SharedPreferences.Editor editor = getActivity().getSharedPreferences("data",getActivity().MODE_PRIVATE).edit();
+                        editor.putString("user","");
+                        editor.commit();
                         getActivity().finish();
                     }
                 });
@@ -176,14 +179,12 @@ public class UserFragment extends Fragment implements MyListener{
     @Override
     public void onStart() {
         super.onStart();
-        LogUtils.e("Userfragment", "onstart");
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        LogUtils.e("Userfragment", "onResume");
         Map<String, String> map = new HashMap<String, String>();
         map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
         map.put("token", String.valueOf(UserInfo.getInstance().getToken()));

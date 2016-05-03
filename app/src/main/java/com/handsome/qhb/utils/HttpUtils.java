@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -77,6 +78,7 @@ public class HttpUtils {
             }
         };
         stringRequest.setTag(tag);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(10000,2,DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         MyApplication.getmQueue().add(stringRequest);
     }
 
@@ -123,6 +125,7 @@ public class HttpUtils {
             }
         };
         stringRequest.setTag(tag);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(10000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         MyApplication.getmQueue().add(stringRequest);
     }
 
@@ -156,6 +159,7 @@ public class HttpUtils {
             }
         };
         stringRequest.setTag(tag);
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(10000, 2, DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         MyApplication.getmQueue().add(stringRequest);
     }
 }

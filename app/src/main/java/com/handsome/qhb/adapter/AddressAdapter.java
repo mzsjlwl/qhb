@@ -45,7 +45,6 @@ public class AddressAdapter extends CommonAdapter<Address> {
         public void onClick(View view) {
             Activity activity =(Activity)mContext;
             Intent i ;
-//            LogUtils.e("TAG",activity.getIntent().getStringExtra("TAG"));
             if(activity.getIntent().getStringExtra("TAG")!=null&&activity.getIntent().getStringExtra("TAG").equals("GWC")){
                  i = new Intent(activity, GwcActivity.class);
             }else{

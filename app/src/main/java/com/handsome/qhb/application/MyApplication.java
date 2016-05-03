@@ -12,7 +12,6 @@ import com.google.gson.Gson;
 import com.handsome.qhb.db.UserDBOpenHelper;
 import com.handsome.qhb.listener.MessageListener;
 import com.handsome.qhb.utils.LogUtils;
-import com.squareup.leakcanary.LeakCanary;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushManager;
 
@@ -50,7 +49,6 @@ public class MyApplication extends Application {
                 LogUtils.e("TPush", "注册失败,错误码" + i + ",错误信息：" + s);
             }
         });
-       // LeakCanary.install(this);
 
     }
 

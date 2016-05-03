@@ -17,6 +17,7 @@
         android:textColor="#ffffff"
         android:text="@string/tx_add"
         android:clickable="true"
+        android:visibility="gone"
         />
     <TextView
         android:layout_height="match_parent"

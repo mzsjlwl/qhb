@@ -31,8 +31,7 @@ import tab.com.handsome.handsome.R;
         holder.setText(R.id.tx_pname, product.getPname());
         holder.setText(R.id.tx_price, String.valueOf(product.getPrice()) + "￥");
         holder.setText(R.id.tv_num, String.valueOf(product.getNum()));
-//        holder.setImage(R.id.iv_product, product.getPicture());
-        holder.setNetWorkImage(R.id.iv_product, product.getPicture());
+        holder.setImage(R.id.iv_product, product.getPicture());
         holder.getView(R.id.btn_add).setOnClickListener(
                 new View.OnClickListener() {
             @Override
@@ -75,7 +74,6 @@ import tab.com.handsome.handsome.R;
     }
 
     private void updateSingleRow(ListView listView,int id){
-        LogUtils.e("position",String.valueOf(id));
         if(listView!=null){
             int start = listView.getFirstVisiblePosition();
             View view = listView.getChildAt(id-start+1);

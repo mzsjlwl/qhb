@@ -35,6 +35,16 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
+
+        if(sharedPreferences.getString("active","").equals("")){
+            Intent i = new Intent(this,IndexActivity.class);
+            startActivity(i);
+            finish();
+            return;
+        }
+
         if(MyApplication.welcome==0){
             Intent i = new Intent(this,WelcomeActivity.class);
             startActivity(i);
@@ -47,7 +57,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         registerReceiver();
         if(UserInfo.getInstance().getUid()==0){
             //判断登录情况
-            SharedPreferences sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
+            sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
             User user = MyApplication.getGson().fromJson(sharedPreferences.getString("user", ""),User.class);
             if(user==null||user.getUid()==0){
                 Intent i = new Intent(MainActivity.this,LoginActivity.class);

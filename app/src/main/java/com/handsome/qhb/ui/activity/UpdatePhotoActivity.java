@@ -23,6 +23,7 @@ import com.handsome.qhb.listener.MyListener;
 import com.handsome.qhb.utils.HttpUtils;
 import com.handsome.qhb.utils.ImageUtils;
 import com.handsome.qhb.utils.UserInfo;
+import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -59,7 +60,7 @@ public class UpdatePhotoActivity extends BaseActivity implements MyListener{
         ll_back = (LinearLayout) findViewById(R.id.ll_back);
         ib_photo_menu = (ImageButton)findViewById(R.id.ib_photo_menu);
         iv_user_photo = (ImageView)findViewById(R.id.iv_user_photo);
-        ImageUtils.imageLoader(MyApplication.getmQueue(),UserInfo.getInstance().getPhoto(),iv_user_photo);
+        Picasso.with(this).load(UserInfo.getInstance().getPhoto()).into(iv_user_photo);
         ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -264,7 +265,9 @@ public class UpdatePhotoActivity extends BaseActivity implements MyListener{
     public void dataController(String response, int tag) {
         switch(tag){
             case Config.UPDATEPHOTO_TAG:
-                img.delete();
+                if(img!=null){
+                    img.delete();
+                }
                 User user =  gson.fromJson(response,User.class);
                 UserInfo.setUser(user);
                 finish();

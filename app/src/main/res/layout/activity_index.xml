@@ -1,42 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
         <android.support.v4.view.ViewPager
-            android:id="@+id/viewPager"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:id="@+id/guidePages"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dip"
-            android:layout_gravity="bottom|center_horizontal"
-            android:layout_marginBottom="@dimen/y50"
-            android:gravity="center" >
+            android:orientation="vertical">
 
-            <View
-                android:id="@+id/v_dot0"
-                style="@style/dot_style"
-                android:background="@drawable/dot_focused"
-                android:visibility="invisible" />
+            <LinearLayout
+                android:id="@+id/viewGroup"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="40dp"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal">
 
-            <View
-                android:id="@+id/v_dot1"
-                style="@style/dot_style"
-                android:visibility="invisible"/>
+            </LinearLayout>
+        </RelativeLayout>
 
-            <View
-                android:id="@+id/v_dot2"
-                style="@style/dot_style"
-                android:visibility="invisible"/>
+    </LinearLayout>
 
-        </LinearLayout>
-    </FrameLayout>
-</LinearLayout>
+</FrameLayout>

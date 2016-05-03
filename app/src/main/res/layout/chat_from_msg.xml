@@ -25,7 +25,7 @@
             android:layout_marginLeft="@dimen/x5"
             android:orientation="horizontal" >
 
-            <com.android.volley.toolbox.NetworkImageView
+            <ImageView
                 android:id="@+id/chat_icon"
                 android:layout_width="@dimen/x50"
                 android:layout_height="@dimen/x45"
