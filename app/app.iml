@@ -98,6 +98,7 @@
     <orderEntry type="library" exported="" name="android-async-http-1.4.6" level="project" />
     <orderEntry type="library" exported="" name="wup-1.0.0.E-SNAPSHOT" level="project" />
     <orderEntry type="library" exported="" name="support-v4-23.1.1" level="project" />
+    <orderEntry type="library" exported="" name="tbs_sdk_v1.5.1.1057_25436_obfs_20160331_144900" level="project" />
     <orderEntry type="library" exported="" name="Xg_sdk_v2.42_20160111_1539" level="project" />
     <orderEntry type="library" exported="" name="okhttp-2.0.0" level="project" />
   </component>

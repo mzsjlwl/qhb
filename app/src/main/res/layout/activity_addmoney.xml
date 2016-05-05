@@ -34,9 +34,10 @@
             android:textColor="#ffffff"
             />
     </RelativeLayout>
-    <TextView
-        android:id="@+id/tv_notice"
+    <com.tencent.smtt.sdk.WebView
+        android:id="@+id/wv_notice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+
 </LinearLayout>

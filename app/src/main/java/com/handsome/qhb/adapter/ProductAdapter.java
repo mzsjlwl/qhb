@@ -13,6 +13,7 @@ import com.handsome.qhb.utils.LogUtils;
 import com.handsome.qhb.utils.UserInfo;
 import com.handsome.qhb.utils.ViewHolder;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import tab.com.handsome.handsome.R;
@@ -23,13 +24,16 @@ import tab.com.handsome.handsome.R;
  */
  public class ProductAdapter extends CommonAdapter<Product> {
 
+    DecimalFormat df = new DecimalFormat("#0.00");
     public ProductAdapter(Context context, List<Product> datas, int layoutId, RequestQueue mQueue){
         super(context,datas,layoutId,mQueue);
     }
     @Override
     public void convert(final int position,final ViewHolder holder,final ListView listView, final Product product) {
         holder.setText(R.id.tx_pname, product.getPname());
-        holder.setText(R.id.tx_price, String.valueOf(product.getPrice()) + "￥");
+        System.out.println(product.getPrice());
+        LogUtils.e("money",String.valueOf(product.getPrice()));
+        holder.setText(R.id.tx_price, String.valueOf(df.format(product.getPrice())) + "￥");
         holder.setText(R.id.tv_num, String.valueOf(product.getNum()));
         holder.setImage(R.id.iv_product, product.getPicture());
         holder.getView(R.id.btn_add).setOnClickListener(
@@ -81,6 +85,5 @@ import tab.com.handsome.handsome.R;
             holder.setText(R.id.tv_num,String.valueOf(mDatas.get(id).getNum()));
         }
     }
-
 
 }

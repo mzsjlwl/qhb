@@ -28,6 +28,11 @@
     <uses-permission android:name="android.permission.BATTERY_STATS" />
 
 
+
+
+
+
+
     <application
         android:name="com.handsome.qhb.application.MyApplication"
         android:allowBackup="true"

@@ -4,6 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_alignBottom="@dimen/y5"
     android:clickable="true"
     android:id="@+id/ll_items">
     <LinearLayout
