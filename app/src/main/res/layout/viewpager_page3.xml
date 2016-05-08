@@ -10,10 +10,14 @@
         android:layout_height="match_parent"
         android:background="@mipmap/index3"/>
     <Button
+        android:layout_alignParentBottom="true"
         android:id="@+id/btn_close_guide"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/y15"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="fds"/>
+        android:background="@mipmap/lijicanyu"
+        />
 
 
 </RelativeLayout>

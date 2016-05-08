@@ -6,7 +6,6 @@ public class Config {
     public static final String ORDER_TAG = "order";
     public static final String ACCESSID = "2100189658";
     public static final String ACCESSIDIOS = "2200195440";
-    public static final String ACCESSKEY = "AQV87R7CL46K";
     public static final String SECRETKEY = "92319602671d73ebab46ff60537e3754";
     public static final String SECRETKEYIOS = "0e8d5682dc81ab5a2dbd2b211895a389";
 
@@ -14,19 +13,16 @@ public class Config {
     public static final int INIT_SLIDER_PICTURE = 2;
     public static final int INIT_PRODUCT = 3;
     public static final int REFERSH_PRODUCT = 4;
-    public static final int LoadMORE_PRODUCT = 5;
-    public static final int INITROOM_MESSAGE = 6;
+    public static final int INITROOM_MESSAGE = 5;
 
-    public static final int ROOM_MESSAGE = 7;
-    public static final int CHAT_MESSAGE = 8;
-    public static final int RANDOMBONUS_MESSAGE = 9;
-    public static final int CDSBONUS_MESSAGE = 10;
-    public static final int ADD_MESSAGE=11;
-    public static final int ROOM_REFRESH_LASTMESSAGE = 12;
+    public static final int CHAT_MESSAGE = 6;
+    public static final int RANDOMBONUS_MESSAGE = 7;
+    public static final int CDSBONUS_MESSAGE = 8;
+    public static final int ADD_MESSAGE=9;
+    public static final int ROOM_REFRESH_LASTMESSAGE = 10;
 
 
     public static final int DS_RESULT = 13;
-    public static final int BONUSLIST = 14;
     public static final int CDS_TIME = 15;
     public static final int REFRESH_USER = 16;
     public static final int ORDER_MESSAGE = 17;
@@ -37,7 +33,6 @@ public class Config {
     public static final String XG_PUSH_URL = "http://openapi.xg.qq.com/v2/push/";
 
 
-    public static final int TYPE_NOTIFICATION =1;
     public static final int TYPE_MESSAGE = 2;
 
     public static final int TYPE_TEXT=1;
@@ -54,19 +49,17 @@ public class Config {
     public static final String ENTERROOM_URL = "Room/enterRoom";
     public static final String GETSLIDER_URL = "Slider/getJson";
     public static final String GETPRODUCT_URL = "Product/getJson";
-    public static final String USERLOGIN_URL = "User/login";
     public static final String USERNOTICE_URL = "User/notice";
     public static final String DSCDS_URL = "DS/cds";
     public static final String INSERTORDER_URL = "Order/insert";
     public static final String GETORDER_URL = "Order/getJson";
-    public static final String USERREGISTER_URL="User/register";
     public static final String USERUPDATE_URL= "User/update";
     public static final String USERUPDATEPHOTO_URL = "User/updatePhoto";
     public static final String USERINFO_URL = "User/getInfo";
-    public static final String DSGETRESULT_URL = "DS/getResult";
     public static final String DSGETMYGUESS_URL = "DS/getMyguess";
     public static final String DSGETPERSONNUM_URL = "DS/getpersonNum";
-    public static final String HBGETRANDOMBONUS_URL = "HB/getRandomBonus";
+    public static final String UPDATEVERSION_URL = "Download/updateAPP";
+    public static final String DOWNLOADAPP_URL = "Download/downloadAPP";
 
     public static final int GETROOM_TAG = 1;
     public static final int GETSLIDER_TAG = 2;
@@ -82,17 +75,13 @@ public class Config {
     public static final int LOADMOREPRODUCT_TAG = 12;
     public static final int USERINFO_TAG = 13;
     public static final int SENDMSG_TAG = 14;
-    public static final int AUTOLOGIN_TAG = 15;
     public static final int REFRESHORDER_TAG = 16;
     public static final int LOADMOREORDER_TAG = 17;
     public static final int UPDATEDATA_TAG = 18;
     public static final int UPDATEPASSWORD_TAG = 19;
     public static final int UPDATEPHOTO_TAG = 20;
     public static final int ENTERROOM_TAG = 21;
-    public static final int DSGETRESULT_TAG = 22;
     public static final int DSGETMYGUESS_TAG = 23;
     public static final int DSGETPERSONNUM_TAG = 24;
-    public static final int HBGETRANDOMBONUS_TAG = 25;
-
 
 }

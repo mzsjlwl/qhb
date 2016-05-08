@@ -49,7 +49,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
     private List<Room> rooms = new ArrayList<Room>();
     private ChatMessage chatMessage;
     private static final int NOTIFYID_1 = 1;
-    private Bitmap LargeBitmap = BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.mipmap.test_icon);
+    private Bitmap LargeBitmap = BitmapFactory.decodeResource(MyApplication.getContext().getResources(),R.mipmap.logo);
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 
@@ -119,7 +119,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
 
 
             Notification.Builder mBuilder = new Notification.Builder(MyApplication.getContext());
-            mBuilder.setContentTitle("楼下购");
+            mBuilder.setContentTitle(String.valueOf(R.string.app_name));
 
             //消息到达时间
             chatMessage.setDate(format.format(new Date()));
@@ -282,7 +282,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
             //判断是不是自己的消息，若是自己的消息，不提醒
             if(chatMessage.getUid()!=UserInfo.getInstance().getUid()&&!isForeground(MyApplication.getContext(),"com.handsome.qhb")){
                 mBuilder.setWhen(System.currentTimeMillis())
-                        .setSmallIcon(R.mipmap.test_icon)
+                        .setSmallIcon(R.mipmap.logo)
                         .setLargeIcon(LargeBitmap)
                         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
                         .setAutoCancel(true);

@@ -41,7 +41,7 @@ public class TimeUtils  {
             Date d2 = sd.parse(lasttime);
             Date now = new Date();
             long time = now.getTime()-d1.getTime();
-            if((d1.getTime()-d2.getTime())/60000<3){
+            if((d1.getTime()-d2.getTime())/60000<1){
                 interval = "";
             }else if(time/3600000<24&&time/3600000>=0){
                 SimpleDateFormat sd1 = new SimpleDateFormat("HH");

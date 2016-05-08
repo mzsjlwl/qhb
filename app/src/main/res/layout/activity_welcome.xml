@@ -3,15 +3,16 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/x100"
-        android:text="sfadfsfda"/>
+
     <ImageView
+        android:id="@+id/iv_welcome"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#0f0"
+        android:background="@mipmap/welcome"
         />
-
+    <com.tencent.smtt.sdk.WebView
+        android:id="@+id/wv_updateapp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        />
 </LinearLayout>
