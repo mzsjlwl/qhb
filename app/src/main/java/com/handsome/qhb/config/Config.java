@@ -2,6 +2,8 @@ package com.handsome.qhb.config;
 
 public class Config {
 
+
+    public static final String APP_NAME="桦商城";
     public static final String BASE_URL = "http://192.168.111.106/QHB/";
     public static final String ORDER_TAG = "order";
     public static final String ACCESSID = "2100189658";

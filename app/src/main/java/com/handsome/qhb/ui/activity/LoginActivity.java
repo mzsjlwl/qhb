@@ -84,7 +84,7 @@ public class LoginActivity extends BaseActivity  {
                                     LogUtils.e("response",response);
                                     JSONObject jsonObject = new JSONObject(response);
                                     String status = jsonObject.getString("status");
-                                    if(status == "0"){
+                                    if(status.equals("0")){
                                         Toast.makeText(LoginActivity.this,jsonObject.getString("info"),Toast.LENGTH_LONG).show();
                                         return;
                                     }

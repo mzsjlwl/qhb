@@ -1,5 +1,6 @@
 package com.handsome.qhb.ui.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,14 +19,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.handsome.qhb.adapter.MsgAdapter;
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.APS;
 import com.handsome.qhb.bean.ChatMessage;
 import com.handsome.qhb.bean.IOSMessage;
-import com.handsome.qhb.bean.RandomBonus;
 import com.handsome.qhb.bean.Room;
 import com.handsome.qhb.bean.XGMessage;
 import com.handsome.qhb.config.Config;
@@ -122,7 +120,55 @@ public class ChatActivity extends BaseActivity implements MessageListener {
         ll_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                LogUtils.e("room=====", "onclick");
+
+                final ProgressDialog progressDialog = new ProgressDialog(ChatActivity.this);
+                progressDialog.setMessage("系统正在安排您退出房间");
+                progressDialog.setCancelable(true);
+                progressDialog.show();
+                StringRequest stringRequest = new StringRequest(Request.Method.POST,Config.BASE_URL+"Room/exitRoom",
+                        new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                try {
+                                    progressDialog.dismiss();
+                                    LogUtils.e("response",response);
+                                    JSONObject jsonObject = new JSONObject(response);
+                                    String status = jsonObject.getString("status");
+                                    if(status.equals("0")){
+
+                                       Toast toast = Toast.makeText(ChatActivity.this,jsonObject.getString("info"), Toast.LENGTH_SHORT);
+                                        toast.setGravity(Gravity.CENTER, 0, 0);
+                                        toast.show();
+                                        return;
+                                    }
+
+                                    Toast toast = Toast.makeText(ChatActivity.this,jsonObject.getString("info"), Toast.LENGTH_SHORT);
+                                    toast.setGravity(Gravity.CENTER, 0, 0);
+                                    toast.show();
+                                    finish();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e("TAG", error.getMessage(), error);
+                        Toast.makeText(ChatActivity.this, "网络错误,请检查后重试", Toast.LENGTH_SHORT).show();
+                    }
+                }){
+                    @Override
+                    protected Map<String, String> getParams() throws AuthFailureError {
+                        Map<String, String> map = new HashMap<String, String>();
+                        map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+                        map.put("token", UserInfo.getInstance().getToken());
+                        map.put("rid", String.valueOf(room.getRid()));
+                        return map;
+                    }
+                };
+                MyApplication.getmQueue().add(stringRequest);
             }
         });
 

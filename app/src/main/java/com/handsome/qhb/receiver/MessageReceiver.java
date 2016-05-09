@@ -119,7 +119,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
 
 
             Notification.Builder mBuilder = new Notification.Builder(MyApplication.getContext());
-            mBuilder.setContentTitle(String.valueOf(R.string.app_name));
+            mBuilder.setContentTitle(Config.APP_NAME);
 
             //消息到达时间
             chatMessage.setDate(format.format(new Date()));
