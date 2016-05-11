@@ -106,7 +106,6 @@ public class ShopFragment extends Fragment implements MyListener{
             } else if (msg.what == Config.INIT_SLIDER_PICTURE) {
                 LogUtils.d("0x124", "----->");
                 initSliderImage();
-                initSliderdots();
             } else if (msg.what == Config.INIT_PRODUCT) {
                 LogUtils.d("0x125", "------>");
                 initProductList();
@@ -123,12 +122,10 @@ public class ShopFragment extends Fragment implements MyListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
+        LogUtils.e("fragment", "=====oncreate");
         map = new HashMap<String, String>();
         map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
         map.put("token", String.valueOf(UserInfo.getInstance().getToken()));
-
-
 
         //异步加载轮播图片
         HttpUtils.request(getActivity(), Config.GETSLIDER_URL, this, map,Config.GETSLIDER_TAG);
@@ -140,6 +137,7 @@ public class ShopFragment extends Fragment implements MyListener{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        LogUtils.e("shopfragment","oncreateView");
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
 
         dots = new ArrayList<View>();
@@ -148,6 +146,8 @@ public class ShopFragment extends Fragment implements MyListener{
         dot1 = view.findViewById(R.id.v_dot1);
         dot2 = view.findViewById(R.id.v_dot2);
         dot3 = view.findViewById(R.id.v_dot3);
+
+
 
         dots.add(dot0);
         dots.add(dot1);
@@ -190,7 +190,6 @@ public class ShopFragment extends Fragment implements MyListener{
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE);
         if(productLists.size()==0) {
             if (!sharedPreferences.getString("product", "").equals("")) {
-                LogUtils.e("sd=========product============", "=======>");
                 productLists = MyApplication.getGson().fromJson(sharedPreferences.getString("product", ""), new TypeToken<List<Product>>() {
                 }.getType());
 
@@ -199,14 +198,13 @@ public class ShopFragment extends Fragment implements MyListener{
         }
         if(sliderLists.size()==0){
             if(!sharedPreferences.getString("slider","").equals("")){
-                LogUtils.e("sd=========slider============","=======>");
                 sliderLists = MyApplication.getGson().fromJson(sharedPreferences.getString("slider",""),new TypeToken<List<Slider>>(){}.getType());
                 initSliderImage();
-                initSliderdots();
+
             }
         }
 
-
+        initSliderdots();
         //当前Fragment不可见后,重新加载轮播图片和商品项
         if (msg1.obj!=null) {
             if (msg1.obj.toString().equals("0")) {
@@ -234,20 +232,36 @@ public class ShopFragment extends Fragment implements MyListener{
     }
 
     public void initSliderImage() {
-        imageViews = new ArrayList<ImageView>();
-        for (Slider s : sliderLists) {
-            ImageView imageView = new ImageView(getActivity());
-            //加载图片
-//            imageView =  ImageUtils.imageLoader(MyApplication.getmQueue(), s.getImage(), imageView);
-            Picasso.with(getActivity()).load(s.getImage()).into(imageView);
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            imageViews.add(imageView);
-        }
-        // 设置填充ViewPager页面的适配器
-        viewPager.setAdapter(new SliderAdapter(imageViews));
 
-        // 设置一个监听器，当ViewPager中的页面改变时调用
-        viewPager.setOnPageChangeListener(new MyPageChangeListener());
+        if(imageViews==null){
+            imageViews = new ArrayList<ImageView>();
+            for (Slider s : sliderLists) {
+                ImageView imageView = new ImageView(getActivity());
+                //加载图片
+//            imageView =  ImageUtils.imageLoader(MyApplication.getmQueue(), s.getImage(), imageView);
+                Picasso.with(getActivity()).load(s.getImage()).into(imageView);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imageViews.add(imageView);
+            }
+            // 设置填充ViewPager页面的适配器
+            viewPager.setAdapter(new SliderAdapter(imageViews));
+
+            // 设置一个监听器，当ViewPager中的页面改变时调用
+            viewPager.setOnPageChangeListener(new MyPageChangeListener());
+        }else{
+            imageViews.clear();
+            for (Slider s : sliderLists) {
+                ImageView imageView = new ImageView(getActivity());
+                //加载图片
+//            imageView =  ImageUtils.imageLoader(MyApplication.getmQueue(), s.getImage(), imageView);
+                Picasso.with(getActivity()).load(s.getImage()).into(imageView);
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imageViews.add(imageView);
+            }
+
+        }
+
+
     }
 
     public void initSliderdots() {
@@ -288,6 +302,7 @@ public class ShopFragment extends Fragment implements MyListener{
     public void onStop() {
         MyApplication.getmQueue().cancelAll(Config.GETPRODUCT_TAG);
         MyApplication.getmQueue().cancelAll(Config.GETSLIDER_TAG);
+        scheduledExecutorService = null;
         super.onStop();
     }
 

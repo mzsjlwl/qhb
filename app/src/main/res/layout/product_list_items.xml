@@ -42,19 +42,20 @@
             <RelativeLayout
                 android:layout_weight="1"
                 android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/y5"
+                android:layout_marginTop="@dimen/y1"
                 android:layout_height="0dp"
-                >
 
+                >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_alignParentRight="true">
                     <Button
-                        android:layout_height="@dimen/y20"
+                        android:layout_height="@dimen/y16"
                         android:layout_width="@dimen/x20"
-                        android:background="@drawable/btn_bg_border"
+                        android:background="@mipmap/jiahao"
                         android:id="@+id/btn_add"
-                        android:text="@string/tx_add"
-                        android:textColor="#ffffff"
-                        android:textStyle="bold"
-                        android:textSize="@dimen/x16"
                         />
                     <TextView
                         android:layout_height="wrap_content"
@@ -62,26 +63,26 @@
                         android:layout_marginLeft="@dimen/x5"
                         android:layout_marginRight="@dimen/x5"
                         android:layout_toRightOf="@+id/btn_add"
+                        android:layout_gravity="center"
                         android:id="@+id/tv_num"
                         android:text="1"
-                        android:textSize="@dimen/x18"
+                        android:textSize="@dimen/x16"
                         />
                     <Button
-                        android:layout_height="@dimen/y20"
+                        android:layout_height="@dimen/y16"
                         android:layout_width="@dimen/x20"
-                        android:background="@drawable/btn_bg_border"
-                        android:layout_toRightOf="@+id/tv_num"
-                        android:text="@string/tx_subtract"
-                        android:textColor="#ffffff"
 
-                        android:textStyle="bold"
-                        android:textSize="@dimen/x16"
+                        android:background="@mipmap/jianhao"
+                        android:layout_toRightOf="@+id/tv_num"
+
                         android:id="@+id/btn_sub"
                         />
+                </LinearLayout>
+
 
                 <TextView
                     android:id="@+id/tx_price"
-                    android:layout_alignParentRight="true"
+
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="99.9￥"

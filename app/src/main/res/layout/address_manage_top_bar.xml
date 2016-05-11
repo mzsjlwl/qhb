@@ -7,12 +7,15 @@
         android:id="@+id/ll_back"
         android:layout_width="wrap_content"
         android:layout_height="@dimen/y30"
+
         android:layout_alignParentLeft="true">
         <ImageButton
             android:layout_height="wrap_content"
-            android:layout_width="@dimen/x20"
+            android:layout_width="@dimen/x16"
+            android:layout_marginRight="@dimen/x10"
+            android:layout_marginLeft="@dimen/x10"
             android:scaleType="fitXY"
-            android:layout_margin="@dimen/x12"
+            android:layout_gravity="center"
             android:background="@mipmap/zf_back_btn"
             android:clickable="false"
             ></ImageButton>
@@ -20,7 +23,7 @@
 
     <ImageButton
         android:id="@+id/ib_delete"
-        android:layout_height = "match_parent"
+        android:layout_height = "wrap_content"
         android:layout_width="@dimen/x20"
         android:layout_margin="@dimen/x8"
         android:scaleType="fitXY"

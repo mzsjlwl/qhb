@@ -16,7 +16,9 @@ import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MyApplication extends Application {
 
@@ -26,9 +28,11 @@ public class MyApplication extends Application {
     private static NotificationManager nm;
     private static SQLiteDatabase db;
     private static Gson gson;
-    public static List<MessageListener> messageListenersList = new ArrayList<MessageListener>();
+    public static Map<String,MessageListener> messageListenerMap = new HashMap<String,MessageListener>();
     public static int netstate = 1;
     public static int welcome = 0;
+    public static int width ;
+    public static int height;
 
     @Override
     public void onCreate() {

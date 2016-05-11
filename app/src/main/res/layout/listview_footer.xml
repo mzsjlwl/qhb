@@ -16,15 +16,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:indeterminateDrawable="@drawable/common_progressbar" />
+            />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dip"
             android:text="加载更多..."
-            android:textColor="#FF0000"
-            android:textSize="18sp" />
+            android:textColor="#000"
+            android:textSize="14sp" />
     </LinearLayout>
 
 </LinearLayout>

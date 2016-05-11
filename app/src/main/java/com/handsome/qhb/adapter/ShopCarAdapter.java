@@ -25,6 +25,6 @@ public class ShopCarAdapter extends CommonAdapter<Product> {
     public void convert(int position, ViewHolder holder,ListView listView, Product product) {
         holder.setText(R.id.tv_pname,product.getPname());
         holder.setText(R.id.tv_num,"X "+String.valueOf(product.getNum()));
-        holder.setText(R.id.tv_price,String.valueOf(df.format(product.getNum()*product.getPrice())));
+        holder.setText(R.id.tv_price,df.format(product.getNum()*product.getPrice()));
     }
 }

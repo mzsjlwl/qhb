@@ -33,7 +33,7 @@ import tab.com.handsome.handsome.R;
         holder.setText(R.id.tx_pname, product.getPname());
         System.out.println(product.getPrice());
         LogUtils.e("money",String.valueOf(product.getPrice()));
-        holder.setText(R.id.tx_price, String.valueOf(df.format(product.getPrice())) + "￥");
+        holder.setText(R.id.tx_price, df.format(product.getPrice()) + "￥");
         holder.setText(R.id.tv_num, String.valueOf(product.getNum()));
         holder.setImage(R.id.iv_product, product.getPicture());
         holder.getView(R.id.btn_add).setOnClickListener(

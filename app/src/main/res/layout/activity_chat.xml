@@ -9,19 +9,22 @@
     <RelativeLayout
         android:id="@+id/ly_chat_title"
         android:layout_width="fill_parent"
-        android:layout_height="@dimen/y33"
+        android:layout_height="@dimen/y30"
         android:background="#000000" >
 
         <LinearLayout
             android:id="@+id/ll_back"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true">
+            android:layout_height="@dimen/y30"
+            android:layout_alignParentLeft="true"
+            android:gravity="center_vertical">
             <ImageButton
                 android:layout_height="wrap_content"
-                android:layout_width="@dimen/x20"
+                android:layout_width="@dimen/x16"
                 android:scaleType="fitXY"
-                android:layout_margin="@dimen/x12"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginRight="@dimen/x10"
+                android:layout_gravity="center"
                 android:background="@mipmap/zf_back_btn"
                 android:clickable="false"
                 ></ImageButton>
@@ -45,19 +48,30 @@
         android:id="@+id/ly_chat_bottom"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/y45"
+        android:background="#000"
         android:layout_alignParentBottom="true"
          >
-        <ImageButton
-            android:id="@+id/ib_chat_send"
-            android:layout_height="@dimen/y30"
+        <!--<ImageButton-->
+            <!--android:id="@+id/ib_chat_send"-->
+            <!--android:layout_height="@dimen/y30"-->
+            <!--android:layout_width="@dimen/x35"-->
+            <!--android:scaleType="fitXY"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginRight="@dimen/x5"-->
+            <!--android:-->
+            <!--></ImageButton>-->
+        <TextView
+            android:id="@+id/tv_chat_send"
             android:layout_width="@dimen/x35"
-            android:scaleType="fitXY"
+            android:layout_height="@dimen/y30"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/x5"
-            android:background="@mipmap/zf_album_img_selected"
-
-            ></ImageButton>
+            android:text="@string/tx_chat_send"
+            android:gravity="center"
+            android:textColor="#fff"
+            android:textSize="@dimen/x15"/>
         <EditText
             android:id="@+id/et_chat_msg"
             android:layout_width="fill_parent"
@@ -66,7 +80,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:paddingLeft="@dimen/x5"
-            android:layout_toLeftOf="@id/ib_chat_send"
+            android:layout_toLeftOf="@id/tv_chat_send"
             android:background="@drawable/et_bg_border"
             android:singleLine="true"
             android:textSize="@dimen/x15" />
@@ -81,6 +95,7 @@
         android:cacheColorHint="#0000"
         android:divider="@null"
         android:dividerHeight="@dimen/y5"
-        android:scrollbarStyle="outsideOverlay" >
+        android:scrollbarStyle="outsideOverlay"
+        android:layout_marginBottom="@dimen/y5">
     </ListView>
 </RelativeLayout>

@@ -57,4 +57,6 @@
     <string name="tx_bonus_detail">红包详情</string>
     <string name="tx_cds_bonus">猜单双红包</string>
 
+    <string name ="tx_chat_send">发送</string>
+
 </resources>

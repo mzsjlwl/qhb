@@ -52,7 +52,7 @@ import tab.com.handsome.handsome.R;
 /**
  * Created by zhang on 2016/2/22.
  */
-public class RoomAdapter extends CommonAdapter<Room> implements MyListener{
+public class RoomAdapter extends CommonAdapter<Room> {
 
     public ChatMessage chatMessage;
     public List<ChatMessage> chatMessageList = new ArrayList<ChatMessage>();
@@ -81,10 +81,7 @@ public class RoomAdapter extends CommonAdapter<Room> implements MyListener{
         holder.setImage(R.id.iv_roomPhoto,room.getRoomPhoto());
     }
 
-    @Override
-    public void dataController(String response, int tag) {
-        LogUtils.e("enterroom.response===",response);
-    }
+
 
     class RoomItemOnclick implements View.OnClickListener{
         private int position;
@@ -103,17 +100,22 @@ public class RoomAdapter extends CommonAdapter<Room> implements MyListener{
             progressDialog.show();
             //数据库更新
             RoomDAO.updateMessage(MyApplication.getSQLiteDatabase(), "", mDatas.get(position).getRid());
-            Intent i = new Intent(mContext, ChatActivity.class);
-            Bundle b = new Bundle();
-            b.putSerializable("room", mDatas.get(position));
-            i.putExtras(b);
-            mContext.startActivity(i);
+
             Map<String, String> map = new HashMap<String, String>();
             map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
             map.put("token", UserInfo.getInstance().getToken());
             map.put("rid", String.valueOf(mDatas.get(position).getRid()));
-            HttpUtils.request((Activity) mContext, Config.ENTERROOM_URL, RoomAdapter.this, map, Config.ENTERROOM_TAG);
-            progressDialog.dismiss();
+            HttpUtils.request((Activity) mContext, Config.ENTERROOM_URL, new MyListener() {
+                @Override
+                public void dataController(String response, int tag) {
+                    Intent i = new Intent(mContext, ChatActivity.class);
+                    Bundle b = new Bundle();
+                    b.putSerializable("room", mDatas.get(position));
+                    i.putExtras(b);
+                    mContext.startActivity(i);
+                    progressDialog.dismiss();
+                }
+            }, map, Config.ENTERROOM_TAG);
         }
     }
 

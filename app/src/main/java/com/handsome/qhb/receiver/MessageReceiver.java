@@ -80,19 +80,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
         if(UserInfo.getInstance()==null){
             return;
         }
-        if(xgPushTextMessage.getTitle().equals("Room")) {
-            roomList = MyApplication.getGson().fromJson(xgPushTextMessage.getContent(), new TypeToken<List<Room>>() {
-            }.getType());
-            if (roomList != null) {
-                Message message = new Message();
-                message.what = Config.INITROOM_MESSAGE;
-                message.obj = roomList;
-                for (MessageListener ml:MyApplication.messageListenersList) {
-                    ml.handleMsg(message);
-                }
-            }
-        }else {
-            LogUtils.e("xgMessage==>",xgPushTextMessage.getContent());
+         LogUtils.e("xgMessage==>",xgPushTextMessage.getContent());
             //数据库中获取存储的房间
             rooms = RoomDAO.query(MyApplication.getSQLiteDatabase(), UserInfo.getInstance().getUid());
             chatMessage = MyApplication.getGson().fromJson(xgPushTextMessage.getContent(), ChatMessage.class);
@@ -102,7 +90,6 @@ public class MessageReceiver extends XGPushBaseReceiver {
             int i = 0;
             for(;i<rooms.size();i++){
                 if(rooms.get(i).getRid()==chatMessage.getRid()){
-                    RoomDAO.update(MyApplication.getSQLiteDatabase(),MyApplication.getGson().toJson(chatMessage),chatMessage.getRid());
                     String dbPhoto = MessageDAO.getDBPhoto(MyApplication.getSQLiteDatabase(),chatMessage.getUid());
 
                     if(dbPhoto!=null&&!dbPhoto.equals(chatMessage.getPhoto())){
@@ -121,6 +108,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
             Notification.Builder mBuilder = new Notification.Builder(MyApplication.getContext());
             mBuilder.setContentTitle(Config.APP_NAME);
 
+
             //消息到达时间
             chatMessage.setDate(format.format(new Date()));
             //普通消息
@@ -129,68 +117,57 @@ public class MessageReceiver extends XGPushBaseReceiver {
                 mBuilder.setContentText(chatMessage.getNackname()+" : "+chatMessage.getContent())
                         .setTicker("收到" + chatMessage.getNackname() + "发送过来的信息");
                 //判断该房间是否正打开
-                if(MyApplication.messageListenersList.size()==1){
-                    //更新房间信息
-                    Message message = new Message();
-                    message.what = Config.ADD_MESSAGE;
-                    message.obj = chatMessage;
-                    for (MessageListener ml:MyApplication.messageListenersList) {
-                        ml.handleMsg(message);
-                    }
-                }else{
-                    Message message = new Message();
-                    message.what = Config.CHAT_MESSAGE;
-                    message.obj = chatMessage;
-                    Message message1 = new Message();
-                    message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
-                    message1.obj = chatMessage;
 
-                    for (MessageListener ml:MyApplication.messageListenersList) {
-                        ml.handleMsg(message);
-                        ml.handleMsg(message1);
+                if(MyApplication.messageListenerMap.get(String.valueOf(chatMessage.getRid()))==null) {
+                    if(MyApplication.messageListenerMap.get("0")==null){
+                        return;
                     }
+                    Message message1 = new Message();
+                    message1.what = Config.ADD_MESSAGE;
+                    message1.obj = chatMessage;
+                    MyApplication.messageListenerMap.get("0").handleMsg(message1);
+
+                }else {
+                    Message message2 = new Message();
+                    message2.what = Config.CHAT_MESSAGE;
+                    message2.obj = chatMessage;
+                    MyApplication.messageListenerMap.get(String.valueOf(chatMessage.getRid())).handleMsg(message2);
+                    Message message3 = new Message();
+                    message3.what = Config.ROOM_REFRESH_LASTMESSAGE;
+                    message3.obj = chatMessage;
+                    MyApplication.messageListenerMap.get("0").handleMsg(message3);
+
                 }
 
             }else if(xgPushTextMessage.getTitle().equals(String.valueOf(Config.TYPE_RANDOMBONUS))){
+
                 //红包消息
                 mBuilder.setContentText(chatMessage.getNackname()+chatMessage.getContent())
                         .setTicker("收到" + chatMessage.getNackname() + "发送过来的信息");
                 chatMessage.setType(Config.TYPE_RANDOMBONUS);
                 //判断该房间是否正打开
-                if(MyApplication.messageListenersList.size()==1){
-                    //更新房间信息
-                    Message message = new Message();
-                    message.what = Config.ADD_MESSAGE;
-                    message.obj = chatMessage;
-                    for (MessageListener ml:MyApplication.messageListenersList) {
-                        ml.handleMsg(message);
-                    }
-                }else{
-                    Message message = new Message();
-                    message.what = Config.CHAT_MESSAGE;
-                    message.obj = chatMessage;
-                    Message message1 = new Message();
-                    message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
-                    message1.obj = chatMessage;
-
-                    for (MessageListener ml:MyApplication.messageListenersList) {
-                        ml.handleMsg(message);
-                        ml.handleMsg(message1);
-                    }
+                if(MyApplication.messageListenerMap.get(String.valueOf(chatMessage.getRid()))==null){
+                   return;
+                }else {
+                    Message message2 = new Message();
+                    message2.what = Config.CHAT_MESSAGE;
+                    message2.obj = chatMessage;
+                    MyApplication.messageListenerMap.get(String.valueOf(chatMessage.getRid())).handleMsg(message2);
+                    Message message3 = new Message();
+                    message3.what = Config.ROOM_REFRESH_LASTMESSAGE;
+                    message3.obj = chatMessage;
+                    MyApplication.messageListenerMap.get("0").handleMsg(message3);
                 }
 
             }else if(xgPushTextMessage.getTitle().equals(String.valueOf(Config.TYPE_DSRESULT))){
                 chatMessage.setType(Config.TYPE_DSRESULT);
-                MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(),Config.STATE_CDSBONUS_END,chatMessage.getId());
+                //MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(),Config.STATE_CDSBONUS_END,chatMessage.getId());
 
-                if(MyApplication.messageListenersList.size()==3){
+                if(MyApplication.messageListenerMap.get("ds")!=null) {
                     Message message = new Message();
                     message.what = Config.DS_RESULT;
                     message.obj = chatMessage;
-                    LogUtils.e("result_before", chatMessage.toString());
-                    for (MessageListener ml:MyApplication.messageListenersList) {
-                        ml.handleMsg(message);
-                    }
+                    MyApplication.messageListenerMap.get("ds").handleMsg(message);
                 }
 
                 if(chatMessage.getContent().equals("1")){
@@ -201,27 +178,20 @@ public class MessageReceiver extends XGPushBaseReceiver {
                 }
 
                 //判断该房间是否正打开
-                if(MyApplication.messageListenersList.size()==1){
-                    //更新房间信息
-                    Message message = new Message();
-                    message.what = Config.ADD_MESSAGE;
-                    message.obj = chatMessage;
-                    for (MessageListener ml:MyApplication.messageListenersList) {
-                        ml.handleMsg(message);
-                    }
-                }else{
-                    Message message = new Message();
-                    message.what = Config.CHAT_MESSAGE;
-                    message.obj = chatMessage;
-                    Message message1 = new Message();
-                    message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
-                    message1.obj = chatMessage;
 
-                    for (MessageListener ml:MyApplication.messageListenersList) {
-                        ml.handleMsg(message);
-                        ml.handleMsg(message1);
-                    }
+                if(MyApplication.messageListenerMap.get(String.valueOf(chatMessage.getRid()))==null){
+                    return;
+                }else {
+                    Message message2 = new Message();
+                    message2.what = Config.CHAT_MESSAGE;
+                    message2.obj = chatMessage;
+                    MyApplication.messageListenerMap.get(String.valueOf(chatMessage.getRid())).handleMsg(message2);
+                    Message message3 = new Message();
+                    message3.what = Config.ROOM_REFRESH_LASTMESSAGE;
+                    message3.obj = chatMessage;
+                    MyApplication.messageListenerMap.get("0").handleMsg(message3);
                 }
+
             }
             else if(xgPushTextMessage.getTitle().equals(String.valueOf(Config.TYPE_CDSBONUS))){
                 //判断是否有这个房间,若没有则不响应
@@ -231,51 +201,33 @@ public class MessageReceiver extends XGPushBaseReceiver {
 
                 chatMessage.setType(Config.TYPE_CDSBONUS);
                 chatMessage.setStatus(1);
-                if(MyApplication.messageListenersList.size()==1){
-                    //更新房间信息
-                    Message message = new Message();
-                    message.what = Config.ADD_MESSAGE;
-                    message.obj = chatMessage;
-                    for (MessageListener ml:MyApplication.messageListenersList) {
-                        ml.handleMsg(message);
-                    }
-                }else{
-                    Message message = new Message();
-                    message.what = Config.CHAT_MESSAGE;
-                    message.obj = chatMessage;
-                    Message message1 = new Message();
-                    message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
-                    message1.obj = chatMessage;
-
-                    for (MessageListener ml:MyApplication.messageListenersList) {
-                        ml.handleMsg(message);
-                        ml.handleMsg(message1);
-                    }
+                if(MyApplication.messageListenerMap.get(String.valueOf(chatMessage.getRid()))==null){
+                    return;
+                }else {
+                    Message message2 = new Message();
+                    message2.what = Config.CHAT_MESSAGE;
+                    message2.obj = chatMessage;
+                    MyApplication.messageListenerMap.get(String.valueOf(chatMessage.getRid())).handleMsg(message2);
+                    Message message3 = new Message();
+                    message3.what = Config.ROOM_REFRESH_LASTMESSAGE;
+                    message3.obj = chatMessage;
+                    MyApplication.messageListenerMap.get("0").handleMsg(message3);
                 }
             }else if(xgPushTextMessage.getTitle().equals(String.valueOf(Config.TYPE_CANCELBONUS))){
                 chatMessage.setType(Config.TYPE_CANCELBONUS);
-                MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(),0,chatMessage.getId());
+                //MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(),0,chatMessage.getId());
                 //判断该房间是否正打开
-                if(MyApplication.messageListenersList.size()==1){
-                    //更新房间信息
-                    Message message = new Message();
-                    message.what = Config.ADD_MESSAGE;
-                    message.obj = chatMessage;
-                    for (MessageListener ml:MyApplication.messageListenersList) {
-                        ml.handleMsg(message);
-                    }
-                }else{
-                    Message message = new Message();
-                    message.what = Config.CHAT_MESSAGE;
-                    message.obj = chatMessage;
-                    Message message1 = new Message();
-                    message1.what = Config.ROOM_REFRESH_LASTMESSAGE;
-                    message1.obj = chatMessage;
-
-                    for (MessageListener ml:MyApplication.messageListenersList) {
-                        ml.handleMsg(message);
-                        ml.handleMsg(message1);
-                    }
+                if(MyApplication.messageListenerMap.get(String.valueOf(chatMessage.getRid()))==null){
+                    return;
+                }else {
+                    Message message2 = new Message();
+                    message2.what = Config.CHAT_MESSAGE;
+                    message2.obj = chatMessage;
+                    MyApplication.messageListenerMap.get(String.valueOf(chatMessage.getRid())).handleMsg(message2);
+                    Message message3 = new Message();
+                    message3.what = Config.ROOM_REFRESH_LASTMESSAGE;
+                    message3.obj = chatMessage;
+                    MyApplication.messageListenerMap.get("0").handleMsg(message3);
                 }
             }
 
@@ -292,11 +244,13 @@ public class MessageReceiver extends XGPushBaseReceiver {
                 mBuilder.setContentIntent(pendingIntent);
                 MyApplication.getNotificationManager().notify(NOTIFYID_1, mBuilder.build());
             }
-            //添加到数据库
+        RoomDAO.update(MyApplication.getSQLiteDatabase(), MyApplication.getGson().toJson(chatMessage), chatMessage.getRid());
+
+        //添加到数据库
             MessageDAO.insert(MyApplication.getSQLiteDatabase(), chatMessage.getId(), chatMessage.getRid(), chatMessage.getUid(), chatMessage.getContent(),
                     chatMessage.getNackname(), chatMessage.getDate(), chatMessage.getStatus(), chatMessage.getType(), chatMessage.getBonus_total(),chatMessage.getDsTime(),chatMessage.getPhoto());
         }
-    }
+
 
     @Override
     public void onNotifactionClickedResult(Context context, XGPushClickedResult xgPushClickedResult) {

@@ -115,7 +115,7 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
             }
             ll_guess.setVisibility(View.INVISIBLE);
             ll_myguess.setVisibility(View.VISIBLE);
-            MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_GUESSED, chatMessage.getId());
+            //MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_GUESSED, chatMessage.getId());
         }
 
         if (ds.getResult() != 0) {
@@ -127,7 +127,7 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
             ll_guess.setVisibility(View.INVISIBLE);
             ll_result.setVisibility(View.VISIBLE);
 
-            MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_END, chatMessage.getId());
+            //MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_END, chatMessage.getId());
         }
 
         tv_single.setOnClickListener(new View.OnClickListener() {
@@ -190,7 +190,7 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
         };
         timer = new Timer();
         timer.schedule(timerTask, 0, 1000);
-        MyApplication.messageListenersList.add(this);
+        MyApplication.messageListenerMap.put("ds",this);
     }
 
     @Override
@@ -202,7 +202,7 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
     @Override
     protected void onStop() {
         super.onStop();
-        MyApplication.messageListenersList.remove(this);
+        MyApplication.messageListenerMap.remove("ds");
     }
 
     @Override

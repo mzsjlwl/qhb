@@ -58,7 +58,7 @@ public class HallFragment extends Fragment implements MyListener ,MessageListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MyApplication.messageListenersList.add(this);
+        MyApplication.messageListenerMap.put("0",this);
         if(UserInfo.getInstance()!=null){
             roomList = RoomDAO.query(MyApplication.getSQLiteDatabase(),UserInfo.getInstance().getUid());
         }
@@ -285,6 +285,6 @@ public class HallFragment extends Fragment implements MyListener ,MessageListene
     public void onDestroy() {
         super.onDestroy();
         LogUtils.e("hallFragment====================", "remove");
-        MyApplication.messageListenersList.remove(this);
+        MyApplication.messageListenerMap.remove("0");
     }
 }

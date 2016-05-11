@@ -1,5 +1,6 @@
 package com.handsome.qhb.adapter;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -67,8 +69,10 @@ public class MsgAdapter extends BaseAdapter{
     private List<RandomBonus> bonusList = new ArrayList<RandomBonus>();
     private Context context;
 
+
     public MsgAdapter(Context context, List<ChatMessage> datas)
     {
+
         this.context = context;
         mInflater = LayoutInflater.from(context);
         mDatas = datas;
@@ -109,35 +113,64 @@ public class MsgAdapter extends BaseAdapter{
         ChatMessage chatMessage = mDatas.get(position);
         ViewHolder viewHolder = null;
 
+
         if (convertView == null)
         {
             viewHolder = new ViewHolder();
             if (chatMessage.getUid()!= UserInfo.getInstance().getUid())
             {
-                convertView = mInflater.inflate(R.layout.chat_from_msg,
-                        parent, false);
-                viewHolder.createDate = (TextView) convertView
-                        .findViewById(R.id.chat_createDate);
-                viewHolder.content = (TextView) convertView
-                        .findViewById(R.id.chat_from_content);
-                viewHolder.nackname = (TextView) convertView
-                        .findViewById(R.id.chat_from_name);
-                viewHolder.chat_icon = (ImageView) convertView.findViewById(R.id.chat_icon);
-                viewHolder.rl_content = (RelativeLayout) convertView.findViewById(R.id.rl_content);
+                if(chatMessage.getType()==Config.TYPE_CDSBONUS||chatMessage.getType()==Config.TYPE_RANDOMBONUS){
+                    convertView = mInflater.inflate(R.layout.bonus_from_msg,
+                            parent, false);
+                    viewHolder.createDate = (TextView) convertView
+                            .findViewById(R.id.chat_createDate);
+                    viewHolder.content = (TextView) convertView
+                            .findViewById(R.id.chat_from_content);
+                    viewHolder.nackname = (TextView) convertView
+                            .findViewById(R.id.chat_from_name);
+                    viewHolder.chat_icon = (ImageView) convertView.findViewById(R.id.chat_icon);
+                    viewHolder.rl_content = (RelativeLayout) convertView.findViewById(R.id.rl_content);
+                }else{
+                    convertView = mInflater.inflate(R.layout.chat_from_msg,
+                            parent, false);
+                    viewHolder.createDate = (TextView) convertView
+                            .findViewById(R.id.chat_createDate);
+                    viewHolder.content = (TextView) convertView
+                            .findViewById(R.id.chat_from_content);
+                    viewHolder.nackname = (TextView) convertView
+                            .findViewById(R.id.chat_from_name);
+                    viewHolder.chat_icon = (ImageView) convertView.findViewById(R.id.chat_icon);
+                    viewHolder.rl_content = (RelativeLayout) convertView.findViewById(R.id.rl_content);
+                }
+
                 convertView.setTag(viewHolder);
             }else if(chatMessage.getUid()==UserInfo.getInstance().getUid())
             {
-                convertView = mInflater.inflate(R.layout.chat_send_msg,
-                        null);
-                viewHolder.createDate = (TextView) convertView
-                        .findViewById(R.id.chat_createDate);
-                viewHolder.content = (TextView) convertView
-                        .findViewById(R.id.chat_send_content);
-                viewHolder.nackname = (TextView) convertView
-                        .findViewById(R.id.chat_send_name);
-                viewHolder.chat_icon = (ImageView) convertView.findViewById(R.id.chat_icon);
-                viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_progressBar);
-                viewHolder.rl_content = (RelativeLayout) convertView.findViewById(R.id.rl_content);
+                if(chatMessage.getType()==Config.TYPE_CDSBONUS||chatMessage.getType()==Config.TYPE_RANDOMBONUS){
+                    convertView = mInflater.inflate(R.layout.bonus_send_msg,
+                            null);
+                    viewHolder.createDate = (TextView) convertView
+                            .findViewById(R.id.chat_createDate);
+                    viewHolder.content = (TextView) convertView
+                            .findViewById(R.id.chat_send_content);
+                    viewHolder.nackname = (TextView) convertView
+                            .findViewById(R.id.chat_send_name);
+                    viewHolder.chat_icon = (ImageView) convertView.findViewById(R.id.chat_icon);
+                    viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_progressBar);
+                    viewHolder.rl_content = (RelativeLayout) convertView.findViewById(R.id.rl_content);
+                }else{
+                    convertView = mInflater.inflate(R.layout.chat_send_msg,
+                            null);
+                    viewHolder.createDate = (TextView) convertView
+                            .findViewById(R.id.chat_createDate);
+                    viewHolder.content = (TextView) convertView
+                            .findViewById(R.id.chat_send_content);
+                    viewHolder.nackname = (TextView) convertView
+                            .findViewById(R.id.chat_send_name);
+                    viewHolder.chat_icon = (ImageView) convertView.findViewById(R.id.chat_icon);
+                    viewHolder.progressBar = (ProgressBar) convertView.findViewById(R.id.id_progressBar);
+                    viewHolder.rl_content = (RelativeLayout) convertView.findViewById(R.id.rl_content);
+                }
                 convertView.setTag(viewHolder);
             }
 
@@ -159,11 +192,17 @@ public class MsgAdapter extends BaseAdapter{
 
         Picasso.with(context).load(chatMessage.getPhoto()).into(viewHolder.chat_icon);
         //随机红包
+
         if(chatMessage.getType()== Config.TYPE_RANDOMBONUS){
+            ViewGroup.LayoutParams p = viewHolder.rl_content.getLayoutParams();
+            p.height = MyApplication.height*5/36;
+            p.width = MyApplication.width*7/12;
             if(chatMessage.getUid()==UserInfo.getInstance().getUid()){
                 viewHolder.rl_content.setBackgroundResource(R.mipmap.sjhb);
+                viewHolder.rl_content.setLayoutParams(p);
             }else {
                 viewHolder.rl_content.setBackgroundResource(R.mipmap.sjhb1);
+                viewHolder.rl_content.setLayoutParams(p);
             }
             viewHolder.content.setPadding(0,0,0,0);
             viewHolder.content.setText("");
@@ -178,9 +217,14 @@ public class MsgAdapter extends BaseAdapter{
         }
         //单双红包
         else if(chatMessage.getType()==Config.TYPE_CDSBONUS){
+            ViewGroup.LayoutParams p = viewHolder.rl_content.getLayoutParams();
+            p.height = MyApplication.height*5/36;
+            p.width = MyApplication.width*7/12;
             viewHolder.rl_content.setBackgroundResource(R.mipmap.cds1);
+            viewHolder.rl_content.setLayoutParams(p);
             viewHolder.content.setPadding(0, 0, 0, 0);
             viewHolder.content.setText("");
+
             viewHolder.rl_content.setOnClickListener(new CDSBonusOnclickListener(position));
             viewHolder.nackname.setText(chatMessage.getNackname());
         }
@@ -293,22 +337,28 @@ public class MsgAdapter extends BaseAdapter{
             progressDialog.setMessage("加载中");
             progressDialog.setCancelable(true);
             progressDialog.show();
-            int statuts = Integer.valueOf(MessageDAO.getStatus(MyApplication.getSQLiteDatabase(), mDatas.get(position).getId(), mDatas.get(
-                    position).getType()));
-            if(statuts==Config.STATE_CDSBONUS_START){
-                getPersonNum(mDatas.get(position).getId(), mDatas.get(position).getRid(),
-                        mDatas.get(position));
-                progressDialog.dismiss();
 
-            }else if(statuts==Config.STATE_CDSBONUS_GUESSED){
-                progressDialog.dismiss();
-                getMyguess(mDatas.get(position).getId(),mDatas.get(position).getRid(),
-                        UserInfo.getInstance().getUid(),mDatas.get(position));
-            }else if(statuts==Config.STATE_CDSBONUS_END){
-                progressDialog.dismiss();
-                getResult(mDatas.get(position).getId(),mDatas.get(position).getRid(),
-                        UserInfo.getInstance().getUid(),mDatas.get(position));
-            }
+            Map<String, String> map = new HashMap<String, String>();
+            map.put("dsId", String.valueOf(mDatas.get(position).getId()));
+            map.put("rid", String.valueOf(mDatas.get(position).getRid()));
+            map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
+            map.put("token", UserInfo.getInstance().getToken());
+            HttpUtils.request((Activity) context, Config.DSGETRESULT_URL,
+                    new MyListener() {
+                        @Override
+                        public void dataController(String response, int tag) {
+                            progressDialog.dismiss();
+                            LogUtils.e("getResult=====>", response);
+                            DS ds = new DS();
+                            ds = MyApplication.getGson().fromJson(response, DS.class);
+                            Intent i = new Intent(context, CDSActivity.class);
+                            Bundle b = new Bundle();
+                            b.putSerializable("ds", ds);
+                            b.putSerializable("cdsMessage",mDatas.get(position));
+                            i.putExtras(b);
+                            context.startActivity(i);
+                        }
+                    }, map, Config.DSGETMYGUESS_TAG);
 
         }
 
@@ -316,80 +366,7 @@ public class MsgAdapter extends BaseAdapter{
             this.position = position;
         }
 
-
     }
 
-    public void getPersonNum(final int id, final int rid, final ChatMessage msg) {
-
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("dsId", String.valueOf(id));
-        map.put("rid", String.valueOf(rid));
-        map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
-        map.put("token", UserInfo.getInstance().getToken());
-
-        HttpUtils.request((Activity) context, Config.DSGETPERSONNUM_URL,
-                new MyListener() {
-                    @Override
-                    public void dataController(String response, int tag) {
-                        DS ds = new DS();
-                        ds = MyApplication.getGson().fromJson(response, DS.class);
-                        Intent i = new Intent(context, CDSActivity.class);
-                        Bundle b = new Bundle();
-                        b.putSerializable("ds", ds);
-                        b.putSerializable("cdsMessage", msg);
-                        i.putExtras(b);
-                        context.startActivity(i);
-                    }
-                }, map, Config.DSGETPERSONNUM_TAG);
-
-
-    }
-
-    public void getMyguess(final int id,final int rid,final int uid,final ChatMessage msg){
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("dsId", String.valueOf(id));
-        map.put("rid", String.valueOf(rid));
-        map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-        map.put("token", UserInfo.getInstance().getToken());
-
-        HttpUtils.request((Activity) context, Config.DSGETMYGUESS_URL,
-                new MyListener() {
-                    @Override
-                    public void dataController(String response, int tag) {
-                        DS ds = new DS();
-                        ds = MyApplication.getGson().fromJson(response, DS.class);
-                        Intent i = new Intent(context, CDSActivity.class);
-                        Bundle b = new Bundle();
-                        b.putSerializable("ds", ds);
-                        b.putSerializable("cdsMessage", msg);
-                        i.putExtras(b);
-                        context.startActivity(i);
-                    }
-                }, map, Config.DSGETMYGUESS_TAG);
-
-    }
-
-    public void getResult(final int id,final int rid,final int uid,final ChatMessage msg){
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("dsId", String.valueOf(id));
-        map.put("rid", String.valueOf(rid));
-        map.put("uid",String.valueOf(UserInfo.getInstance().getUid()));
-        map.put("token", UserInfo.getInstance().getToken());
-        HttpUtils.request((Activity) context, Config.DSGETMYGUESS_URL,
-                new MyListener() {
-                    @Override
-                    public void dataController(String response, int tag) {
-                        DS ds = new DS();
-                        ds = MyApplication.getGson().fromJson(response, DS.class);
-                        Intent i = new Intent(context, CDSActivity.class);
-                        Bundle b = new Bundle();
-                        b.putSerializable("ds", ds);
-                        b.putSerializable("cdsMessage", msg);
-                        i.putExtras(b);
-                        context.startActivity(i);
-                    }
-                }, map, Config.DSGETMYGUESS_TAG);
-
-    }
 }
 

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:clickable="false">
+
+    <TextView
+        android:id="@+id/chat_createDate"
+        style="@style/chat_date_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="" />
+    <LinearLayout
+        android:id="@+id/ly_chat_icon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/x50"
+        android:gravity="right|center_vertical"
+        android:orientation="horizontal" >
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x50"
+            android:layout_gravity="right|center_vertical"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/chat_send_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="fs"
+                android:textColor="#444"
+                android:textSize="@dimen/x12" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:orientation="horizontal">
+                <ProgressBar
+                    android:id="@+id/id_progressBar"
+                    android:layout_width="@dimen/x16"
+                    android:layout_height="match_parent"
+                    />
+                <RelativeLayout
+                    android:id="@+id/rl_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/balloon_r2">
+                    <TextView
+                        android:id="@+id/chat_send_content"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:maxWidth="@dimen/x180"
+                        android:textSize="@dimen/x14"
+                        android:paddingTop="2dp"
+                        android:clickable="false"
+                        android:text=""/>
+                </RelativeLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <ImageView
+            android:id="@+id/chat_icon"
+            android:layout_width="@dimen/x50"
+            android:layout_height="@dimen/x45"
+            android:layout_gravity="top"
+            android:layout_marginRight="@dimen/x5"
+            android:src="@mipmap/test_icon" />
+    </LinearLayout>
+
+
+
+
+</LinearLayout>

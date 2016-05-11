@@ -24,8 +24,8 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <ImageView
-                android:layout_width="@dimen/x26"
-                android:layout_height="@dimen/y15"
+                android:layout_width="@dimen/x25"
+                android:layout_height="@dimen/y18"
                 android:layout_marginTop="@dimen/y5"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/tab_menu_shop"
@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/y3"
+                android:layout_marginTop="@dimen/y2"
                 android:text="@string/tab_menu_shop"
                 android:textSize="@dimen/x13"
                 android:clickable="false"/>
@@ -47,8 +47,8 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <ImageView
-                android:layout_width="@dimen/x26"
-                android:layout_height="@dimen/y15"
+                android:layout_width="@dimen/x25"
+                android:layout_height="@dimen/y18"
                 android:layout_marginTop="@dimen/y5"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/tab_menu_hall"
@@ -58,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/y3"
+                android:layout_marginTop="@dimen/y2"
                 android:text="@string/tab_menu_hall"
                 android:textSize="@dimen/x13"
                 android:clickable="false"/>
@@ -71,8 +71,8 @@
             android:layout_weight="1"
             android:orientation="vertical">
             <ImageView
-                android:layout_width="@dimen/x26"
-                android:layout_height="@dimen/y15"
+                android:layout_width="@dimen/x25"
+                android:layout_height="@dimen/y18"
                 android:layout_marginTop="@dimen/y5"
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/tab_menu_user"
@@ -81,7 +81,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/y3"
+                android:layout_marginTop="@dimen/y2"
                 android:text="@string/tab_menu_user"
                 android:textSize="@dimen/x13"
                 android:clickable="false"/>

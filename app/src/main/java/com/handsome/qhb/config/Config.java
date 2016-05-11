@@ -58,8 +58,7 @@ public class Config {
     public static final String USERUPDATE_URL= "User/update";
     public static final String USERUPDATEPHOTO_URL = "User/updatePhoto";
     public static final String USERINFO_URL = "User/getInfo";
-    public static final String DSGETMYGUESS_URL = "DS/getMyguess";
-    public static final String DSGETPERSONNUM_URL = "DS/getpersonNum";
+    public static final String DSGETRESULT_URL = "DS/getResult";
     public static final String UPDATEVERSION_URL = "Download/updateAPP";
     public static final String DOWNLOADAPP_URL = "Download/downloadAPP";
 

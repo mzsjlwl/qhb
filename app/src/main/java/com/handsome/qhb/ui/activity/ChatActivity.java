@@ -56,7 +56,7 @@ import tab.com.handsome.handsome.R;
 public class ChatActivity extends BaseActivity implements MessageListener {
     private TextView tv_room_title;
     private EditText et_chat_msg;
-    private ImageButton ib_chat_send;
+    private TextView tv_chat_send;
     private LinearLayout ll_back;
     private ListView lv_chat;
     private Room room;
@@ -96,15 +96,15 @@ public class ChatActivity extends BaseActivity implements MessageListener {
             return;
         }
         setContentView(R.layout.activity_chat);
-        MyApplication.messageListenersList.add(this);
 
         tv_room_title = (TextView) findViewById(R.id.tv_room_title);
         et_chat_msg = (EditText)findViewById(R.id.et_chat_msg);
 
-        ib_chat_send = (ImageButton)findViewById(R.id.ib_chat_send);
+        tv_chat_send = (TextView)findViewById(R.id.tv_chat_send);
         ll_back = (LinearLayout)findViewById(R.id.ll_back);
         lv_chat = (ListView)findViewById(R.id.lv_chat);
         room = (Room) getIntent().getSerializableExtra("room");
+        MyApplication.messageListenerMap.put(String.valueOf(room.getRid()),this);
         messageList = MessageDAO.query(MyApplication.getSQLiteDatabase(),room.getRid());
         for(int i = 0;i<messageList.size();i++){
             if(messageList.get(i).getStatus()==0){
@@ -173,7 +173,7 @@ public class ChatActivity extends BaseActivity implements MessageListener {
         });
 
 
-        ib_chat_send.setOnClickListener(new View.OnClickListener() {
+        tv_chat_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(et_chat_msg.getText().toString().trim().equals("")) {
@@ -316,7 +316,7 @@ public class ChatActivity extends BaseActivity implements MessageListener {
     protected void onDestroy() {
         super.onDestroy();
         MyApplication.getmQueue().cancelAll(Config.SENDMSG_TAG);
-        MyApplication.messageListenersList.remove(this);
+        MyApplication.messageListenerMap.remove(String.valueOf(room.getRid()));
     }
 
 

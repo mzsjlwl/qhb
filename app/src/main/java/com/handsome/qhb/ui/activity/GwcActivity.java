@@ -127,6 +127,7 @@ public class GwcActivity extends BaseActivity implements MyListener {
                     toast.show();
                     return ;
                 }
+                btn_sub.setClickable(false);
                 final ProgressDialog progressDialog = new ProgressDialog(GwcActivity.this);
                 progressDialog.setMessage("提交中");
                 progressDialog.setCancelable(true);

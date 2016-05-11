@@ -54,6 +54,8 @@ public class OrderActivity extends BaseActivity implements MyListener{
     private JSONObject pageJson;
     //订单页数
     private int page;
+    //当前页
+    private int curpage;
     //订单下一页
     private String nextpage;
 
@@ -114,11 +116,10 @@ public class OrderActivity extends BaseActivity implements MyListener{
                 }
                 @Override
                 public void onLoadingMore() {
-                    if (page <= 1) {
+                    if (page== curpage) {
                         refreshListView.hideFooterView();
                         return;
                     } else {
-                        page--;
                         HttpUtils.request(OrderActivity.this,nextpage.substring(Config.BASE_URL.length()),
                                 OrderActivity.this,map,Config.LOADMOREORDER_TAG);
                     }
@@ -142,6 +143,7 @@ public class OrderActivity extends BaseActivity implements MyListener{
                     }.getType());
                     pageJson = new JSONObject(jsonObjectdata1.getString("page"));
                     page = Integer.valueOf(pageJson.getString("nums"));
+                    curpage = Integer.valueOf(pageJson.getString("cur"));
                     nextpage = pageJson.getString("next");
                     handler.handleMessage(msg1);
                     break;
@@ -159,11 +161,14 @@ public class OrderActivity extends BaseActivity implements MyListener{
                     pageJson = new JSONObject(jsonObjectdata2.getString("page"));
                     nextpage = pageJson.getString("next");
                     page = Integer.valueOf(pageJson.getString("nums"));
+                    curpage = Integer.valueOf(pageJson.getString("cur"));
                     handler.handleMessage(msg2);
                     break;
-                case Config.LOADMORE_ORDER:
+                case Config.LOADMOREORDER_TAG:
+                    LogUtils.e("loadmore","=====>");
                     JSONObject jsonObjectdata3 = new JSONObject(response);
                     if (jsonObjectdata3.getString("orders").equals("")) {
+                        refreshListView.hideFooterView();
                         return;
                     }
                     Message msg3 = new Message();
@@ -176,7 +181,11 @@ public class OrderActivity extends BaseActivity implements MyListener{
                     }
                     pageJson = new JSONObject(jsonObjectdata3.getString("page"));
                     nextpage = pageJson.getString("next");
+                    page = Integer.valueOf(pageJson.getString("nums"));
+                    curpage = Integer.valueOf(pageJson.getString("cur"));
+                    refreshListView.hideFooterView();
                     handler.handleMessage(msg3);
+
                     break;
             }
 

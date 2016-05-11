@@ -11,6 +11,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -36,6 +37,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        WindowManager windowManager = getWindowManager();
+        MyApplication.width = windowManager.getDefaultDisplay().getWidth();
+        MyApplication.height = windowManager.getDefaultDisplay().getHeight();
+
+        LogUtils.e("width",String.valueOf(MyApplication.width));
+        LogUtils.e("height",String.valueOf(MyApplication.height));
         SharedPreferences sharedPreferences = getSharedPreferences("data",MODE_PRIVATE);
 
         if(sharedPreferences.getString("active","").equals("")){
@@ -189,7 +196,5 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 networkstate=1;
             }
         }
-
-
     }
 }
