@@ -190,6 +190,12 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
     @Override
     protected void onResume() {
         super.onResume();
+        MyApplication.messageListenerMap.put("ds", this);
+        nowtime = System.currentTimeMillis();
+        subtime = chatMessage.getDsTime() * 60 - (nowtime - hbtime) / 1000;
+        if(subtime<=0){
+            return;
+        }
         timerTask = new TimerTask() {
             @Override
             public void run() {
@@ -202,7 +208,6 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
         };
         timer = new Timer();
         timer.schedule(timerTask, 0, 1000);
-        MyApplication.messageListenerMap.put("ds",this);
     }
 
     @Override
@@ -221,7 +226,10 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
     protected void onDestroy() {
         super.onDestroy();
         MyApplication.getmQueue().cancelAll(Config.DSCDS_TAG);
-        timer.cancel();
+        if(timer!=null){
+
+            timer.cancel();
+        }
     }
 
     public void refreshResult(ChatMessage msg) {
