@@ -52,14 +52,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             return;
         }
 
-//        if(MyApplication.welcome==0){
-//            Intent i = new Intent(this,WelcomeActivity.class);
-//            startActivity(i);
-//            LogUtils.e("WELECOME", String.valueOf(MyApplication.welcome));
-//            MyApplication.welcome=1;
-//            finish();
-//            return;
-//        }
+        if(MyApplication.welcome==0){
+            Intent i = new Intent(this,WelcomeActivity.class);
+            startActivity(i);
+            LogUtils.e("WELECOME", String.valueOf(MyApplication.welcome));
+            MyApplication.welcome=1;
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_main);
         registerReceiver();
         if(UserInfo.getInstance().getUid()==0){

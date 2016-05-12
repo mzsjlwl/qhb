@@ -61,6 +61,9 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
                 refreshResult((ChatMessage) msg.obj);
             } else if (msg.what == Config.CDS_TIME) {
                 if (subtime < 0) {
+                    progressDialog.setMessage("开奖中");
+                    progressDialog.setCancelable(false);
+                    progressDialog.show();
                     timer.cancel();
                     return;
                 }
@@ -134,7 +137,7 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
 
         progressDialog = new ProgressDialog(CDSActivity.this);
         progressDialog.setMessage("竞猜中");
-        progressDialog.setCancelable(true);
+        progressDialog.setCancelable(false);
 
         tv_single.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -266,6 +269,7 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
 
     @Override
     public void handleMsg(Message message) {
+        progressDialog.dismiss();
         handler.handleMessage(message);
     }
 }
