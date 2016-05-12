@@ -274,4 +274,9 @@ public class UpdatePhotoActivity extends BaseActivity implements MyListener{
                 break;
         }
     }
+
+    @Override
+    public void requestError(String error) {
+
+    }
 }

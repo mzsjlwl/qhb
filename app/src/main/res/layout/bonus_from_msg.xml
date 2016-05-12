@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
-                    android:id="@+id/chat_from_name"
+                    android:id="@+id/chat_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="left"
@@ -43,26 +43,15 @@
                     android:text="张上鑫"
                     android:textColor="#444"
                     android:textSize="@dimen/x12" />
-                <RelativeLayout
-                    android:id="@+id/rl_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/balloon_l2"
-                    >
-                    <TextView
-                        android:id="@+id/chat_from_content"
+
+                    <ImageView
+                        android:id="@+id/iv_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:lineSpacingExtra="@dimen/y2"
                         android:layout_centerVertical="true"
-                        android:paddingTop="2dp"
-                        android:text="dsa"
-                        android:textColor="#000"
-                        android:clickable="false"
-                        android:textSize="@dimen/x14"
+                        android:clickable="true"
                         />
-                </RelativeLayout>
+
 
             </LinearLayout>
         </LinearLayout>

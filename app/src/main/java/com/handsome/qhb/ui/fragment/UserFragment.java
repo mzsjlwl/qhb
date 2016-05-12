@@ -210,4 +210,9 @@ public class UserFragment extends Fragment implements MyListener{
         }
 
     }
+
+    @Override
+    public void requestError(String error) {
+
+    }
 }

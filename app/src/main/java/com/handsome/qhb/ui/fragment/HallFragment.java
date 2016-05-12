@@ -270,6 +270,11 @@ public class HallFragment extends Fragment implements MyListener ,MessageListene
     }
 
     @Override
+    public void requestError(String error) {
+
+    }
+
+    @Override
     public void onHiddenChanged(boolean hidden) {
 
         super.onHiddenChanged(hidden);

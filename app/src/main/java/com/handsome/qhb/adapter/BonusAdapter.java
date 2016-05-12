@@ -4,14 +4,10 @@ import android.content.Context;
 import android.widget.ListView;
 
 import com.android.volley.RequestQueue;
-import com.google.gson.Gson;
-import com.handsome.qhb.bean.Order;
 import com.handsome.qhb.bean.RandomBonus;
 import com.handsome.qhb.bean.User;
 import com.handsome.qhb.utils.ViewHolder;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 import tab.com.handsome.handsome.R;

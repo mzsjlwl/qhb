@@ -204,4 +204,9 @@ public class GwcActivity extends BaseActivity implements MyListener {
                 break;
         }
     }
+
+    @Override
+    public void requestError(String error) {
+        btn_sub.setClickable(true);
+    }
 }

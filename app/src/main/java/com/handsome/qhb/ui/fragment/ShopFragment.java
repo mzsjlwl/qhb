@@ -378,6 +378,12 @@ public class ShopFragment extends Fragment implements MyListener{
         }
     }
 
+    @Override
+    public void requestError(String error) {
+        rListView.hideHeaderView();
+        rListView.hideFooterView();
+    }
+
     /**
      * 换行切换任务
      */

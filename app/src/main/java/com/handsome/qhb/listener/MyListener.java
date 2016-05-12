@@ -7,5 +7,6 @@ package com.handsome.qhb.listener;
 public interface MyListener  {
 
     void dataController(String response,int tag);
+    void requestError(String error);
 
 }

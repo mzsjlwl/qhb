@@ -194,4 +194,9 @@ public class OrderActivity extends BaseActivity implements MyListener{
         }
 
     }
+
+    @Override
+    public void requestError(String error) {
+
+    }
 }

@@ -49,7 +49,7 @@ public class AddMoneyActivity extends BaseActivity implements MyListener{
     @Override
     protected void onStop() {
         super.onStop();
-        MyApplication.getmQueue().cancelAll(Config.USERNOTICE_TAG);
+        //MyApplication.getmQueue().cancelAll(Config.USERNOTICE_TAG);
     }
 
 
@@ -61,5 +61,10 @@ public class AddMoneyActivity extends BaseActivity implements MyListener{
 
                 break;
         }
+    }
+
+    @Override
+    public void requestError(String error) {
+
     }
 }

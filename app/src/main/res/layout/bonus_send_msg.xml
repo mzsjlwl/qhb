@@ -25,7 +25,7 @@
             android:layout_gravity="right|center_vertical"
             android:orientation="vertical">
             <TextView
-                android:id="@+id/chat_send_name"
+                android:id="@+id/chat_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
@@ -37,29 +37,15 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:orientation="horizontal">
-                <ProgressBar
-                    android:id="@+id/id_progressBar"
-                    android:layout_width="@dimen/x16"
-                    android:layout_height="match_parent"
-                    />
-                <RelativeLayout
-                    android:id="@+id/rl_content"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="right"
-                    android:gravity="center_vertical"
-                    android:background="@drawable/balloon_r2">
-                    <TextView
-                        android:id="@+id/chat_send_content"
+
+
+                    <ImageView
+                        android:id="@+id/iv_content"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:maxWidth="@dimen/x180"
-                        android:textSize="@dimen/x14"
-                        android:paddingTop="2dp"
                         android:clickable="false"
                         android:text=""/>
-                </RelativeLayout>
+
             </LinearLayout>
         </LinearLayout>
 

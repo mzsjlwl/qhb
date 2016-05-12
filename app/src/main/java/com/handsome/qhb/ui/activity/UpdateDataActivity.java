@@ -99,4 +99,9 @@ public class UpdateDataActivity extends BaseActivity implements MyListener{
         }
 
     }
+
+    @Override
+    public void requestError(String error) {
+
+    }
 }

@@ -25,26 +25,22 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:layout_margin="@dimen/x5">
-            <RelativeLayout
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_height="0dp">
-                <TextView
-                    android:id="@+id/tx_pname"
-                    android:layout_alignParentLeft="true"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="商品名称"
-                    android:textSize="@dimen/x16"
-                    android:textColor="#000000"/>
 
-            </RelativeLayout>
-            <RelativeLayout
-                android:layout_weight="1"
-                android:layout_width="match_parent"
-                android:layout_marginTop="@dimen/y1"
-                android:layout_height="0dp"
+            <TextView
+                android:id="@+id/tx_pname"
+                android:layout_alignParentLeft="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="商品名称"
+                android:textSize="@dimen/x16"
+                android:textColor="#000000"/>
 
+
+            <RelativeLayout
+
+                android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/y5"
+                android:layout_height="wrap_content"
                 >
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -52,7 +48,7 @@
                     android:gravity="center_vertical"
                     android:layout_alignParentRight="true">
                     <Button
-                        android:layout_height="@dimen/y16"
+                        android:layout_height="wrap_content"
                         android:layout_width="@dimen/x20"
                         android:background="@mipmap/jiahao"
                         android:id="@+id/btn_add"
@@ -69,7 +65,7 @@
                         android:textSize="@dimen/x16"
                         />
                     <Button
-                        android:layout_height="@dimen/y16"
+                        android:layout_height="wrap_content"
                         android:layout_width="@dimen/x20"
 
                         android:background="@mipmap/jianhao"

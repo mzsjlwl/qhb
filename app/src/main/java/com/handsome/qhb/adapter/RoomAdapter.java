@@ -115,6 +115,12 @@ public class RoomAdapter extends CommonAdapter<Room> {
                     mContext.startActivity(i);
                     progressDialog.dismiss();
                 }
+
+                @Override
+                public void requestError(String error) {
+                    Toast.makeText(mContext,"网络异常,请检查后再试",Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
+                }
             }, map, Config.ENTERROOM_TAG);
         }
     }

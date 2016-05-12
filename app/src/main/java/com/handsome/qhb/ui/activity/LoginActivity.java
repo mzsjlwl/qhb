@@ -109,7 +109,7 @@ public class LoginActivity extends BaseActivity  {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e("TAG", error.getMessage(), error);
-                        Toast.makeText(LoginActivity.this, error.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this,"网络错误,请检查后再试", Toast.LENGTH_LONG).show();
                     }
                 }){
                     @Override

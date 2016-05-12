@@ -45,6 +45,7 @@ public class HttpUtils {
                                 Toast toast = Toast.makeText(activity, jsonObject.getString("info"), Toast.LENGTH_SHORT);
                                 toast.setGravity(Gravity.CENTER, 0, 0);
                                 toast.show();
+                                listener.requestError(jsonObject.getString("info"));
                                 return;
                             }else if(status.equals("-1")){
                                 login(activity,url,listener,map,tag);
@@ -69,6 +70,7 @@ public class HttpUtils {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("TAG", error.getMessage(), error);
+                listener.requestError(error.getMessage());
                 Toast.makeText(activity,"网络异常,请检查后再试", Toast.LENGTH_LONG).show();
             }
         }){
@@ -112,6 +114,7 @@ public class HttpUtils {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                listener.requestError(error.getMessage());
                 Toast.makeText(activity,"网络异常,请检查后再试", Toast.LENGTH_LONG).show();
 
             }
@@ -149,6 +152,7 @@ public class HttpUtils {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+
                 Toast.makeText(activity,"网络异常,请检查后再试", Toast.LENGTH_LONG).show();
 
             }

@@ -1,5 +1,6 @@
 package com.handsome.qhb.ui.activity;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -50,6 +51,7 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
     private long hbtime, nowtime, subtime;
     private int minute, seconds;
     private String s_minute, s_seconds;
+    private ProgressDialog progressDialog;
 
 
     private Handler handler = new Handler() {
@@ -130,9 +132,14 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
             //MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_END, chatMessage.getId());
         }
 
+        progressDialog = new ProgressDialog(CDSActivity.this);
+        progressDialog.setMessage("竞猜中");
+        progressDialog.setCancelable(true);
+
         tv_single.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressDialog.show();
                 MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_GUESSED, chatMessage.getId());
                 Map<String, String> map = new HashMap<String, String>();
                 map.put("rid", String.valueOf(chatMessage.getRid()));
@@ -148,6 +155,7 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
         tv_double.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                progressDialog.show();
                 tv_double.setClickable(false);
                 MessageDAO.updateStatus(MyApplication.getSQLiteDatabase(), Config.STATE_CDSBONUS_GUESSED, chatMessage.getId());
                 Map<String, String> map = new HashMap<String, String>();
@@ -156,6 +164,7 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
                 map.put("token", UserInfo.getInstance().getToken());
                 map.put("uid", String.valueOf(UserInfo.getInstance().getUid()));
                 map.put("result", String.valueOf(2));
+
                 HttpUtils.request(CDSActivity.this, Config.DSCDS_URL, CDSActivity.this, map,Config.DSCDS_TAG);
             }
         });
@@ -230,6 +239,7 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
         try {
             switch(tag){
                 case Config.DSCDS_TAG:
+                    progressDialog.dismiss();
                     JSONObject data = new JSONObject(response);
                     tv_person.setText(data.getString("personNum"));
                     ll_guess.setVisibility(View.INVISIBLE);
@@ -246,6 +256,11 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
         }
 
 
+    }
+
+    @Override
+    public void requestError(String error) {
+        progressDialog.dismiss();
     }
 
 
