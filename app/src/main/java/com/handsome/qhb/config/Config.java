@@ -22,6 +22,7 @@ public class Config {
     public static final int CDSBONUS_MESSAGE = 8;
     public static final int ADD_MESSAGE=9;
     public static final int ROOM_REFRESH_LASTMESSAGE = 10;
+    public static final int DSPERSION_MESSAGE = 11;
 
 
     public static final int DS_RESULT = 13;
@@ -42,6 +43,7 @@ public class Config {
     public static final int TYPE_CDSBONUS=3;
     public static final int TYPE_CANCELBONUS=4;
     public static final int TYPE_DSRESULT = 5;
+    public static final int TYPE_DSPERSION = 6;
 
     public static final int STATE_CDSBONUS_START = 1;
     public static final int STATE_CDSBONUS_GUESSED = 2;

@@ -83,7 +83,11 @@ public class MessageReceiver extends XGPushBaseReceiver {
          LogUtils.e("xgMessage==>",xgPushTextMessage.getContent());
             //数据库中获取存储的房间
             rooms = RoomDAO.query(MyApplication.getSQLiteDatabase(), UserInfo.getInstance().getUid());
-            chatMessage = MyApplication.getGson().fromJson(xgPushTextMessage.getContent(), ChatMessage.class);
+            try{
+                chatMessage = MyApplication.getGson().fromJson(xgPushTextMessage.getContent(), ChatMessage.class);
+            }catch(Exception e){
+                return;
+            }
             String time = format.format(new Date());
             chatMessage.setDate(time);
             //查找这条消息所对应的房间
@@ -229,6 +233,15 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     message3.obj = chatMessage;
                     MyApplication.messageListenerMap.get("0").handleMsg(message3);
                 }
+            }else if(xgPushTextMessage.getTitle().equals(String.valueOf(Config.TYPE_DSPERSION))){
+                LogUtils.e("66666666","=======");
+                if(MyApplication.messageListenerMap.get("ds")!=null) {
+                    Message message = new Message();
+                    message.what = Config.DSPERSION_MESSAGE;
+                    message.obj = chatMessage;
+                    MyApplication.messageListenerMap.get("ds").handleMsg(message);
+                }
+                return;
             }
 
             //判断是不是自己的消息，若是自己的消息，不提醒

@@ -59,7 +59,9 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
         public void handleMessage(Message msg) {
             if (msg.what == Config.DS_RESULT) {
                 refreshResult((ChatMessage) msg.obj);
-            } else if (msg.what == Config.CDS_TIME) {
+            }else if(msg.what==Config.DSPERSION_MESSAGE){
+                refreshPersionNum((ChatMessage)msg.obj);
+            }else if (msg.what == Config.CDS_TIME) {
                 if (subtime < 0) {
                     progressDialog.setMessage("开奖中");
                     progressDialog.setCancelable(false);
@@ -243,6 +245,13 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
             ll_result.setVisibility(View.VISIBLE);
         }
     }
+
+    public void refreshPersionNum(ChatMessage msg){
+        if(msg.getId()==ds.getId()){
+            tv_person.setText(msg.getContent());
+        }
+    }
+
 
     @Override
     public void dataController(String response, int tag)  {
