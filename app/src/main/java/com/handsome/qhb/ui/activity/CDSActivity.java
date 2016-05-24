@@ -4,9 +4,11 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.handsome.qhb.application.MyApplication;
 import com.handsome.qhb.bean.ChatMessage;
@@ -63,6 +65,7 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
                 refreshPersionNum((ChatMessage)msg.obj);
             }else if (msg.what == Config.CDS_TIME) {
                 if (subtime < 0) {
+                    progressDialog = new ProgressDialog(CDSActivity.this);
                     progressDialog.setMessage("开奖中");
                     progressDialog.setCancelable(false);
                     progressDialog.show();
@@ -90,7 +93,6 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cds);
-        LogUtils.e("cdsActivity====>","oncreate");
 
         tv_Btime = (TextView) findViewById(R.id.tv_Btime);
         tv_money = (TextView) findViewById(R.id.tv_money);
@@ -193,8 +195,10 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
     protected void onResume() {
         super.onResume();
         MyApplication.messageListenerMap.put("ds", this);
+
         nowtime = System.currentTimeMillis();
         subtime = chatMessage.getDsTime() * 60 - (nowtime - hbtime) / 1000;
+
         if(subtime<=0){
             return;
         }
@@ -243,6 +247,15 @@ public class CDSActivity extends BaseActivity implements MyListener,MessageListe
             }
             ll_guess.setVisibility(View.INVISIBLE);
             ll_result.setVisibility(View.VISIBLE);
+            if(tv_result.getText().toString().equals(tv_guess.getText().toString())){
+                Toast toast = Toast.makeText(CDSActivity.this,"恭喜您,您赢了！积分+"+chatMessage.getBonus_total(),Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER,0,0);
+                toast.show();
+            }else{
+                Toast toast = Toast.makeText(CDSActivity.this,"很遗憾,您输了！积分-"+chatMessage.getBonus_total(),Toast.LENGTH_LONG);
+                toast.setGravity(Gravity.CENTER,0,0);
+                toast.show();
+            }
         }
     }
 

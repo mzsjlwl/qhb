@@ -15,6 +15,7 @@ import com.handsome.qhb.bean.Order;
 import com.handsome.qhb.bean.Products;
 import com.handsome.qhb.utils.LogUtils;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class OrderDetailActivity extends BaseActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-
+        DecimalFormat df = new DecimalFormat("#0.00");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
         tv_title = (TextView) findViewById(R.id.tv_title);

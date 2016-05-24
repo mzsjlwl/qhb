@@ -66,7 +66,7 @@ public class OrderAdapter extends CommonAdapter<Order> {
             Intent i = new Intent(mContext, OrderDetailActivity.class);
             Bundle b = new Bundle();
             b.putSerializable("order",mDatas.get(position));
-            b.putString("totalMoney", String.valueOf(totalMoney));
+            b.putString("totalMoney", df.format(totalMoney));
             i.putExtras(b);
             mContext.startActivity(i);
         }

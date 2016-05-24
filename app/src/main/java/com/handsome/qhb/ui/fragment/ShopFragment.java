@@ -100,20 +100,25 @@ public class ShopFragment extends Fragment implements MyListener{
     // 切换当前显示的图片
     private Handler handler = new Handler() {
         public void handleMessage(android.os.Message msg) {
-            if (msg.what == Config.SLIDER_PICTURE) {
-                LogUtils.d("0x123", "----->");
-                viewPager.setCurrentItem(currentItem,true);// 切换当前显示的图片
-            } else if (msg.what == Config.INIT_SLIDER_PICTURE) {
-                LogUtils.d("0x124", "----->");
-                initSliderImage();
-            } else if (msg.what == Config.INIT_PRODUCT) {
-                LogUtils.d("0x125", "------>");
-                initProductList();
-            }else if(msg.what==Config.REFERSH_PRODUCT){
-                LogUtils.d("0x126","------>");
-                initProductList();
-                rListView.hideHeaderView();
+            try{
+                if (msg.what == Config.SLIDER_PICTURE) {
+                    LogUtils.d("0x123", "----->");
+                    viewPager.setCurrentItem(currentItem,true);// 切换当前显示的图片
+                } else if (msg.what == Config.INIT_SLIDER_PICTURE) {
+                    LogUtils.d("0x124", "----->");
+                    initSliderImage();
+                } else if (msg.what == Config.INIT_PRODUCT) {
+                    LogUtils.d("0x125", "------>");
+                    initProductList();
+                }else if(msg.what==Config.REFERSH_PRODUCT){
+                    LogUtils.d("0x126","------>");
+                    initProductList();
+                    rListView.hideHeaderView();
+                }
+            }catch (Exception e){
+                return;
             }
+
         }
     };
 

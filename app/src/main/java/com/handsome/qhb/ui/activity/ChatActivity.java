@@ -230,7 +230,14 @@ public class ChatActivity extends BaseActivity implements MessageListener {
                 String timestampI = String.valueOf((long)(System.currentTimeMillis()/1000));
 
                 APS aps = new APS();
-                aps.setAlert(message);
+                aps.setAlert(message.getNackname()+" : "+message.getContent());
+                aps.setDate(message.getDate());
+                aps.setNackname(message.getNackname());
+                aps.setId(message.getId());
+                aps.setRid(message.getRid());
+                aps.setUid(message.getUid());
+                aps.setType(message.getType());
+                aps.setPhoto(message.getPhoto());
                 IOSMessage iosMessage = new IOSMessage();
                 iosMessage.setAps(aps);
                 mapI.put("message_type","0");

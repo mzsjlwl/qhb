@@ -94,11 +94,15 @@ public class MessageReceiver extends XGPushBaseReceiver {
             int i = 0;
             for(;i<rooms.size();i++){
                 if(rooms.get(i).getRid()==chatMessage.getRid()){
-                    String dbPhoto = MessageDAO.getDBPhoto(MyApplication.getSQLiteDatabase(),chatMessage.getUid());
+                    if(chatMessage.getType()!=Config.TYPE_DSPERSION){
+                        String dbPhoto = MessageDAO.getDBPhoto(MyApplication.getSQLiteDatabase(),chatMessage.getUid());
 
-                    if(dbPhoto!=null&&!dbPhoto.equals(chatMessage.getPhoto())){
-                       MessageDAO.updateDBPhoto(MyApplication.getSQLiteDatabase(),chatMessage.getUid(),chatMessage.getPhoto());
+                        if(dbPhoto!=null&&!dbPhoto.equals(chatMessage.getPhoto())){
+
+                            MessageDAO.updateDBPhoto(MyApplication.getSQLiteDatabase(),chatMessage.getUid(),chatMessage.getPhoto());
+                        }
                     }
+
                     break;
                 }
             }
