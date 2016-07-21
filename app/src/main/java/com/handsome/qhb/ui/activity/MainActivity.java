@@ -10,6 +10,7 @@ import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -84,7 +85,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
         //初始化控件
         initViews();
-        fragmentController.showFragment(0);
+        if(!TextUtils.isEmpty(getIntent().getStringExtra("chat"))){
+            fragmentController.showFragment(1);
+            LogUtils.e("shopfragment","chat");
+        }else{
+            fragmentController.showFragment(0);
+            LogUtils.e("shopfragment","shop");
+        }
+
     }
 
     /**
@@ -139,6 +147,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     @Override
     protected void onRestart() {
         super.onRestart();
+
+        //fragmentController.showFragment(0);
+        LogUtils.e("shopfragment","shop");
         LogUtils.e("Mainactivity", "onRestart");
     }
 
@@ -152,7 +163,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     protected void onDestroy() {
         super.onDestroy();
         LogUtils.e("Mainactivity", "onDestroy");
-//        MyApplication.welcome = 0;
         if(myReceiver!=null){
             unregisterReceiver();
         }
@@ -173,6 +183,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         @Override
         public void onReceive(Context context, Intent intent) {
+
             ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mobNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
             NetworkInfo wifiNetInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);

@@ -225,6 +225,7 @@ public class ShopFragment extends Fragment implements MyListener{
     @Override
     public void onStart() {
         super.onStart();
+        LogUtils.e("shopfragment","onstart");
         if(productLists!=null&&productLists.size()!=0){
             String TAG = getActivity().getIntent().getStringExtra("TAG");
             if(TAG!=null&&TAG.equals("ClearGWC")){
@@ -235,6 +236,8 @@ public class ShopFragment extends Fragment implements MyListener{
             }
         }
     }
+
+
 
     public void initSliderImage() {
 
@@ -305,6 +308,7 @@ public class ShopFragment extends Fragment implements MyListener{
 
     @Override
     public void onStop() {
+        LogUtils.e("shopfragment","onstop");
         MyApplication.getmQueue().cancelAll(Config.GETPRODUCT_TAG);
         MyApplication.getmQueue().cancelAll(Config.GETSLIDER_TAG);
         scheduledExecutorService = null;
@@ -423,11 +427,14 @@ public class ShopFragment extends Fragment implements MyListener{
 
     @Override
     public void onResume() {
+        LogUtils.e("shopfragment","onresume");
         super.onResume();
     }
 
+
     @Override
     public void onPause() {
+        LogUtils.e("shopfragment","onPause");
         super.onPause();
         List<Product> shopCarList = new ArrayList<Product>();
         if(productLists!=null){
@@ -459,7 +466,7 @@ public class ShopFragment extends Fragment implements MyListener{
 
     @Override
     public void onDestroy() {
-
+        LogUtils.e("shopfragment","ondestory");
         super.onDestroy();
         SharedPreferences.Editor editor =getActivity().getSharedPreferences("data", getActivity().MODE_PRIVATE).edit();
         editor.putString("user", MyApplication.getGson().toJson(UserInfo.getInstance()));

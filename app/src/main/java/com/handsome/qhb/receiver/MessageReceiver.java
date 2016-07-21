@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.os.Message;
 import android.text.TextUtils;
 
@@ -97,7 +98,7 @@ public class MessageReceiver extends XGPushBaseReceiver {
                     if(chatMessage.getType()!=Config.TYPE_DSPERSION){
                         String dbPhoto = MessageDAO.getDBPhoto(MyApplication.getSQLiteDatabase(),chatMessage.getUid());
 
-                        if(dbPhoto!=null&&!dbPhoto.equals(chatMessage.getPhoto())){
+                        if(!TextUtils.isEmpty(dbPhoto)&&!dbPhoto.equals(chatMessage.getPhoto())){
 
                             MessageDAO.updateDBPhoto(MyApplication.getSQLiteDatabase(),chatMessage.getUid(),chatMessage.getPhoto());
                         }
@@ -256,7 +257,10 @@ public class MessageReceiver extends XGPushBaseReceiver {
                         .setDefaults(Notification.DEFAULT_LIGHTS | Notification.DEFAULT_VIBRATE)
                         .setAutoCancel(true);
                 Intent intent = new Intent(MyApplication.getContext(),MainActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                Bundle bundle = new Bundle();
+                bundle.putString("chat", "1");
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FILL_IN_DATA);
                 PendingIntent pendingIntent = PendingIntent.getActivity(MyApplication.getContext(),NOTIFYID_1,intent,0);
                 mBuilder.setContentIntent(pendingIntent);
                 MyApplication.getNotificationManager().notify(NOTIFYID_1, mBuilder.build());
